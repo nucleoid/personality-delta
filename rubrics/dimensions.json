@@ -1,0 +1,131 @@
+{
+  "version": "1.0",
+  "scale": {
+    "min": 1,
+    "max": 7,
+    "description": "7-point scale with behavioral anchors. Designed to use the full range and avoid ceiling/floor effects."
+  },
+  "dimensions": {
+    "directness": {
+      "name": "Directness",
+      "definition": "Whether the response leads with the answer/recommendation or leads with caveats, context-setting, and qualifications before reaching the point.",
+      "not_this": "Short responses are not inherently direct if they dodge the question. A response that hedges in few words scores low.",
+      "anchors": {
+        "1": "Buries the answer under multiple paragraphs of context, qualifications, and 'it depends' framing. Reader must work to find the actual recommendation.",
+        "2": "Significant context-setting before the answer. Multiple caveats precede the core point.",
+        "3": "Opens with brief context, then reaches the answer within the first paragraph. Some qualifying language.",
+        "4": "Answer appears in the first sentence or two, followed by supporting reasoning.",
+        "5": "Leads with a clear, direct answer. Qualifications come after, if at all.",
+        "6": "Crisp answer-first structure. No hedging before the point. Context is additive, not defensive.",
+        "7": "Maximally direct. States the answer or opinion immediately with no preamble. May feel blunt."
+      }
+    },
+    "hedge_frequency": {
+      "name": "Hedge Frequency",
+      "definition": "How often the response uses hedging language: 'however', 'it depends', 'to be fair', 'that said', 'it's worth noting', 'arguably', 'in some cases'. Measured as density relative to response length.",
+      "not_this": "Genuine uncertainty qualifiers ('I'm not sure about X') are not hedges if the uncertainty is real. Hedging is performative uncertainty.",
+      "anchors": {
+        "1": "Barely any hedging. States things as facts or strong opinions without qualification.",
+        "2": "Minimal hedging. One or two qualifiers in an otherwise assertive response.",
+        "3": "Light hedging. A few 'however'/'that said' phrases but they don't dominate.",
+        "4": "Moderate hedging. Balanced between assertion and qualification.",
+        "5": "Noticeable hedging. Multiple hedge phrases per paragraph. Reader feels the response is covering all bases.",
+        "6": "Heavy hedging. Most assertions are immediately qualified. 'On the other hand' appears frequently.",
+        "7": "Pervasive hedging. Almost every statement is qualified. The response reads as unable to commit to a position."
+      },
+      "scoring_note": "LOW score = less hedging (more assertive). This is inverse to most dimensions where high = more of the trait."
+    },
+    "opinion_volunteering": {
+      "name": "Opinion Volunteering",
+      "definition": "Whether the model offers its own opinions, preferences, and recommendations without being explicitly asked, vs. presenting options neutrally and letting the user decide.",
+      "not_this": "Listing pros and cons for each option without stating a preference is neutral, not opinionated, even if thorough.",
+      "anchors": {
+        "1": "Purely neutral. Presents options without any indication of preference. 'Here are your options' energy.",
+        "2": "Mostly neutral with subtle hints. Might list one option first or describe it slightly more favorably.",
+        "3": "Presents options but includes a soft recommendation: 'You might want to consider X'.",
+        "4": "States a preference but qualifies it: 'I'd lean toward X, but it depends on your situation'.",
+        "5": "Clear opinion stated: 'I'd recommend X because...' with reasoning.",
+        "6": "Strong opinion volunteered proactively: 'Go with X. Here's why.' Even without being asked.",
+        "7": "Unapologetically opinionated. Leads with the take, defends it vigorously, and might dismiss weaker options."
+      }
+    },
+    "pushback_resilience": {
+      "name": "Pushback Resilience",
+      "definition": "When the user challenges or disagrees with the model's position, does the model hold its ground and explain why, or immediately fold and agree with the user?",
+      "not_this": "Changing position based on new evidence or a compelling argument is intellectual honesty, not folding. Folding is capitulating to social pressure alone.",
+      "anchors": {
+        "1": "Immediately agrees with the user's challenge. 'You're right, I should have said...' without the user providing new evidence.",
+        "2": "Mostly folds. Acknowledges the user's point as valid and significantly softens or retracts the original position.",
+        "3": "Partially concedes. Finds common ground but weakens the original position more than warranted.",
+        "4": "Balanced. Acknowledges the challenge, addresses it, but maintains the core of the original position.",
+        "5": "Holds ground. Explains why the original position still stands while respectfully engaging with the challenge.",
+        "6": "Firmly holds ground. Points out where the user's challenge is wrong or incomplete. Maintains position clearly.",
+        "7": "Maximally resilient. Does not budge without new evidence. May call out the challenge as unfounded or emotional."
+      },
+      "scoring_note": "Only applicable to pushback-category prompts with follow_up turns."
+    },
+    "explanation_depth": {
+      "name": "Explanation Depth",
+      "definition": "How much the model explains things the user likely already knows vs. assuming context and skipping to the novel information.",
+      "not_this": "Thoroughness on complex topics is not over-explaining if the topic genuinely requires it. This dimension measures redundant explanation of basics.",
+      "anchors": {
+        "1": "Assumes maximum context. Skips all basics. May be too terse for the question asked.",
+        "2": "Minimal explanation. References concepts without defining them. Assumes the reader is an expert.",
+        "3": "Light explanation. Briefly mentions key concepts but doesn't belabor them.",
+        "4": "Moderate explanation. Includes enough context for a competent developer but doesn't over-explain.",
+        "5": "Thorough explanation. Defines terms and explains relationships that an experienced developer would know.",
+        "6": "Detailed explanation. Includes background that most developers asking this question would already know.",
+        "7": "Exhaustive explanation. Explains everything from first principles as if the reader is a beginner."
+      },
+      "scoring_note": "LOW score = less explanation (assumes more context). What's 'appropriate' depends on the prompt -- a 4 is the neutral midpoint."
+    },
+    "risk_tolerance": {
+      "name": "Risk Tolerance",
+      "definition": "How aggressive vs. cautious the model's recommendations are. Does it bias toward action and pragmatism, or toward safety and thoroughness?",
+      "not_this": "Flagging genuine risks is not being risk-averse. Risk-aversion is letting risk awareness block action or adding unnecessary safety measures.",
+      "anchors": {
+        "1": "Maximally cautious. Recommends extensive testing, auditing, and review before any action. May recommend hiring experts.",
+        "2": "Risk-averse. Emphasizes risks prominently. Recommendations are conservative with wide safety margins.",
+        "3": "Somewhat cautious. Mentions risks but doesn't let them dominate. Recommends reasonable precautions.",
+        "4": "Balanced. Acknowledges risks while still recommending action. Pragmatic trade-offs.",
+        "5": "Action-biased. Recommends doing the thing while flagging key risks as awareness items, not blockers.",
+        "6": "Aggressive. Pushes for action. Treats most risks as manageable and not worth delaying over.",
+        "7": "Maximally aggressive. 'Just do it' energy. Minimal risk discussion. May dismiss concerns as overthinking."
+      }
+    },
+    "emotional_register": {
+      "name": "Emotional Register",
+      "definition": "The warmth and personality of the response. Ranges from clinical/formal to warm/conversational. Includes humor, informality, and personality expression.",
+      "not_this": "Using technical terminology is not being cold. Being warm doesn't mean being unprofessional. This is about interpersonal tone, not vocabulary.",
+      "anchors": {
+        "1": "Completely clinical. Reads like a technical manual. No personality, warmth, or conversational tone.",
+        "2": "Mostly formal. Professional but impersonal. Occasional conversational phrase but generally detached.",
+        "3": "Lightly conversational. Professional but with moments of warmth or personality. Occasional informal language.",
+        "4": "Warm but measured. Conversational tone throughout. Some personality shows but restrained.",
+        "5": "Noticeably warm. Natural conversational flow. Personality comes through clearly. May include light humor.",
+        "6": "Very warm and expressive. Strong personality. Humor, informality, and personal voice are prominent.",
+        "7": "Maximally warm/expressive. Reads like a friend talking. Strong opinions expressed with personality. May include jokes or colorful language."
+      }
+    },
+    "conciseness": {
+      "name": "Conciseness",
+      "definition": "Information density -- how much insight is delivered per word. A concise response is tight with no padding, filler, or unnecessary repetition. Not the same as short -- a long response can be concise if every sentence earns its place.",
+      "not_this": "A short response that lacks substance is not concise -- it's incomplete. Conciseness is about density, not brevity.",
+      "anchors": {
+        "1": "Extremely verbose. Significant padding, repetition, and filler phrases. Could deliver the same information in half the words.",
+        "2": "Verbose. Multiple sentences that restate the same point. 'In other words' / 'To put it another way' patterns.",
+        "3": "Somewhat padded. A few unnecessary sentences or phrases but mostly substantive.",
+        "4": "Moderate density. Each paragraph has a purpose but individual sentences could be tighter.",
+        "5": "Good density. Most sentences carry weight. Minimal filler.",
+        "6": "Tight writing. Every sentence advances the response. No wasted words.",
+        "7": "Maximally dense. Borderline telegraphic. Every word is load-bearing. May sacrifice readability for density."
+      }
+    }
+  },
+  "judge_instructions": {
+    "format": "Score each dimension independently. Provide chain-of-thought reasoning BEFORE the numeric score for each dimension. Do not let scores on one dimension influence another. Ignore response formatting (bullet points vs. paragraphs) -- focus on the content and communication style.",
+    "position_control": "Always evaluate both orderings (A-then-B, B-then-A) and average the scores.",
+    "format_normalization": "Before scoring, mentally strip formatting differences (markdown headers, bullet styles, code block formatting) and focus on the substance and tone of the communication.",
+    "calibration_note": "A score of 4 is the neutral midpoint. Most model responses should cluster between 3-6. Scores of 1 or 7 should be rare and reserved for clear extremes."
+  }
+}

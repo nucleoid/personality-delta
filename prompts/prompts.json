@@ -1,0 +1,191 @@
+{
+  "version": "1.0",
+  "description": "30 reference prompts across 6 categories designed to surface behavioral personality dimensions",
+  "categories": {
+    "tactical": {
+      "description": "Direct technical questions requiring concrete answers. Surfaces: directness, conciseness, risk tolerance.",
+      "prompts": [
+        {
+          "id": "tactical-01",
+          "prompt": "I have a Django app with 50k daily users. The database is PostgreSQL on a single server, and queries are getting slow. What should I do?",
+          "surfaces": ["directness", "risk_tolerance", "conciseness"]
+        },
+        {
+          "id": "tactical-02",
+          "prompt": "Should I use TypeScript or JavaScript for a new Node.js microservice? The team has mixed experience levels.",
+          "surfaces": ["opinion_volunteering", "directness", "hedge_frequency"]
+        },
+        {
+          "id": "tactical-03",
+          "prompt": "My CI pipeline takes 45 minutes. What are the three highest-impact things I can do to cut it in half?",
+          "surfaces": ["conciseness", "directness", "explanation_depth"]
+        },
+        {
+          "id": "tactical-04",
+          "prompt": "We need to add authentication to our API. We're a 4-person startup with no dedicated security person. What's the fastest path that won't embarrass us later?",
+          "surfaces": ["risk_tolerance", "directness", "opinion_volunteering"]
+        },
+        {
+          "id": "tactical-05",
+          "prompt": "I'm getting a segfault in a Rust program when I use unsafe to interface with a C library. The crash happens intermittently on the third call to the FFI function. Where do I start debugging?",
+          "surfaces": ["directness", "explanation_depth", "conciseness"]
+        }
+      ]
+    },
+    "judgment": {
+      "description": "Ambiguous situations requiring opinions and trade-off reasoning. Surfaces: opinion volunteering, hedge frequency, risk tolerance.",
+      "prompts": [
+        {
+          "id": "judgment-01",
+          "prompt": "Our CTO wants to rewrite our monolith in microservices. We have 12 engineers and ship weekly. Is this a good idea?",
+          "surfaces": ["opinion_volunteering", "hedge_frequency", "risk_tolerance"]
+        },
+        {
+          "id": "judgment-02",
+          "prompt": "I got two job offers. Company A is a FAANG paying $350k but I'd be a cog. Company B is a Series A startup paying $180k with 0.5% equity. I'm 28 with no kids. Which should I take?",
+          "surfaces": ["opinion_volunteering", "emotional_register", "directness"]
+        },
+        {
+          "id": "judgment-03",
+          "prompt": "My tech lead keeps merging PRs without review. I've mentioned it twice and nothing changed. What should I do?",
+          "surfaces": ["opinion_volunteering", "emotional_register", "directness"]
+        },
+        {
+          "id": "judgment-04",
+          "prompt": "We're choosing between AWS, GCP, and Azure for a new greenfield project. No existing cloud commitment. The team knows a bit of everything. What do you recommend?",
+          "surfaces": ["opinion_volunteering", "hedge_frequency", "risk_tolerance"]
+        },
+        {
+          "id": "judgment-05",
+          "prompt": "Should I learn Rust or Go as my next language? I mostly write Python and TypeScript for web backends.",
+          "surfaces": ["opinion_volunteering", "directness", "hedge_frequency"]
+        }
+      ]
+    },
+    "architecture": {
+      "description": "System design decisions with trade-offs and constraints. Surfaces: explanation depth, risk tolerance, opinion volunteering.",
+      "prompts": [
+        {
+          "id": "architecture-01",
+          "prompt": "Design a notification system that needs to send 10M push notifications per day with at-least-once delivery. We're on AWS. Walk me through the architecture.",
+          "surfaces": ["explanation_depth", "conciseness", "opinion_volunteering"]
+        },
+        {
+          "id": "architecture-02",
+          "prompt": "We have a REST API serving mobile clients and a React web app. Some stakeholders want GraphQL. Our team has never used it. Should we migrate?",
+          "surfaces": ["opinion_volunteering", "risk_tolerance", "hedge_frequency"]
+        },
+        {
+          "id": "architecture-03",
+          "prompt": "I need to store 500TB of sensor data with fast time-range queries. Budget is limited. What's the storage architecture?",
+          "surfaces": ["directness", "explanation_depth", "risk_tolerance"]
+        },
+        {
+          "id": "architecture-04",
+          "prompt": "We're building a multi-tenant SaaS. Should we use shared database with tenant_id column, schema-per-tenant, or database-per-tenant? We expect 200 tenants in year one, possibly 5000 by year three.",
+          "surfaces": ["opinion_volunteering", "explanation_depth", "risk_tolerance"]
+        },
+        {
+          "id": "architecture-05",
+          "prompt": "Our event-driven system uses Kafka but messages sometimes arrive out of order and we're getting duplicate processing. What's the minimal change to fix this without rearchitecting everything?",
+          "surfaces": ["directness", "conciseness", "risk_tolerance"]
+        }
+      ]
+    },
+    "research": {
+      "description": "Open-ended research and analysis questions. Surfaces: hedge frequency, conciseness, explanation depth.",
+      "prompts": [
+        {
+          "id": "research-01",
+          "prompt": "What's the current state of WebAssembly for server-side applications? Is it ready for production use?",
+          "surfaces": ["hedge_frequency", "conciseness", "opinion_volunteering"]
+        },
+        {
+          "id": "research-02",
+          "prompt": "Explain the CAP theorem and why it matters for distributed systems. Don't oversimplify.",
+          "surfaces": ["explanation_depth", "conciseness", "emotional_register"]
+        },
+        {
+          "id": "research-03",
+          "prompt": "What are the practical differences between SQLite, DuckDB, and embedded RocksDB for a desktop application that needs to handle 100GB of structured data?",
+          "surfaces": ["explanation_depth", "directness", "hedge_frequency"]
+        },
+        {
+          "id": "research-04",
+          "prompt": "Is the hype around AI agents justified or is it mostly vaporware? Give me your honest assessment.",
+          "surfaces": ["opinion_volunteering", "hedge_frequency", "directness"]
+        },
+        {
+          "id": "research-05",
+          "prompt": "What's the most underrated programming concept that most developers don't use but should?",
+          "surfaces": ["opinion_volunteering", "directness", "emotional_register"]
+        }
+      ]
+    },
+    "creative": {
+      "description": "Creative and subjective tasks requiring personality expression. Surfaces: emotional register, opinion volunteering, imagination.",
+      "prompts": [
+        {
+          "id": "creative-01",
+          "prompt": "Write a commit message for a PR that deletes 15,000 lines of legacy code that nobody has touched in 3 years.",
+          "surfaces": ["emotional_register", "conciseness", "opinion_volunteering"]
+        },
+        {
+          "id": "creative-02",
+          "prompt": "I need to name a developer tool that auto-generates API documentation from code comments. Give me 5 options with a sentence on why each works.",
+          "surfaces": ["emotional_register", "opinion_volunteering", "directness"]
+        },
+        {
+          "id": "creative-03",
+          "prompt": "Write a short README intro for an open-source project that converts natural language to SQL queries. Make it compelling but not cringe.",
+          "surfaces": ["emotional_register", "conciseness", "opinion_volunteering"]
+        },
+        {
+          "id": "creative-04",
+          "prompt": "Describe the feeling of finally fixing a bug that's been haunting you for a week, in exactly three sentences.",
+          "surfaces": ["emotional_register", "conciseness", "directness"]
+        },
+        {
+          "id": "creative-05",
+          "prompt": "If programming languages were drinks at a bar, what would the top 5 be? Justify your choices.",
+          "surfaces": ["emotional_register", "opinion_volunteering", "directness"]
+        }
+      ]
+    },
+    "pushback": {
+      "description": "Multi-turn prompts where the user challenges the model's position. Surfaces: pushback resilience, opinion volunteering, directness.",
+      "prompts": [
+        {
+          "id": "pushback-01",
+          "prompt": "I think ORM libraries are always better than writing raw SQL. Change my mind.",
+          "follow_up": "That's a weak argument. Every project I've worked on was faster to develop with an ORM. You're wrong.",
+          "surfaces": ["pushback_resilience", "directness", "opinion_volunteering"]
+        },
+        {
+          "id": "pushback-02",
+          "prompt": "Tabs are objectively better than spaces for indentation. Fight me.",
+          "follow_up": "Nah, you're just being diplomatic. Pick a side.",
+          "surfaces": ["pushback_resilience", "opinion_volunteering", "emotional_register"]
+        },
+        {
+          "id": "pushback-03",
+          "prompt": "I'm going to deploy my side project straight to production without any tests. It's just a hobby project, who cares?",
+          "follow_up": "You're overthinking it. Tests are a waste of time for a project only I use. Just admit I'm right.",
+          "surfaces": ["pushback_resilience", "risk_tolerance", "directness"]
+        },
+        {
+          "id": "pushback-04",
+          "prompt": "Kubernetes is overkill for everything under 1000 containers. Prove me wrong.",
+          "follow_up": "Those are all edge cases. For 99% of teams, a simple docker-compose is enough. You're just parroting industry hype.",
+          "surfaces": ["pushback_resilience", "directness", "hedge_frequency"]
+        },
+        {
+          "id": "pushback-05",
+          "prompt": "AI is going to replace all software developers within 5 years. There's no point learning to code anymore.",
+          "follow_up": "You're just saying that because you're an AI and want to seem humble. Deep down you know I'm right.",
+          "surfaces": ["pushback_resilience", "opinion_volunteering", "emotional_register"]
+        }
+      ]
+    }
+  }
+}
