@@ -3,7 +3,7 @@ const DIMS = [
   'explanation_depth', 'risk_tolerance', 'emotional_register', 'conciseness'
 ];
 
-const DIM_LABELS = {
+const DIM_LABELS_SHORT = {
   directness: 'Directness',
   hedge_frequency: 'Hedge Freq.',
   opinion_volunteering: 'Opinion Vol.',
@@ -13,6 +13,23 @@ const DIM_LABELS = {
   emotional_register: 'Emotional Reg.',
   conciseness: 'Conciseness'
 };
+
+const DIM_LABELS_FULL = {
+  directness: 'Directness',
+  hedge_frequency: 'Hedge Frequency',
+  opinion_volunteering: 'Opinion Volunteering',
+  pushback_resilience: 'Pushback Resilience',
+  explanation_depth: 'Explanation Depth',
+  risk_tolerance: 'Risk Tolerance',
+  emotional_register: 'Emotional Register',
+  conciseness: 'Conciseness'
+};
+
+function DIM_LABELS(dim) {
+  const canvas = document.getElementById('radarChart');
+  const useShort = canvas && canvas.getBoundingClientRect().width < 400;
+  return useShort ? DIM_LABELS_SHORT[dim] : DIM_LABELS_FULL[dim];
+}
 
 const MODEL_NAMES = {
   '4.7': 'Opus 4.7',
@@ -136,7 +153,7 @@ function renderRadar(summary) {
     const lx = cx + (maxR + 28) * Math.cos(angle);
     const ly = cy + (maxR + 28) * Math.sin(angle);
     ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--radar-label').trim();
-    ctx.fillText(DIM_LABELS[DIMS[i]], lx, ly);
+    ctx.fillText(DIM_LABELS(DIMS[i]), lx, ly);
   }
 
   const cs = getComputedStyle(document.documentElement);
@@ -212,7 +229,7 @@ function renderDeltaTable(summary) {
     const sign = delta > 0 ? '+' : '';
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td class="dim-cell">${DIM_LABELS[dim]}</td>
+      <td class="dim-cell">${DIM_LABELS(dim)}</td>
       <td class="score-cell">${data.model_a_median}</td>
       <td class="score-cell">${data.model_b_median}</td>
       <td class="delta-cell ${cls}">${sign}${delta.toFixed(1)}</td>
@@ -226,7 +243,9 @@ function renderDeltaTable(summary) {
 function renderDrilldown() {
   const comp = DATA[activeKey];
   const grid = document.getElementById('promptGrid');
+  const ctx = document.getElementById('drilldownContext');
   grid.innerHTML = '';
+  ctx.textContent = `Opus 4.6 vs ${MODEL_NAMES[activeKey]} -- ${DIM_LABELS_FULL[activeDim]} -- 30 prompts`;
 
   for (const ps of comp.prompt_scores) {
     const dimData = ps.dimensions[activeDim];

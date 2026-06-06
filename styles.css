@@ -622,6 +622,18 @@ body {
   border-color: var(--accent-cyan);
 }
 
+.drilldown-context {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius);
+  display: inline-block;
+}
+
 .prompt-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
