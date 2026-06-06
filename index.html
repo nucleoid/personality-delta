@@ -25,6 +25,7 @@
         <span class="brand-name">Personality Delta</span>
       </div>
       <nav class="header-nav">
+        <a href="#why">Why</a>
         <a href="#findings">Findings</a>
         <a href="#comparisons">Comparisons</a>
         <a href="#patch">Patch</a>
@@ -61,6 +62,60 @@
               <span class="stat-value">4,800</span>
               <span class="stat-label">Judge Scores</span>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="why" id="why">
+      <div class="container">
+        <div class="why-primary">
+          <h2 class="section-title">Why this exists</h2>
+          <p class="why-lead">
+            <a href="https://github.com/nicholasgasior/openclaw" target="_blank" rel="noopener">OpenClaw</a> is an open-source agent harness that runs across multiple LLM providers. Its agent personality -- how direct it is, whether it leads with opinions or caveats, how much risk it tolerates in recommendations -- is defined in system prompt files (SOUL.md, IDENTITY.md). But when the underlying model changes, the personality drifts. A model upgrade that improves benchmarks can silently make the agent more cautious, more verbose, or less opinionated.
+          </p>
+          <p class="why-body">
+            Personality Delta was built to solve this: measure the exact behavioral delta between the current model and the upgrade candidate, then generate targeted system prompt corrections that preserve the agent's disposition. No more guessing whether a model swap will break the vibe.
+          </p>
+        </div>
+
+        <div class="uses-grid">
+          <h3 class="uses-heading">Other uses for this data</h3>
+
+          <div class="use-card">
+            <div class="use-number">01</div>
+            <h4>Model upgrade gating</h4>
+            <p>Run the behavioral suite as a CI/CD gate before deploying a new model version. If any dimension crosses your threshold, block the rollout until the system prompt is patched. No more personality regressions in production.</p>
+          </div>
+
+          <div class="use-card">
+            <div class="use-number">02</div>
+            <h4>Cross-vendor model selection</h4>
+            <p>Choosing between Claude, GPT, Gemini, or open-source models? Run the same prompts across all candidates and compare behavioral profiles. Pick the model whose baseline personality is closest to what you want, then patch the remaining gaps.</p>
+          </div>
+
+          <div class="use-card">
+            <div class="use-number">03</div>
+            <h4>System prompt effectiveness testing</h4>
+            <p>Measure whether a system prompt change actually moved the behavioral needle. Before: "we think the prompt makes it more direct." After: "directness moved from 4.2 to 5.8, hedge frequency dropped from 3.1 to 1.4." Quantify prompt engineering.</p>
+          </div>
+
+          <div class="use-card">
+            <div class="use-number">04</div>
+            <h4>Persona consistency for products</h4>
+            <p>Customer-facing AI assistants need consistent personality. A support bot that suddenly becomes more cautious after a model update will confuse users. Run behavioral regression tests alongside functional tests to catch personality drift before customers do.</p>
+          </div>
+
+          <div class="use-card">
+            <div class="use-number">05</div>
+            <h4>Alignment and safety research</h4>
+            <p>Track how safety training affects behavioral dimensions over time. The data shows Opus 4.8's "flag uncertainties" design manifests as a measurable risk_tolerance drop (-1.1). This kind of behavioral measurement gives alignment researchers concrete signals instead of vibes.</p>
+          </div>
+
+          <div class="use-card">
+            <div class="use-number">06</div>
+            <h4>Behavioral fingerprinting</h4>
+            <p>Each model has a measurable behavioral signature across 8 dimensions. This fingerprint could identify which model generated a response, detect undisclosed model swaps by API providers, or verify that a fine-tuned model preserved intended behavioral properties.</p>
           </div>
         </div>
       </div>
