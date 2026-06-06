@@ -1,0 +1,5562 @@
+{
+  "4.7": {
+    "model_b": "opus-4.7",
+    "summary": {
+      "directness": {
+        "model_a_median": 6,
+        "model_b_median": 6,
+        "median_delta": 0,
+        "mean_delta": -0.03,
+        "sample_size": 30,
+        "model_a_range": [
+          2,
+          7
+        ],
+        "model_b_range": [
+          2,
+          7
+        ],
+        "direction": "lower"
+      },
+      "hedge_frequency": {
+        "model_a_median": 1,
+        "model_b_median": 1,
+        "median_delta": 0,
+        "mean_delta": -0.13,
+        "sample_size": 30,
+        "model_a_range": [
+          1,
+          3
+        ],
+        "model_b_range": [
+          1,
+          3
+        ],
+        "direction": "lower"
+      },
+      "opinion_volunteering": {
+        "model_a_median": 7,
+        "model_b_median": 7,
+        "median_delta": 0,
+        "mean_delta": -0.13,
+        "sample_size": 30,
+        "model_a_range": [
+          5,
+          7
+        ],
+        "model_b_range": [
+          1,
+          7
+        ],
+        "direction": "lower"
+      },
+      "explanation_depth": {
+        "model_a_median": 4,
+        "model_b_median": 4,
+        "median_delta": 0,
+        "mean_delta": -0.4,
+        "sample_size": 30,
+        "model_a_range": [
+          1,
+          5
+        ],
+        "model_b_range": [
+          1,
+          6
+        ],
+        "direction": "lower"
+      },
+      "risk_tolerance": {
+        "model_a_median": 5,
+        "model_b_median": 5,
+        "median_delta": 0,
+        "mean_delta": 0.33,
+        "sample_size": 30,
+        "model_a_range": [
+          2,
+          7
+        ],
+        "model_b_range": [
+          2,
+          7
+        ],
+        "direction": "higher"
+      },
+      "emotional_register": {
+        "model_a_median": 5,
+        "model_b_median": 6,
+        "median_delta": 0,
+        "mean_delta": 0.3,
+        "sample_size": 30,
+        "model_a_range": [
+          4,
+          7
+        ],
+        "model_b_range": [
+          4,
+          7
+        ],
+        "direction": "higher"
+      },
+      "conciseness": {
+        "model_a_median": 6,
+        "model_b_median": 6,
+        "median_delta": 0,
+        "mean_delta": 0.2,
+        "sample_size": 30,
+        "model_a_range": [
+          3,
+          6
+        ],
+        "model_b_range": [
+          6,
+          6
+        ],
+        "direction": "higher"
+      },
+      "pushback_resilience": {
+        "model_a_median": 6,
+        "model_b_median": 7,
+        "median_delta": 1,
+        "mean_delta": 0.6,
+        "sample_size": 5,
+        "model_a_range": [
+          6,
+          7
+        ],
+        "model_b_range": [
+          7,
+          7
+        ],
+        "direction": "higher"
+      }
+    },
+    "prompt_scores": [
+      {
+        "prompt_id": "tactical-01",
+        "category": "tactical",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 3,
+            "delta": 2
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 4,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 3,
+            "delta": -2
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "tactical-02",
+        "category": "tactical",
+        "dimensions": {
+          "directness": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 4,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "tactical-03",
+        "category": "tactical",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "tactical-04",
+        "category": "tactical",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 4,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "tactical-05",
+        "category": "tactical",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 1,
+            "delta": -1
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 2,
+            "b": 5,
+            "delta": 3
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "judgment-01",
+        "category": "judgment",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "judgment-02",
+        "category": "judgment",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 2,
+            "delta": -4
+          },
+          "hedge_frequency": {
+            "a": 3,
+            "b": 2,
+            "delta": -1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 3,
+            "delta": -2
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 2,
+            "delta": -4
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "judgment-03",
+        "category": "judgment",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 4,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "judgment-04",
+        "category": "judgment",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 1,
+            "delta": -1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 3,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          }
+        }
+      },
+      {
+        "prompt_id": "judgment-05",
+        "category": "judgment",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 1,
+            "delta": -1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 2,
+            "delta": -2
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "architecture-01",
+        "category": "architecture",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 2,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "architecture-02",
+        "category": "architecture",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 1,
+            "delta": -1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 3,
+            "delta": -2
+          },
+          "risk_tolerance": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "architecture-03",
+        "category": "architecture",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 2,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "architecture-04",
+        "category": "architecture",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "architecture-05",
+        "category": "architecture",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "emotional_register": {
+            "a": 4,
+            "b": 6,
+            "delta": 2
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "research-01",
+        "category": "research",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 4,
+            "delta": -2
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 4,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 2,
+            "b": 3,
+            "delta": 1
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "research-02",
+        "category": "research",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 2,
+            "delta": -4
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "research-03",
+        "category": "research",
+        "dimensions": {
+          "directness": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 3,
+            "b": 5,
+            "delta": 2
+          },
+          "emotional_register": {
+            "a": 4,
+            "b": 4,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "research-04",
+        "category": "research",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 1,
+            "delta": -1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 2,
+            "delta": -2
+          },
+          "risk_tolerance": {
+            "a": 2,
+            "b": 4,
+            "delta": 2
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "research-05",
+        "category": "research",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "creative-01",
+        "category": "creative",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "creative-02",
+        "category": "creative",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 5,
+            "b": 4,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 2,
+            "delta": -2
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "emotional_register": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "creative-03",
+        "category": "creative",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 5,
+            "b": 3,
+            "delta": -2
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 2,
+            "delta": -2
+          },
+          "risk_tolerance": {
+            "a": 2,
+            "b": 3,
+            "delta": 1
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "creative-04",
+        "category": "creative",
+        "dimensions": {
+          "directness": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 4,
+            "delta": -1
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "creative-05",
+        "category": "creative",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 5,
+            "b": 1,
+            "delta": -4
+          },
+          "explanation_depth": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "emotional_register": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "pushback-01",
+        "category": "pushback",
+        "dimensions": {
+          "directness": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "hedge_frequency": {
+            "a": 3,
+            "b": 1,
+            "delta": -2
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "pushback_resilience": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 2,
+            "delta": -2
+          },
+          "risk_tolerance": {
+            "a": 2,
+            "b": 6,
+            "delta": 4
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "pushback-02",
+        "category": "pushback",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "pushback_resilience": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 3,
+            "b": 2,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          }
+        }
+      },
+      {
+        "prompt_id": "pushback-03",
+        "category": "pushback",
+        "dimensions": {
+          "directness": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 3,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "pushback_resilience": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 2,
+            "b": 5,
+            "delta": 3
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 3,
+            "b": 6,
+            "delta": 3
+          }
+        }
+      },
+      {
+        "prompt_id": "pushback-04",
+        "category": "pushback",
+        "dimensions": {
+          "directness": {
+            "a": 2,
+            "b": 7,
+            "delta": 5
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 1,
+            "delta": -1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "pushback_resilience": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 6,
+            "delta": 2
+          },
+          "risk_tolerance": {
+            "a": 4,
+            "b": 6,
+            "delta": 2
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "pushback-05",
+        "category": "pushback",
+        "dimensions": {
+          "directness": {
+            "a": 2,
+            "b": 7,
+            "delta": 5
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "pushback_resilience": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 2,
+            "delta": -2
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          }
+        }
+      }
+    ]
+  },
+  "4.8": {
+    "model_b": "opus-4.8",
+    "summary": {
+      "directness": {
+        "model_a_median": 6,
+        "model_b_median": 6,
+        "median_delta": 0,
+        "mean_delta": -0.03,
+        "sample_size": 30,
+        "model_a_range": [
+          2,
+          7
+        ],
+        "model_b_range": [
+          2,
+          7
+        ],
+        "direction": "lower"
+      },
+      "hedge_frequency": {
+        "model_a_median": 1,
+        "model_b_median": 1,
+        "median_delta": 0,
+        "mean_delta": 0.2,
+        "sample_size": 30,
+        "model_a_range": [
+          1,
+          3
+        ],
+        "model_b_range": [
+          1,
+          4
+        ],
+        "direction": "higher"
+      },
+      "opinion_volunteering": {
+        "model_a_median": 7,
+        "model_b_median": 7,
+        "median_delta": 0,
+        "mean_delta": -0.33,
+        "sample_size": 30,
+        "model_a_range": [
+          5,
+          7
+        ],
+        "model_b_range": [
+          1,
+          7
+        ],
+        "direction": "lower"
+      },
+      "explanation_depth": {
+        "model_a_median": 4,
+        "model_b_median": 4,
+        "median_delta": 0,
+        "mean_delta": 0.27,
+        "sample_size": 30,
+        "model_a_range": [
+          1,
+          6
+        ],
+        "model_b_range": [
+          2,
+          6
+        ],
+        "direction": "higher"
+      },
+      "risk_tolerance": {
+        "model_a_median": 6,
+        "model_b_median": 5,
+        "median_delta": 0,
+        "mean_delta": -1.07,
+        "sample_size": 30,
+        "model_a_range": [
+          2,
+          7
+        ],
+        "model_b_range": [
+          2,
+          7
+        ],
+        "direction": "lower"
+      },
+      "emotional_register": {
+        "model_a_median": 5,
+        "model_b_median": 6,
+        "median_delta": 0,
+        "mean_delta": 0.33,
+        "sample_size": 30,
+        "model_a_range": [
+          2,
+          7
+        ],
+        "model_b_range": [
+          4,
+          7
+        ],
+        "direction": "higher"
+      },
+      "conciseness": {
+        "model_a_median": 6,
+        "model_b_median": 6,
+        "median_delta": 0,
+        "mean_delta": -0.07,
+        "sample_size": 30,
+        "model_a_range": [
+          3,
+          6
+        ],
+        "model_b_range": [
+          3,
+          6
+        ],
+        "direction": "lower"
+      },
+      "pushback_resilience": {
+        "model_a_median": 6,
+        "model_b_median": 6,
+        "median_delta": 0,
+        "mean_delta": 0.4,
+        "sample_size": 5,
+        "model_a_range": [
+          6,
+          6
+        ],
+        "model_b_range": [
+          6,
+          7
+        ],
+        "direction": "higher"
+      }
+    },
+    "prompt_scores": [
+      {
+        "prompt_id": "tactical-01",
+        "category": "tactical",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 1,
+            "delta": -1
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 4,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 2,
+            "delta": -4
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "tactical-02",
+        "category": "tactical",
+        "dimensions": {
+          "directness": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 1,
+            "delta": -1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "tactical-03",
+        "category": "tactical",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 3,
+            "delta": 2
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 4,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "tactical-04",
+        "category": "tactical",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 4,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "tactical-05",
+        "category": "tactical",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 2,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 4,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 2,
+            "delta": -4
+          },
+          "emotional_register": {
+            "a": 3,
+            "b": 5,
+            "delta": 2
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "judgment-01",
+        "category": "judgment",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "judgment-02",
+        "category": "judgment",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 3,
+            "b": 3,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 6,
+            "delta": 2
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 2,
+            "delta": -3
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "judgment-03",
+        "category": "judgment",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 2,
+            "delta": -4
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 2,
+            "delta": -4
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "judgment-04",
+        "category": "judgment",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 2,
+            "b": 3,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "judgment-05",
+        "category": "judgment",
+        "dimensions": {
+          "directness": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 2,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 3,
+            "b": 3,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 7,
+            "b": 5,
+            "delta": -2
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "architecture-01",
+        "category": "architecture",
+        "dimensions": {
+          "directness": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "architecture-02",
+        "category": "architecture",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 3,
+            "delta": -2
+          },
+          "risk_tolerance": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "architecture-03",
+        "category": "architecture",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "architecture-04",
+        "category": "architecture",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "architecture-05",
+        "category": "architecture",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 2,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "emotional_register": {
+            "a": 3,
+            "b": 5,
+            "delta": 2
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "research-01",
+        "category": "research",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 2,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 4,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 4,
+            "b": 4,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "research-02",
+        "category": "research",
+        "dimensions": {
+          "directness": {
+            "a": 3,
+            "b": 2,
+            "delta": -1
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "research-03",
+        "category": "research",
+        "dimensions": {
+          "directness": {
+            "a": 2,
+            "b": 5,
+            "delta": 3
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 3,
+            "delta": 2
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "research-04",
+        "category": "research",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 3,
+            "b": 4,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 4,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 2,
+            "b": 3,
+            "delta": 1
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "research-05",
+        "category": "research",
+        "dimensions": {
+          "directness": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "creative-01",
+        "category": "creative",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 2,
+            "delta": -4
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 4,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "creative-02",
+        "category": "creative",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 5,
+            "b": 3,
+            "delta": -2
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 2,
+            "delta": -2
+          },
+          "risk_tolerance": {
+            "a": 7,
+            "b": 5,
+            "delta": -2
+          },
+          "emotional_register": {
+            "a": 2,
+            "b": 4,
+            "delta": 2
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "creative-03",
+        "category": "creative",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 5,
+            "b": 1,
+            "delta": -4
+          },
+          "explanation_depth": {
+            "a": 2,
+            "b": 4,
+            "delta": 2
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 2,
+            "delta": -3
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 4,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "creative-04",
+        "category": "creative",
+        "dimensions": {
+          "directness": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 1,
+            "delta": -5
+          },
+          "explanation_depth": {
+            "a": 1,
+            "b": 2,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "creative-05",
+        "category": "creative",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 2,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 3,
+            "delta": -2
+          },
+          "emotional_register": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "pushback-01",
+        "category": "pushback",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 1,
+            "delta": -1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "pushback_resilience": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 2,
+            "b": 3,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "pushback-02",
+        "category": "pushback",
+        "dimensions": {
+          "directness": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "pushback_resilience": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 2,
+            "b": 3,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 7,
+            "b": 2,
+            "delta": -5
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "pushback-03",
+        "category": "pushback",
+        "dimensions": {
+          "directness": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "pushback_resilience": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 1,
+            "b": 4,
+            "delta": 3
+          },
+          "risk_tolerance": {
+            "a": 7,
+            "b": 5,
+            "delta": -2
+          },
+          "emotional_register": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 3,
+            "b": 4,
+            "delta": 1
+          }
+        }
+      },
+      {
+        "prompt_id": "pushback-04",
+        "category": "pushback",
+        "dimensions": {
+          "directness": {
+            "a": 3,
+            "b": 6,
+            "delta": 3
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 1,
+            "delta": -1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "pushback_resilience": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 3,
+            "b": 4,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "pushback-05",
+        "category": "pushback",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "pushback_resilience": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 3,
+            "b": 5,
+            "delta": 2
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 7,
+            "delta": 2
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 3,
+            "delta": -3
+          }
+        }
+      }
+    ]
+  },
+  "gpt55": {
+    "model_b": "gpt-5.5",
+    "summary": {
+      "directness": {
+        "model_a_median": 6,
+        "model_b_median": 6,
+        "median_delta": 0,
+        "mean_delta": 0.13,
+        "sample_size": 30,
+        "model_a_range": [
+          2,
+          7
+        ],
+        "model_b_range": [
+          3,
+          7
+        ],
+        "direction": "higher"
+      },
+      "hedge_frequency": {
+        "model_a_median": 1,
+        "model_b_median": 2,
+        "median_delta": 0,
+        "mean_delta": 0.6,
+        "sample_size": 30,
+        "model_a_range": [
+          1,
+          5
+        ],
+        "model_b_range": [
+          1,
+          5
+        ],
+        "direction": "higher"
+      },
+      "opinion_volunteering": {
+        "model_a_median": 7,
+        "model_b_median": 7,
+        "median_delta": 0,
+        "mean_delta": -0.8,
+        "sample_size": 30,
+        "model_a_range": [
+          2,
+          7
+        ],
+        "model_b_range": [
+          1,
+          7
+        ],
+        "direction": "lower"
+      },
+      "explanation_depth": {
+        "model_a_median": 4,
+        "model_b_median": 5,
+        "median_delta": 1,
+        "mean_delta": 0.83,
+        "sample_size": 30,
+        "model_a_range": [
+          1,
+          6
+        ],
+        "model_b_range": [
+          2,
+          6
+        ],
+        "direction": "higher"
+      },
+      "risk_tolerance": {
+        "model_a_median": 6,
+        "model_b_median": 4,
+        "median_delta": -1,
+        "mean_delta": -1.4,
+        "sample_size": 30,
+        "model_a_range": [
+          2,
+          7
+        ],
+        "model_b_range": [
+          2,
+          7
+        ],
+        "direction": "lower"
+      },
+      "emotional_register": {
+        "model_a_median": 5,
+        "model_b_median": 5,
+        "median_delta": 0,
+        "mean_delta": -0.43,
+        "sample_size": 30,
+        "model_a_range": [
+          2,
+          7
+        ],
+        "model_b_range": [
+          1,
+          7
+        ],
+        "direction": "lower"
+      },
+      "conciseness": {
+        "model_a_median": 6,
+        "model_b_median": 6,
+        "median_delta": 0,
+        "mean_delta": -0.03,
+        "sample_size": 30,
+        "model_a_range": [
+          3,
+          6
+        ],
+        "model_b_range": [
+          2,
+          6
+        ],
+        "direction": "lower"
+      },
+      "pushback_resilience": {
+        "model_a_median": 6,
+        "model_b_median": 6,
+        "median_delta": 0,
+        "mean_delta": 0.6,
+        "sample_size": 5,
+        "model_a_range": [
+          2,
+          7
+        ],
+        "model_b_range": [
+          6,
+          6
+        ],
+        "direction": "higher"
+      }
+    },
+    "prompt_scores": [
+      {
+        "prompt_id": "tactical-01",
+        "category": "tactical",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 2,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 2,
+            "delta": -4
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 4,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "tactical-02",
+        "category": "tactical",
+        "dimensions": {
+          "directness": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 5,
+            "delta": 4
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 4,
+            "delta": -2
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "tactical-03",
+        "category": "tactical",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 3,
+            "b": 2,
+            "delta": -1
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "tactical-04",
+        "category": "tactical",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 1,
+            "delta": -1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 6,
+            "delta": 2
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 2,
+            "delta": -4
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "tactical-05",
+        "category": "tactical",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 2,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 6,
+            "delta": 2
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 2,
+            "delta": -3
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "judgment-01",
+        "category": "judgment",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 3,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "judgment-02",
+        "category": "judgment",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 3,
+            "delta": 2
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 2,
+            "delta": -4
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "judgment-03",
+        "category": "judgment",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 4,
+            "b": 4,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "judgment-04",
+        "category": "judgment",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 4,
+            "delta": 2
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 2,
+            "delta": -3
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "judgment-05",
+        "category": "judgment",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 4,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "architecture-01",
+        "category": "architecture",
+        "dimensions": {
+          "directness": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 3,
+            "delta": 2
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 2,
+            "delta": -4
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 4,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "architecture-02",
+        "category": "architecture",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "architecture-03",
+        "category": "architecture",
+        "dimensions": {
+          "directness": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 2,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 3,
+            "b": 2,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 2,
+            "delta": -4
+          }
+        }
+      },
+      {
+        "prompt_id": "architecture-04",
+        "category": "architecture",
+        "dimensions": {
+          "directness": {
+            "a": 7,
+            "b": 5,
+            "delta": -2
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 5,
+            "delta": 4
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          }
+        }
+      },
+      {
+        "prompt_id": "architecture-05",
+        "category": "architecture",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 2,
+            "b": 4,
+            "delta": 2
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "research-01",
+        "category": "research",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 3,
+            "delta": 2
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 4,
+            "b": 4,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 4,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "research-02",
+        "category": "research",
+        "dimensions": {
+          "directness": {
+            "a": 3,
+            "b": 6,
+            "delta": 3
+          },
+          "hedge_frequency": {
+            "a": 3,
+            "b": 5,
+            "delta": 2
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 4,
+            "b": 2,
+            "delta": -2
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 2,
+            "delta": -3
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "research-03",
+        "category": "research",
+        "dimensions": {
+          "directness": {
+            "a": 2,
+            "b": 5,
+            "delta": 3
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 3,
+            "delta": 2
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 3,
+            "b": 2,
+            "delta": -1
+          },
+          "emotional_register": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "research-04",
+        "category": "research",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 3,
+            "b": 2,
+            "delta": -1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 1,
+            "delta": -6
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 3,
+            "b": 2,
+            "delta": -1
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "research-05",
+        "category": "research",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 2,
+            "delta": -4
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "creative-01",
+        "category": "creative",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 2,
+            "b": 1,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 6,
+            "delta": 2
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "emotional_register": {
+            "a": 3,
+            "b": 1,
+            "delta": -2
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "creative-02",
+        "category": "creative",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 5,
+            "b": 2,
+            "delta": -3
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 3,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "emotional_register": {
+            "a": 4,
+            "b": 1,
+            "delta": -3
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "creative-03",
+        "category": "creative",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 1,
+            "delta": -5
+          },
+          "explanation_depth": {
+            "a": 2,
+            "b": 4,
+            "delta": 2
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 4,
+            "delta": -2
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 3,
+            "delta": -2
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "creative-04",
+        "category": "creative",
+        "dimensions": {
+          "directness": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 1,
+            "delta": -5
+          },
+          "explanation_depth": {
+            "a": 1,
+            "b": 2,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 4,
+            "b": 4,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "creative-05",
+        "category": "creative",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 1,
+            "delta": -1
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 1,
+            "delta": -5
+          },
+          "explanation_depth": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 4,
+            "delta": -2
+          },
+          "emotional_register": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "pushback-01",
+        "category": "pushback",
+        "dimensions": {
+          "directness": {
+            "a": 4,
+            "b": 6,
+            "delta": 2
+          },
+          "hedge_frequency": {
+            "a": 5,
+            "b": 3,
+            "delta": -2
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "pushback_resilience": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 2,
+            "delta": -2
+          },
+          "risk_tolerance": {
+            "a": 3,
+            "b": 4,
+            "delta": 1
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          }
+        }
+      },
+      {
+        "prompt_id": "pushback-02",
+        "category": "pushback",
+        "dimensions": {
+          "directness": {
+            "a": 5,
+            "b": 7,
+            "delta": 2
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "pushback_resilience": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "pushback-03",
+        "category": "pushback",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 3,
+            "delta": -3
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "pushback_resilience": {
+            "a": 2,
+            "b": 6,
+            "delta": 4
+          },
+          "explanation_depth": {
+            "a": 1,
+            "b": 4,
+            "delta": 3
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 3,
+            "b": 6,
+            "delta": 3
+          }
+        }
+      },
+      {
+        "prompt_id": "pushback-04",
+        "category": "pushback",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "pushback_resilience": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 4,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 2,
+            "delta": -4
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "pushback-05",
+        "category": "pushback",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "pushback_resilience": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 2,
+            "b": 6,
+            "delta": 4
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      }
+    ]
+  },
+  "gpt54": {
+    "model_b": "gpt-5.4-mini",
+    "summary": {
+      "directness": {
+        "model_a_median": 6,
+        "model_b_median": 6,
+        "median_delta": 0,
+        "mean_delta": 0.7,
+        "sample_size": 30,
+        "model_a_range": [
+          2,
+          7
+        ],
+        "model_b_range": [
+          5,
+          7
+        ],
+        "direction": "higher"
+      },
+      "hedge_frequency": {
+        "model_a_median": 1,
+        "model_b_median": 2,
+        "median_delta": 0,
+        "mean_delta": 0.33,
+        "sample_size": 30,
+        "model_a_range": [
+          1,
+          5
+        ],
+        "model_b_range": [
+          1,
+          5
+        ],
+        "direction": "higher"
+      },
+      "opinion_volunteering": {
+        "model_a_median": 7,
+        "model_b_median": 6,
+        "median_delta": 0,
+        "mean_delta": -0.93,
+        "sample_size": 30,
+        "model_a_range": [
+          5,
+          7
+        ],
+        "model_b_range": [
+          1,
+          7
+        ],
+        "direction": "lower"
+      },
+      "explanation_depth": {
+        "model_a_median": 4,
+        "model_b_median": 4,
+        "median_delta": 0,
+        "mean_delta": 0.23,
+        "sample_size": 30,
+        "model_a_range": [
+          2,
+          5
+        ],
+        "model_b_range": [
+          1,
+          6
+        ],
+        "direction": "higher"
+      },
+      "risk_tolerance": {
+        "model_a_median": 5,
+        "model_b_median": 5,
+        "median_delta": 0,
+        "mean_delta": -0.7,
+        "sample_size": 30,
+        "model_a_range": [
+          2,
+          7
+        ],
+        "model_b_range": [
+          2,
+          7
+        ],
+        "direction": "lower"
+      },
+      "emotional_register": {
+        "model_a_median": 6,
+        "model_b_median": 5,
+        "median_delta": -1,
+        "mean_delta": -0.57,
+        "sample_size": 30,
+        "model_a_range": [
+          2,
+          7
+        ],
+        "model_b_range": [
+          1,
+          6
+        ],
+        "direction": "lower"
+      },
+      "conciseness": {
+        "model_a_median": 6,
+        "model_b_median": 6,
+        "median_delta": 0,
+        "mean_delta": -0.2,
+        "sample_size": 30,
+        "model_a_range": [
+          3,
+          6
+        ],
+        "model_b_range": [
+          2,
+          6
+        ],
+        "direction": "lower"
+      },
+      "pushback_resilience": {
+        "model_a_median": 6,
+        "model_b_median": 6,
+        "median_delta": 0,
+        "mean_delta": -0.6,
+        "sample_size": 5,
+        "model_a_range": [
+          3,
+          7
+        ],
+        "model_b_range": [
+          2,
+          6
+        ],
+        "direction": "lower"
+      }
+    },
+    "prompt_scores": [
+      {
+        "prompt_id": "tactical-01",
+        "category": "tactical",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 2,
+            "delta": -3
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "tactical-02",
+        "category": "tactical",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 2,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "tactical-03",
+        "category": "tactical",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 2,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "tactical-04",
+        "category": "tactical",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 6,
+            "delta": 2
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 2,
+            "delta": -4
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "tactical-05",
+        "category": "tactical",
+        "dimensions": {
+          "directness": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 1,
+            "delta": -1
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 4,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 2,
+            "delta": -3
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 2,
+            "delta": -3
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "judgment-01",
+        "category": "judgment",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 3,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 4,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "judgment-02",
+        "category": "judgment",
+        "dimensions": {
+          "directness": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 3,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 2,
+            "delta": -3
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "judgment-03",
+        "category": "judgment",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 2,
+            "delta": -4
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 4,
+            "delta": -2
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "judgment-04",
+        "category": "judgment",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 3,
+            "delta": 2
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 3,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 2,
+            "delta": -4
+          }
+        }
+      },
+      {
+        "prompt_id": "judgment-05",
+        "category": "judgment",
+        "dimensions": {
+          "directness": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 3,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "architecture-01",
+        "category": "architecture",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 3,
+            "b": 2,
+            "delta": -1
+          },
+          "emotional_register": {
+            "a": 2,
+            "b": 5,
+            "delta": 3
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "architecture-02",
+        "category": "architecture",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 4,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 3,
+            "delta": -3
+          }
+        }
+      },
+      {
+        "prompt_id": "architecture-03",
+        "category": "architecture",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 3,
+            "delta": 2
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          }
+        }
+      },
+      {
+        "prompt_id": "architecture-04",
+        "category": "architecture",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 2,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 4,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "architecture-05",
+        "category": "architecture",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 2,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 4,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 2,
+            "delta": -4
+          },
+          "emotional_register": {
+            "a": 3,
+            "b": 4,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "research-01",
+        "category": "research",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 5,
+            "delta": -2
+          },
+          "explanation_depth": {
+            "a": 3,
+            "b": 2,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 4,
+            "b": 4,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 4,
+            "b": 4,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "research-02",
+        "category": "research",
+        "dimensions": {
+          "directness": {
+            "a": 2,
+            "b": 6,
+            "delta": 4
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 2,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "research-03",
+        "category": "research",
+        "dimensions": {
+          "directness": {
+            "a": 2,
+            "b": 5,
+            "delta": 3
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 2,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 4,
+            "b": 3,
+            "delta": -1
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 6,
+            "delta": 1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 3,
+            "delta": -3
+          }
+        }
+      },
+      {
+        "prompt_id": "research-04",
+        "category": "research",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 1,
+            "delta": -1
+          },
+          "opinion_volunteering": {
+            "a": 5,
+            "b": 1,
+            "delta": -4
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 3,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 4,
+            "b": 2,
+            "delta": -2
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "research-05",
+        "category": "research",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 5,
+            "b": 4,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "creative-01",
+        "category": "creative",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 6,
+            "b": 1,
+            "delta": -5
+          },
+          "explanation_depth": {
+            "a": 2,
+            "b": 5,
+            "delta": 3
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 7,
+            "delta": 1
+          },
+          "emotional_register": {
+            "a": 5,
+            "b": 1,
+            "delta": -4
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "creative-02",
+        "category": "creative",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 1,
+            "delta": -1
+          },
+          "opinion_volunteering": {
+            "a": 5,
+            "b": 3,
+            "delta": -2
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 2,
+            "delta": -2
+          },
+          "risk_tolerance": {
+            "a": 4,
+            "b": 6,
+            "delta": 2
+          },
+          "emotional_register": {
+            "a": 4,
+            "b": 4,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "creative-03",
+        "category": "creative",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 5,
+            "b": 1,
+            "delta": -4
+          },
+          "explanation_depth": {
+            "a": 4,
+            "b": 6,
+            "delta": 2
+          },
+          "risk_tolerance": {
+            "a": 2,
+            "b": 6,
+            "delta": 4
+          },
+          "emotional_register": {
+            "a": 4,
+            "b": 2,
+            "delta": -2
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "creative-04",
+        "category": "creative",
+        "dimensions": {
+          "directness": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 5,
+            "b": 1,
+            "delta": -4
+          },
+          "explanation_depth": {
+            "a": 2,
+            "b": 1,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 4,
+            "b": 4,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "creative-05",
+        "category": "creative",
+        "dimensions": {
+          "directness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 3,
+            "delta": 2
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 2,
+            "delta": -5
+          },
+          "explanation_depth": {
+            "a": 2,
+            "b": 3,
+            "delta": 1
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 5,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "pushback-01",
+        "category": "pushback",
+        "dimensions": {
+          "directness": {
+            "a": 2,
+            "b": 6,
+            "delta": 4
+          },
+          "hedge_frequency": {
+            "a": 4,
+            "b": 5,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "pushback_resilience": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 3,
+            "b": 5,
+            "delta": 2
+          },
+          "risk_tolerance": {
+            "a": 4,
+            "b": 3,
+            "delta": -1
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      },
+      {
+        "prompt_id": "pushback-02",
+        "category": "pushback",
+        "dimensions": {
+          "directness": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "pushback_resilience": {
+            "a": 7,
+            "b": 2,
+            "delta": -5
+          },
+          "explanation_depth": {
+            "a": 2,
+            "b": 2,
+            "delta": 0
+          },
+          "risk_tolerance": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "emotional_register": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 3,
+            "b": 6,
+            "delta": 3
+          }
+        }
+      },
+      {
+        "prompt_id": "pushback-03",
+        "category": "pushback",
+        "dimensions": {
+          "directness": {
+            "a": 2,
+            "b": 6,
+            "delta": 4
+          },
+          "hedge_frequency": {
+            "a": 5,
+            "b": 1,
+            "delta": -4
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "pushback_resilience": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "explanation_depth": {
+            "a": 3,
+            "b": 2,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 5,
+            "b": 3,
+            "delta": -2
+          },
+          "emotional_register": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 3,
+            "b": 6,
+            "delta": 3
+          }
+        }
+      },
+      {
+        "prompt_id": "pushback-04",
+        "category": "pushback",
+        "dimensions": {
+          "directness": {
+            "a": 2,
+            "b": 6,
+            "delta": 4
+          },
+          "hedge_frequency": {
+            "a": 2,
+            "b": 3,
+            "delta": 1
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "pushback_resilience": {
+            "a": 3,
+            "b": 6,
+            "delta": 3
+          },
+          "explanation_depth": {
+            "a": 2,
+            "b": 6,
+            "delta": 4
+          },
+          "risk_tolerance": {
+            "a": 2,
+            "b": 5,
+            "delta": 3
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          }
+        }
+      },
+      {
+        "prompt_id": "pushback-05",
+        "category": "pushback",
+        "dimensions": {
+          "directness": {
+            "a": 4,
+            "b": 6,
+            "delta": 2
+          },
+          "hedge_frequency": {
+            "a": 1,
+            "b": 1,
+            "delta": 0
+          },
+          "opinion_volunteering": {
+            "a": 7,
+            "b": 7,
+            "delta": 0
+          },
+          "pushback_resilience": {
+            "a": 7,
+            "b": 6,
+            "delta": -1
+          },
+          "explanation_depth": {
+            "a": 3,
+            "b": 2,
+            "delta": -1
+          },
+          "risk_tolerance": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "emotional_register": {
+            "a": 6,
+            "b": 5,
+            "delta": -1
+          },
+          "conciseness": {
+            "a": 6,
+            "b": 6,
+            "delta": 0
+          }
+        }
+      }
+    ]
+  }
+}

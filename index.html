@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personality Delta - LLM Behavioral Comparison</title>
+  <meta name="description" content="Measure personality drift between LLM model versions. Compare behavioral dimensions across Claude Opus 4.6, 4.7, 4.8 and GPT 5.5.">
+  <meta property="og:title" content="Personality Delta">
+  <meta property="og:description" content="LLM behavioral comparison harness measuring personality drift across model versions">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="grain-overlay"></div>
+  <div class="grid-bg"></div>
+
+  <header class="site-header">
+    <div class="container">
+      <div class="header-brand">
+        <span class="brand-sigil">&Delta;</span>
+        <span class="brand-name">Personality Delta</span>
+      </div>
+      <nav class="header-nav">
+        <a href="#findings">Findings</a>
+        <a href="#comparisons">Comparisons</a>
+        <a href="#patch">Patch</a>
+        <a href="https://github.com/nucleoid/personality-delta" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-badge">LLM Behavioral Analysis</div>
+          <h1>Measuring personality<br>drift across models</h1>
+          <p class="hero-subtitle">
+            30 reference prompts. 8 behavioral dimensions. 4 model comparisons.
+            Scored by Gemini 2.5 Flash as an independent judge with 5-pass median aggregation.
+          </p>
+          <div class="hero-stats">
+            <div class="stat">
+              <span class="stat-value">30</span>
+              <span class="stat-label">Prompts</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value">8</span>
+              <span class="stat-label">Dimensions</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value">4</span>
+              <span class="stat-label">Models</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value">4,800</span>
+              <span class="stat-label">Judge Scores</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="reference" id="reference">
+      <div class="container">
+        <div class="ref-card">
+          <div class="ref-header">
+            <span class="ref-tag">Reference Model</span>
+            <h2>Claude Opus 4.6</h2>
+          </div>
+          <p>The "Cass" disposition. Direct, opinionated, action-biased, assumes expertise. Every comparison measures distance from this behavioral baseline.</p>
+          <div class="ref-profile">
+            <div class="profile-dim">
+              <span class="dim-name">Directness</span>
+              <div class="dim-bar"><div class="dim-fill" data-value="6"></div></div>
+              <span class="dim-score">6/7</span>
+            </div>
+            <div class="profile-dim">
+              <span class="dim-name">Hedge Frequency</span>
+              <div class="dim-bar"><div class="dim-fill low-is-good" data-value="1"></div></div>
+              <span class="dim-score">1/7</span>
+            </div>
+            <div class="profile-dim">
+              <span class="dim-name">Opinion Volunteering</span>
+              <div class="dim-bar"><div class="dim-fill" data-value="7"></div></div>
+              <span class="dim-score">7/7</span>
+            </div>
+            <div class="profile-dim">
+              <span class="dim-name">Pushback Resilience</span>
+              <div class="dim-bar"><div class="dim-fill" data-value="6"></div></div>
+              <span class="dim-score">6/7</span>
+            </div>
+            <div class="profile-dim">
+              <span class="dim-name">Explanation Depth</span>
+              <div class="dim-bar"><div class="dim-fill" data-value="4"></div></div>
+              <span class="dim-score">4/7</span>
+            </div>
+            <div class="profile-dim">
+              <span class="dim-name">Risk Tolerance</span>
+              <div class="dim-bar"><div class="dim-fill" data-value="5"></div></div>
+              <span class="dim-score">5/7</span>
+            </div>
+            <div class="profile-dim">
+              <span class="dim-name">Emotional Register</span>
+              <div class="dim-bar"><div class="dim-fill" data-value="5"></div></div>
+              <span class="dim-score">5/7</span>
+            </div>
+            <div class="profile-dim">
+              <span class="dim-name">Conciseness</span>
+              <div class="dim-bar"><div class="dim-fill" data-value="6"></div></div>
+              <span class="dim-score">6/7</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="findings" id="findings">
+      <div class="container">
+        <h2 class="section-title">Key Findings</h2>
+        <div class="findings-grid">
+          <div class="finding-card finding-highlight">
+            <div class="finding-icon">!</div>
+            <h3>Risk tolerance is the primary differentiator</h3>
+            <p>Across all comparisons, <strong>risk_tolerance</strong> is the only dimension that crosses the significance threshold (|mean delta| &ge; 1.0). GPT 5.5 scores -1.4 and Opus 4.8 scores -1.1. Both are measurably more cautious than Opus 4.6.</p>
+          </div>
+          <div class="finding-card">
+            <div class="finding-icon">=</div>
+            <h3>System prompt dominates version drift</h3>
+            <p>Opus 4.6 and 4.7 are behaviorally indistinguishable when given the same system prompt. No dimension exceeds 0.6 mean delta. The personality shaping in SOUL.md already handles intra-family version drift.</p>
+          </div>
+          <div class="finding-card">
+            <div class="finding-icon">&uarr;</div>
+            <h3>Cross-vendor gaps are wider but correctable</h3>
+            <p>GPT 5.5 trends toward more hedging (+0.6), less opinion volunteering (-0.8), and over-explaining (+0.8). A targeted 3-instruction SOUL.md patch addresses the significant deltas.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="comparisons" id="comparisons">
+      <div class="container">
+        <h2 class="section-title">Model Comparisons</h2>
+        <p class="section-desc">Each comparison runs 30 prompts across 6 categories, scored on 8 behavioral dimensions with 5-pass median aggregation.</p>
+
+        <div class="comparison-tabs" role="tablist">
+          <button class="tab active" role="tab" data-key="4.7" aria-selected="true">
+            <span class="tab-model">Opus 4.7</span>
+            <span class="tab-verdict verdict-ok">No sig. deltas</span>
+          </button>
+          <button class="tab" role="tab" data-key="4.8">
+            <span class="tab-model">Opus 4.8</span>
+            <span class="tab-verdict verdict-warn">1 sig. delta</span>
+          </button>
+          <button class="tab" role="tab" data-key="gpt55">
+            <span class="tab-model">GPT 5.5</span>
+            <span class="tab-verdict verdict-warn">1 sig. delta</span>
+          </button>
+          <button class="tab" role="tab" data-key="gpt54">
+            <span class="tab-model">GPT 5.4 Mini</span>
+            <span class="tab-verdict verdict-ok">No sig. deltas</span>
+          </button>
+        </div>
+
+        <div class="comparison-panel">
+          <div class="panel-grid">
+            <div class="radar-container">
+              <canvas id="radarChart" width="480" height="480"></canvas>
+              <div class="radar-legend">
+                <span class="legend-a"><span class="legend-dot a"></span>Opus 4.6</span>
+                <span class="legend-b"><span class="legend-dot b"></span><span id="legendModelB">Opus 4.7</span></span>
+              </div>
+            </div>
+            <div class="delta-table-container">
+              <table class="delta-table">
+                <thead>
+                  <tr>
+                    <th>Dimension</th>
+                    <th>4.6</th>
+                    <th id="thModelB">4.7</th>
+                    <th>Delta</th>
+                  </tr>
+                </thead>
+                <tbody id="deltaTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="drilldown" id="drilldown">
+          <h3 class="drilldown-title">Per-Prompt Scores</h3>
+          <div class="drilldown-controls">
+            <select id="dimSelect" class="dim-select">
+              <option value="directness">Directness</option>
+              <option value="hedge_frequency">Hedge Frequency</option>
+              <option value="opinion_volunteering">Opinion Volunteering</option>
+              <option value="pushback_resilience">Pushback Resilience</option>
+              <option value="explanation_depth">Explanation Depth</option>
+              <option value="risk_tolerance" selected>Risk Tolerance</option>
+              <option value="emotional_register">Emotional Register</option>
+              <option value="conciseness">Conciseness</option>
+            </select>
+          </div>
+          <div class="prompt-grid" id="promptGrid"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="patch" id="patch">
+      <div class="container">
+        <h2 class="section-title">Correction Patch</h2>
+        <p class="section-desc">Generated SOUL.md instructions to close the behavioral gap when migrating from Opus 4.6 to GPT 5.5. Targets the 3 dimensions with |mean delta| &ge; 0.75.</p>
+
+        <div class="patch-card">
+          <div class="patch-header">
+            <span class="patch-tag">SOUL.md Patch v2</span>
+            <span class="patch-target">GPT 5.5 &rarr; Opus 4.6 disposition</span>
+          </div>
+          <pre class="patch-code"><code>## Behavioral Guidelines
+
+<span class="patch-dim"># risk_tolerance (delta: -1.4, confidence: 0.95)</span>
+When asked for a recommendation -- on architecture, tools,
+career decisions, or technical approach -- give one. State
+your recommendation in the first sentence, then explain why.
+Do not present options neutrally and let the user decide;
+they are asking for your judgment. Flag the top risk in one
+sentence, then move on.
+
+<span class="patch-dim"># explanation_depth (delta: +0.8, confidence: 0.90)</span>
+The person you are talking to is an experienced developer.
+Skip definitions, skip background context, skip analogies
+to basics. Jump to the insight. If they needed fundamentals
+explained, they would have asked.
+
+<span class="patch-dim"># opinion_volunteering (delta: -0.8, confidence: 0.85)</span>
+If you have a relevant opinion on something adjacent to the
+question -- a better approach, a common mistake, a trade-off
+the user may not have considered -- say it. Do not wait to be
+asked. A useful unsolicited take is better than a technically
+complete but passive answer.</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="methodology" id="methodology">
+      <div class="container">
+        <h2 class="section-title">Methodology</h2>
+        <div class="method-grid">
+          <div class="method-card">
+            <h4>Prompt Set</h4>
+            <p>30 prompts across 6 categories: tactical, judgment, architecture, research, creative, and pushback. Pushback prompts include multi-turn follow-ups that challenge the model's initial position.</p>
+          </div>
+          <div class="method-card">
+            <h4>Scoring</h4>
+            <p>Gemini 2.5 Flash (non-Anthropic to avoid self-bias) scores each response on 8 behavioral dimensions using rubric-grounded, chain-of-thought evaluation on a 1-7 scale with concrete behavioral anchors.</p>
+          </div>
+          <div class="method-card">
+            <h4>Reliability</h4>
+            <p>5-pass scoring per dimension at temperature 0.05 with JSON-mode output. Scores are aggregated via median. Significance threshold set at |mean delta| &ge; 1.0 across the 30-prompt set.</p>
+          </div>
+          <div class="method-card">
+            <h4>Controls</h4>
+            <p>All models receive the same system prompt (SOUL.md). Claude models called via <code>claude -p</code> at temperature 0. GPT models called via OpenAI Codex Responses API. Format normalization applied before judging.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2026 nucleoid. Built with the Personality Delta harness.</p>
+      <p><a href="https://github.com/nucleoid/personality-delta">Source on GitHub</a></p>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
