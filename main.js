@@ -270,29 +270,4 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-function initThemeToggle() {
-  const btn = document.getElementById('themeToggle');
-  const saved = localStorage.getItem('pd-theme');
-  if (saved === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    btn.innerHTML = '&#9788;';
-  }
-  btn.addEventListener('click', () => {
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    if (isDark) {
-      document.documentElement.removeAttribute('data-theme');
-      btn.innerHTML = '&#9790;';
-      localStorage.setItem('pd-theme', 'light');
-    } else {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      btn.innerHTML = '&#9788;';
-      localStorage.setItem('pd-theme', 'dark');
-    }
-    render();
-  });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  initThemeToggle();
-  init();
-});
+document.addEventListener('DOMContentLoaded', init);
