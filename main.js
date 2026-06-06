@@ -111,7 +111,8 @@ function renderRadar(summary) {
       else ctx.lineTo(x, y);
     }
     ctx.closePath();
-    ctx.strokeStyle = ring === 4 ? 'rgba(136, 153, 180, 0.2)' : 'rgba(30, 45, 74, 0.5)';
+    const cs = getComputedStyle(document.documentElement);
+    ctx.strokeStyle = ring === 4 ? cs.getPropertyValue('--radar-grid-mid').trim() : cs.getPropertyValue('--radar-grid').trim();
     ctx.lineWidth = ring === 4 ? 1.5 : 0.5;
     ctx.stroke();
   }
@@ -128,23 +129,27 @@ function renderRadar(summary) {
     ctx.beginPath();
     ctx.moveTo(cx, cy);
     ctx.lineTo(x1, y1);
-    ctx.strokeStyle = 'rgba(30, 45, 74, 0.6)';
+    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--radar-axis').trim();
     ctx.lineWidth = 0.5;
     ctx.stroke();
 
     const lx = cx + (maxR + 28) * Math.cos(angle);
     const ly = cy + (maxR + 28) * Math.sin(angle);
-    ctx.fillStyle = '#8899b4';
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--radar-label').trim();
     ctx.fillText(DIM_LABELS[DIMS[i]], lx, ly);
   }
 
+  const cs = getComputedStyle(document.documentElement);
+  const colorA = cs.getPropertyValue('--accent-cyan').trim();
+  const colorB = cs.getPropertyValue('--accent-pink').trim();
+
   // Model A polygon
   const aScores = DIMS.map(d => summary[d] ? summary[d].model_a_median : 4);
-  drawPolygon(ctx, cx, cy, maxR, aScores, startAngle, step, 'rgba(0, 212, 255, 0.15)', 'rgba(0, 212, 255, 0.8)', 2);
+  drawPolygon(ctx, cx, cy, maxR, aScores, startAngle, step, hexToRgba(colorA, 0.15), hexToRgba(colorA, 0.8), 2);
 
   // Model B polygon
   const bScores = DIMS.map(d => summary[d] ? summary[d].model_b_median : 4);
-  drawPolygon(ctx, cx, cy, maxR, bScores, startAngle, step, 'rgba(244, 114, 182, 0.12)', 'rgba(244, 114, 182, 0.8)', 2);
+  drawPolygon(ctx, cx, cy, maxR, bScores, startAngle, step, hexToRgba(colorB, 0.12), hexToRgba(colorB, 0.8), 2);
 
   // Score dots
   for (let i = 0; i < n; i++) {
@@ -152,8 +157,8 @@ function renderRadar(summary) {
     const rA = (aScores[i] / 7) * maxR;
     const rB = (bScores[i] / 7) * maxR;
 
-    drawDot(ctx, cx + rA * Math.cos(angle), cy + rA * Math.sin(angle), 4, '#00d4ff');
-    drawDot(ctx, cx + rB * Math.cos(angle), cy + rB * Math.sin(angle), 4, '#f472b6');
+    drawDot(ctx, cx + rA * Math.cos(angle), cy + rA * Math.sin(angle), 4, colorA);
+    drawDot(ctx, cx + rB * Math.cos(angle), cy + rB * Math.sin(angle), 4, colorB);
   }
 }
 
@@ -256,4 +261,38 @@ function renderDrilldown() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', init);
+function hexToRgba(hex, alpha) {
+  hex = hex.replace('#', '');
+  if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function initThemeToggle() {
+  const btn = document.getElementById('themeToggle');
+  const saved = localStorage.getItem('pd-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    btn.innerHTML = '&#9788;';
+  }
+  btn.addEventListener('click', () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+      document.documentElement.removeAttribute('data-theme');
+      btn.innerHTML = '&#9790;';
+      localStorage.setItem('pd-theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      btn.innerHTML = '&#9788;';
+      localStorage.setItem('pd-theme', 'dark');
+    }
+    render();
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initThemeToggle();
+  init();
+});
