@@ -2,7 +2,9 @@
 
 Behavioral comparison harness that measures personality drift between LLM model versions and generates corrective system prompt instructions to preserve a target disposition.
 
-**Live results:** [personality-delta.pragmaticcoder.com](https://personality-delta.pragmaticcoder.com)
+**Live dashboard:** [personality-delta.pragmaticcoder.com](https://personality-delta.pragmaticcoder.com)
+**Research writeup:** [personality-delta.pragmaticcoder.com/research.html](https://personality-delta.pragmaticcoder.com/research.html)
+**Data schema:** [data/SCHEMA.md](data/SCHEMA.md)
 
 ## What it does
 
