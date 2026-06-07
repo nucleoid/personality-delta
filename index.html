@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Personality Delta - LLM Behavioral Comparison</title>
-  <meta name="description" content="Measure personality drift between LLM model versions. Compare behavioral dimensions across Claude Opus 4.6, 4.7, 4.8 and GPT 5.5.">
+  <meta name="description" content="Measure personality drift between LLM model versions. Compare behavioral dimensions across Claude, GPT, and Gemini models with interactive radar charts and model-fit rankings.">
   <meta property="og:title" content="Personality Delta">
-  <meta property="og:description" content="LLM behavioral comparison harness measuring personality drift across model versions">
+  <meta property="og:description" content="Which LLM fits which work? Behavioral comparison across 7 frontier models on 8 personality dimensions.">
   <meta property="og:type" content="website">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -190,8 +190,8 @@
         <div class="findings-grid">
           <div class="finding-card finding-highlight">
             <div class="finding-icon">!</div>
-            <h3>Risk tolerance is the primary differentiator</h3>
-            <p>Across all comparisons, <strong>risk_tolerance</strong> is the only dimension that crosses the significance threshold (|mean delta| &ge; 1.0). GPT 5.5 scores -1.4 and Opus 4.8 scores -1.1. Both are measurably more cautious than Opus 4.6.</p>
+            <h3>Two axes differentiate frontier models</h3>
+            <p><strong>Risk tolerance</strong> (GPT 5.5: -1.4, Opus 4.8: -1.1) and <strong>directness</strong> (Gemini 2.5 Pro: -1.5, Gemini 2.5 Flash: -1.3) are the only dimensions that cross the significance threshold. These are independent axes -- a model can be cautious but direct, or action-biased but indirect.</p>
           </div>
           <div class="finding-card">
             <div class="finding-icon">=</div>
@@ -342,7 +342,7 @@ complete but passive answer.</code></pre>
           </div>
           <div class="method-card">
             <h4>Controls</h4>
-            <p>All models receive the same system prompt (SOUL.md). Claude models called via <code>claude -p</code> at temperature 0. GPT models called via OpenAI Codex Responses API. Format normalization applied before judging.</p>
+            <p>All models receive the same system prompt (SOUL.md). Claude models called via <code>claude -p</code> at temperature 0. GPT and Gemini models called via <code>openclaw infer</code>. Format normalization applied before judging.</p>
           </div>
         </div>
       </div>

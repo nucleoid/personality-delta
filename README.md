@@ -1,6 +1,6 @@
 # Personality Delta
 
-Behavioral comparison harness that measures personality drift between LLM model versions and generates corrective system prompt instructions to preserve a target disposition.
+Behavioral comparison harness that measures personality drift between LLM model versions and generates corrective system prompt instructions. Compares models across Claude, GPT, and Gemini families on 8 behavioral dimensions.
 
 **Live dashboard:** [personality-delta.pragmaticcoder.com](https://personality-delta.pragmaticcoder.com)
 **Research writeup:** [personality-delta.pragmaticcoder.com/research.html](https://personality-delta.pragmaticcoder.com/research.html)
@@ -22,10 +22,17 @@ Reference model: **Claude Opus 4.6**
 |---|---|---|
 | vs Opus 4.7 | None | Virtually identical under same system prompt |
 | vs Opus 4.8 | risk_tolerance (-1.1) | More cautious recommendations |
-| vs GPT 5.5 | risk_tolerance (-1.4) | Most cautious; also trends toward more hedging, less opinionated |
-| vs GPT 5.4 Mini | None | Trends toward generic assistant personality but below threshold |
+| vs GPT 5.5 | risk_tolerance (-1.4) | Most cautious model tested |
+| vs GPT 5.4 Mini | None | Trends toward generic assistant personality |
+| vs Gemini 2.5 Pro | directness (-1.5) | Most caveat-first model tested |
+| vs Gemini 2.5 Flash | directness (-1.3), risk_tolerance (-1.0) | Less direct and more cautious |
+| vs Gemini 3.1 Pro | None | Closest Gemini to Opus 4.6 |
 
-**Risk tolerance is the primary personality differentiator.** System prompts handle most intra-family version drift. Cross-vendor gaps are wider but correctable with targeted instructions.
+Two distinct personality axes emerged across all 7 comparisons:
+- **Risk tolerance**: GPT 5.5 and Opus 4.8 are significantly more cautious than Opus 4.6
+- **Directness**: Gemini 2.5 models lead with caveats where Opus 4.6 leads with answers
+
+System prompts handle most intra-family version drift. Cross-vendor gaps are wider but correctable with targeted instructions.
 
 ## Behavioral dimensions
 
@@ -40,14 +47,19 @@ Reference model: **Claude Opus 4.6**
 | Emotional register | Warm/conversational vs clinical/formal | 5/7 |
 | Conciseness | Information density per word | 6/7 |
 
+## Model fit by work category
+
+The dashboard ranks all analyzed models by behavioral fit for 6 work categories: software development, creative writing, scientific research, customer support, legal/compliance, and executive briefings. Each category has an ideal behavioral profile, and models are ranked by weighted distance from that ideal.
+
 ## Project structure
 
 ```
 personality-delta/
-  index.html, styles.css, main.js   # Results website
-  assets/data.json                   # Visualization data
+  index.html, styles.css, main.js   # Dashboard website
+  research.html                      # Research writeup
+  assets/data.json                   # Visualization data (all 7 comparisons)
   tools/                             # Python tooling
-    runner.py                        # Comparison runner (Claude CLI + OpenAI Codex)
+    runner.py                        # Comparison runner (Claude CLI + openclaw infer)
     analyzer.py                      # LLM-as-judge delta scorer (Gemini)
     generator.py                     # SOUL.md patch generation
     validate.py                      # Correction validation loop
@@ -59,6 +71,7 @@ personality-delta/
   data/
     baselines/                       # Raw model response pairs
     reports/                         # Delta reports and correction patches
+    SCHEMA.md                        # Data format documentation
   research/                          # Background research on LLM-as-judge methodology
 ```
 
@@ -68,7 +81,7 @@ personality-delta/
 
 - Python 3.11+
 - Claude Code CLI (`claude -p`) for Claude models
-- `openclaw infer` for OpenAI/Codex models
+- `openclaw infer` for OpenAI Codex and Google Gemini models
 - Gemini API key for the judge model
 
 ### Setup
@@ -91,6 +104,8 @@ SYSTEM_PROMPT_PATH=path/to/your/system-prompt.md
 ```bash
 python runner.py opus-4.6 opus-4.7
 ```
+
+Available models: `opus-4.6`, `opus-4.7`, `opus-4.8`, `sonnet-4.6`, `gpt-5.5`, `gpt-5.4-mini`, `gemini-2.5-pro`, `gemini-2.5-flash`, `gemini-3.1-pro`
 
 Responses are saved to `data/baselines/` with incremental checkpointing.
 
@@ -120,7 +135,7 @@ python validate.py data/reports/delta_opus-4.6_vs_gpt-5.5.json data/reports/patc
 - **Scoring:** Rubric-grounded, chain-of-thought evaluation on a 1-7 scale with concrete behavioral anchors
 - **Reliability:** 5-pass scoring at temperature 0.05, median aggregation, JSON-mode output
 - **Significance threshold:** |mean delta| >= 1.0 across the 30-prompt set
-- **Controls:** Same system prompt for all models, temperature 0 for response generation
+- **Controls:** Same system prompt for all models; Claude models via `claude -p` at temperature 0; GPT and Gemini models via `openclaw infer`
 
 See `research/` for detailed literature review on LLM-as-judge methodology and Claude version behavioral differences.
 

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Measuring Personality Drift Across LLM Model Versions - Personality Delta</title>
-  <meta name="description" content="We measured behavioral personality differences across 5 frontier LLM models using 30 standardized prompts and an independent judge. Here's what we found.">
+  <meta name="description" content="We measured behavioral personality differences across 8 frontier LLM models using 30 standardized prompts and an independent judge. Here's what we found.">
   <meta property="og:title" content="Measuring Personality Drift Across LLM Model Versions">
   <meta property="og:description" content="Risk tolerance is the primary behavioral differentiator across frontier models. System prompts handle most intra-family drift. Cross-vendor gaps are wider but correctable.">
   <meta property="og:type" content="article">
@@ -71,7 +71,7 @@
 
     <p>When you upgrade an LLM, you test whether it still passes your evals. You check latency, cost, and accuracy. But there's a dimension most teams never measure: <strong>did the model's personality change?</strong></p>
 
-    <p>We built a harness to answer this question precisely. We ran 30 standardized prompts across 5 frontier models, scored every response on 8 behavioral dimensions using an independent LLM judge, and computed the personality delta between each model and a reference baseline. Here's what we found.</p>
+    <p>We built a harness to answer this question precisely. We ran 30 standardized prompts across 7 frontier models from three vendor families (Claude, GPT, Gemini), scored every response on 8 behavioral dimensions using an independent LLM judge, and computed the personality delta between each model and a reference baseline. Here's what we found.</p>
 
     <h2>The problem</h2>
 
@@ -135,14 +135,17 @@
         <tr><td>vs Opus 4.8</td><td class="sig">risk_tolerance -1.1</td><td>"Flags uncertainties" design = measurably more cautious</td></tr>
         <tr><td>vs GPT 5.5</td><td class="sig">risk_tolerance -1.4</td><td>Most cautious model tested; also over-explains</td></tr>
         <tr><td>vs GPT 5.4 Mini</td><td class="ok">None</td><td>Trends toward generic assistant personality</td></tr>
+        <tr><td>vs Gemini 2.5 Pro</td><td class="sig">directness -1.5</td><td>Most caveat-first model tested</td></tr>
+        <tr><td>vs Gemini 2.5 Flash</td><td class="sig">directness -1.3, risk_tolerance -1.0</td><td>Less direct and more cautious</td></tr>
+        <tr><td>vs Gemini 3.1 Pro</td><td class="ok">None</td><td>Closest Gemini to Opus 4.6</td></tr>
       </tbody>
     </table>
 
     <p>Significance threshold: |mean delta| &ge; 1.0 across the 30-prompt set.</p>
 
-    <h3>Finding 1: Risk tolerance is the primary differentiator</h3>
+    <h3>Finding 1: Two personality axes differentiate frontier models</h3>
 
-    <p>Across all comparisons, <strong>risk_tolerance is the only dimension that crosses the significance threshold</strong>. GPT 5.5 scores -1.4 (on a 7-point scale, that's a full point and a half more cautious than Opus 4.6). Opus 4.8 scores -1.1.</p>
+    <p>Two dimensions consistently cross the significance threshold across comparisons: <strong>risk tolerance</strong> and <strong>directness</strong>. GPT 5.5 scores -1.4 on risk tolerance (more cautious than Opus 4.6). Gemini 2.5 Pro scores -1.5 on directness (more caveat-first). These represent independent behavioral axes -- a model can be cautious but direct, or action-biased but indirect.</p>
 
     <p>This isn't random noise. The per-prompt data shows the gap is concentrated on specific prompt types: tactical infrastructure advice (delta -4 on some prompts), career decisions (-4), and architecture trade-offs (-3 to -4). These are exactly the prompts where Opus 4.6 says "do X" and GPT 5.5 says "here are your options, each with trade-offs."</p>
 
@@ -152,7 +155,11 @@
 
     <p>The implication: <strong>if you have a well-written system prompt, minor version upgrades within the same model family are safe</strong>. The system prompt is already doing the personality work.</p>
 
-    <h3>Finding 3: Cross-vendor gaps are wider but correctable</h3>
+    <h3>Finding 3: Gemini models are less direct</h3>
+
+    <p>Gemini 2.5 Pro (-1.5) and 2.5 Flash (-1.3) show significant directness gaps -- they lead with context and caveats where Opus 4.6 leads with the answer. Gemini 2.5 Flash also crosses the risk tolerance threshold (-1.0), making it the only model with two significant deltas. Notably, <strong>Gemini 3.1 Pro closes the directness gap entirely</strong> and shows no significant deltas, suggesting Google addressed this in the newer model.</p>
+
+    <h3>Finding 4: Cross-vendor gaps are wider but correctable</h3>
 
     <p>GPT 5.5 trends toward more hedging (+0.6), less opinion volunteering (-0.8), and more explanation depth (+0.8). None of these individually cross the significance threshold, but they compound into a noticeably different communication style.</p>
 
