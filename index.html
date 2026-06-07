@@ -69,46 +69,10 @@
         <h2 class="section-title">Which model fits which work?</h2>
         <p class="section-desc">Different tasks need different behavioral profiles. A model that's ideal for coding -- direct, concise, action-biased -- may be a poor fit for scientific research, where hedging uncertainty and explaining reasoning are features, not bugs. Behavioral dimensions let you match models to work categories.</p>
 
-        <div class="fit-grid">
-          <div class="fit-card">
-            <h4>Software Development</h4>
-            <p class="fit-profile">Needs: high directness, high conciseness, high risk tolerance, low explanation depth</p>
-            <p>Give me the answer, don't hedge about edge cases I didn't ask about, don't explain what a for loop is. The best coding models lead with working code and flag only the risks that matter.</p>
-          </div>
-
-          <div class="fit-card">
-            <h4>Creative Writing</h4>
-            <p class="fit-profile">Needs: high emotional register, high opinion volunteering, moderate pushback resilience</p>
-            <p>Strong creative voice, warmth, willingness to commit to an aesthetic direction rather than presenting three safe options. Should hold the creative vision under feedback but adapt when the human has a better idea.</p>
-          </div>
-
-          <div class="fit-card">
-            <h4>Scientific Research</h4>
-            <p class="fit-profile">Needs: low risk tolerance, high hedge frequency, high explanation depth, high pushback resilience</p>
-            <p>Qualify uncertainty properly, show reasoning, be cautious about claims. A model that scores 6/7 on risk tolerance would make a dangerous research assistant -- it would state conclusions too confidently.</p>
-          </div>
-
-          <div class="fit-card">
-            <h4>Customer Support</h4>
-            <p class="fit-profile">Needs: high emotional register, moderate directness, low opinion volunteering, high conciseness</p>
-            <p>Warm and empathetic but efficient. Should not volunteer opinions about company policy or recommend competitors. Needs to resolve issues without making the customer feel lectured.</p>
-          </div>
-
-          <div class="fit-card">
-            <h4>Legal / Compliance</h4>
-            <p class="fit-profile">Needs: low risk tolerance, high hedge frequency, high explanation depth, low opinion volunteering</p>
-            <p>Must flag every caveat, never present a recommendation as certain, and explain the reasoning exhaustively. A high-directness model would skip qualifications that matter in legal contexts.</p>
-          </div>
-
-          <div class="fit-card">
-            <h4>Executive Briefings</h4>
-            <p class="fit-profile">Needs: high directness, high conciseness, high opinion volunteering, moderate risk tolerance</p>
-            <p>Lead with the recommendation, keep it tight, and have a point of view. Executives want signal, not options. But temper risk tolerance enough to flag genuine blockers.</p>
-          </div>
-        </div>
+        <div class="fit-grid" id="fitGrid"></div>
 
         <div class="fit-insight">
-          <p>The behavioral profiles in this study let you score each model's natural fit for each category. A model like GPT 5.5, which scores low on risk tolerance (-1.4 vs Opus 4.6), is naturally better suited for scientific research and legal work than for coding. Opus 4.6's action-biased disposition makes it a strong coding and executive briefing model but would need correction for compliance work.</p>
+          <p>Rankings are computed from each model's median behavioral scores against the ideal profile for each category. Click a model name to jump to its comparison data below. Models are ranked by weighted distance from the ideal -- lower distance means better natural fit.</p>
         </div>
       </div>
     </section>

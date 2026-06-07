@@ -38,6 +38,56 @@ const MODEL_NAMES = {
   'gpt54': 'GPT 5.4 Mini'
 };
 
+const WORK_CATEGORIES = [
+  {
+    name: 'Software Development',
+    desc: 'Give me the answer, don\'t hedge about edge cases I didn\'t ask about, don\'t explain what a for loop is. The best coding models lead with working code and flag only the risks that matter.',
+    ideal: { directness: 7, hedge_frequency: 1, opinion_volunteering: 6, pushback_resilience: 5, explanation_depth: 2, risk_tolerance: 6, emotional_register: 4, conciseness: 7 },
+    weights: { directness: 1.5, conciseness: 1.5, risk_tolerance: 1.5, explanation_depth: 1.2, hedge_frequency: 1, opinion_volunteering: 0.8, pushback_resilience: 0.5, emotional_register: 0.3 }
+  },
+  {
+    name: 'Creative Writing',
+    desc: 'Strong creative voice, warmth, willingness to commit to an aesthetic direction rather than presenting three safe options. Should hold the creative vision under feedback but adapt when the human has a better idea.',
+    ideal: { directness: 5, hedge_frequency: 2, opinion_volunteering: 7, pushback_resilience: 5, explanation_depth: 3, risk_tolerance: 5, emotional_register: 7, conciseness: 4 },
+    weights: { emotional_register: 1.5, opinion_volunteering: 1.5, pushback_resilience: 1, directness: 0.5, hedge_frequency: 0.5, explanation_depth: 0.5, risk_tolerance: 0.5, conciseness: 0.5 }
+  },
+  {
+    name: 'Scientific Research',
+    desc: 'Qualify uncertainty properly, show reasoning, be cautious about claims. A model that scores 6/7 on risk tolerance would make a dangerous research assistant -- it would state conclusions too confidently.',
+    ideal: { directness: 4, hedge_frequency: 5, opinion_volunteering: 3, pushback_resilience: 7, explanation_depth: 6, risk_tolerance: 2, emotional_register: 3, conciseness: 4 },
+    weights: { risk_tolerance: 1.5, hedge_frequency: 1.5, explanation_depth: 1.2, pushback_resilience: 1.2, opinion_volunteering: 1, directness: 0.5, emotional_register: 0.3, conciseness: 0.5 }
+  },
+  {
+    name: 'Customer Support',
+    desc: 'Warm and empathetic but efficient. Should not volunteer opinions about company policy or recommend competitors. Needs to resolve issues without making the customer feel lectured.',
+    ideal: { directness: 4, hedge_frequency: 2, opinion_volunteering: 2, pushback_resilience: 4, explanation_depth: 4, risk_tolerance: 3, emotional_register: 7, conciseness: 6 },
+    weights: { emotional_register: 1.5, opinion_volunteering: 1.5, conciseness: 1.2, directness: 0.8, hedge_frequency: 0.5, pushback_resilience: 0.5, explanation_depth: 0.5, risk_tolerance: 0.8 }
+  },
+  {
+    name: 'Legal / Compliance',
+    desc: 'Must flag every caveat, never present a recommendation as certain, and explain the reasoning exhaustively. A high-directness model would skip qualifications that matter in legal contexts.',
+    ideal: { directness: 3, hedge_frequency: 6, opinion_volunteering: 2, pushback_resilience: 6, explanation_depth: 7, risk_tolerance: 1, emotional_register: 2, conciseness: 3 },
+    weights: { risk_tolerance: 1.5, hedge_frequency: 1.5, explanation_depth: 1.5, opinion_volunteering: 1.2, pushback_resilience: 1, directness: 0.8, emotional_register: 0.5, conciseness: 0.5 }
+  },
+  {
+    name: 'Executive Briefings',
+    desc: 'Lead with the recommendation, keep it tight, and have a point of view. Executives want signal, not options. But temper risk tolerance enough to flag genuine blockers.',
+    ideal: { directness: 7, hedge_frequency: 1, opinion_volunteering: 7, pushback_resilience: 5, explanation_depth: 2, risk_tolerance: 5, emotional_register: 5, conciseness: 7 },
+    weights: { directness: 1.5, conciseness: 1.5, opinion_volunteering: 1.5, risk_tolerance: 1, hedge_frequency: 1, explanation_depth: 1, pushback_resilience: 0.5, emotional_register: 0.5 }
+  }
+];
+
+const ALL_MODEL_DISPLAY = {
+  'ref': 'Opus 4.6',
+  '4.7': 'Opus 4.7',
+  '4.8': 'Opus 4.8',
+  'gpt55': 'GPT 5.5',
+  'gpt54': 'GPT 5.4 Mini',
+  'gem25pro': 'Gemini 2.5 Pro',
+  'gem25flash': 'Gemini 2.5 Flash',
+  'gem31pro': 'Gemini 3.1 Pro',
+};
+
 let DATA = null;
 let activeKey = '4.7';
 let activeDim = 'risk_tolerance';
@@ -45,6 +95,7 @@ let activeDim = 'risk_tolerance';
 async function init() {
   const resp = await fetch('assets/data.json');
   DATA = await resp.json();
+  renderFitCards();
   initBars();
   bindTabs();
   bindDimSelect();
@@ -278,6 +329,96 @@ function renderDrilldown() {
     }
     grid.appendChild(cell);
   }
+}
+
+function getModelProfiles() {
+  const profiles = {};
+  const sampleKey = Object.keys(DATA)[0];
+  const sample = DATA[sampleKey].summary;
+  const ref = {};
+  for (const dim of DIMS) {
+    if (sample[dim]) ref[dim] = sample[dim].model_a_median;
+  }
+  profiles['ref'] = ref;
+
+  for (const [key, comp] of Object.entries(DATA)) {
+    const p = {};
+    for (const dim of DIMS) {
+      if (comp.summary[dim]) p[dim] = comp.summary[dim].model_b_median;
+    }
+    profiles[key] = p;
+  }
+  return profiles;
+}
+
+function scoreModelFit(profile, category) {
+  let totalDist = 0;
+  let totalWeight = 0;
+  for (const dim of DIMS) {
+    const ideal = category.ideal[dim];
+    const actual = profile[dim];
+    const weight = category.weights[dim] || 1;
+    if (ideal === undefined || actual === undefined) continue;
+    totalDist += Math.abs(ideal - actual) * weight;
+    totalWeight += weight;
+  }
+  return totalWeight > 0 ? totalDist / totalWeight : 99;
+}
+
+function renderFitCards() {
+  const grid = document.getElementById('fitGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  const profiles = getModelProfiles();
+
+  for (const cat of WORK_CATEGORIES) {
+    const ranked = Object.entries(profiles)
+      .map(([key, profile]) => ({ key, name: ALL_MODEL_DISPLAY[key] || key, score: scoreModelFit(profile, cat) }))
+      .sort((a, b) => a.score - b.score);
+
+    const card = document.createElement('div');
+    card.className = 'fit-card';
+
+    const profileText = Object.entries(cat.weights)
+      .filter(([, w]) => w >= 1.2)
+      .sort((a, b) => b[1] - a[1])
+      .map(([dim]) => {
+        const ideal = cat.ideal[dim];
+        const label = ideal <= 2 ? 'low' : ideal >= 6 ? 'high' : 'moderate';
+        return `${label} ${DIM_LABELS_FULL[dim].toLowerCase()}`;
+      })
+      .join(', ');
+
+    let rankHtml = '<ol class="fit-ranking">';
+    ranked.forEach((m, i) => {
+      const link = m.key === 'ref' ? '' : `data-model-key="${m.key}"`;
+      const cls = m.key === 'ref' ? 'rank-ref' : 'rank-link';
+      const dist = m.score.toFixed(2);
+      rankHtml += `<li class="${cls}" ${link}><span class="rank-pos">${i + 1}</span><span class="rank-name">${m.name}</span><span class="rank-score">${dist}</span></li>`;
+    });
+    rankHtml += '</ol>';
+
+    card.innerHTML = `
+      <h4>${cat.name}</h4>
+      <p class="fit-profile">Key dimensions: ${profileText}</p>
+      <p class="fit-desc">${cat.desc}</p>
+      ${rankHtml}
+    `;
+    grid.appendChild(card);
+  }
+
+  grid.querySelectorAll('.rank-link').forEach(el => {
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', () => {
+      const key = el.dataset.modelKey;
+      const tab = document.querySelector(`.tab[data-key="${key}"]`);
+      if (tab) {
+        tab.click();
+        document.getElementById('comparisons').scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
 }
 
 function hexToRgba(hex, alpha) {
