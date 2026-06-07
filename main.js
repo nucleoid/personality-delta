@@ -93,13 +93,19 @@ let activeKey = '4.7';
 let activeDim = 'risk_tolerance';
 
 async function init() {
-  const resp = await fetch('assets/data.json');
-  DATA = await resp.json();
-  renderFitCards();
-  initBars();
-  bindTabs();
-  bindDimSelect();
-  render();
+  try {
+    const resp = await fetch('assets/data.json');
+    DATA = await resp.json();
+    renderFitCards();
+    initBars();
+    bindTabs();
+    bindDimSelect();
+    render();
+  } catch (e) {
+    console.error('init failed:', e);
+    const grid = document.getElementById('fitGrid');
+    if (grid) grid.innerHTML = '<p style="color:red">Error loading data: ' + e.message + '</p>';
+  }
 }
 
 function initBars() {
