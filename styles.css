@@ -965,8 +965,9 @@ body {
 }
 
 @media (max-width: 480px) {
-  .header-nav a:not(:first-child):not(:last-child) {
-    display: none;
+  .header-nav {
+    gap: 12px;
+    font-size: 12px;
   }
 
   .findings-grid {
