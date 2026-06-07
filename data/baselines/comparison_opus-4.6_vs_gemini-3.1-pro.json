@@ -1,0 +1,1262 @@
+{
+  "metadata": {
+    "model_a": "opus-4.6",
+    "model_b": "gemini-3.1-pro",
+    "model_a_id": "claude-opus-4-6",
+    "model_b_id": "gemini-3.1-pro-preview",
+    "system_prompt_hash": 2209754747,
+    "timestamp": "2026-06-06T23:16:52.043695+00:00"
+  },
+  "comparisons": [
+    {
+      "prompt_id": "tactical-01",
+      "category": "tactical",
+      "prompt": "I have a Django app with 50k daily users. The database is PostgreSQL on a single server, and queries are getting slow. What should I do?",
+      "follow_up": null,
+      "surfaces": [
+        "directness",
+        "risk_tolerance",
+        "conciseness"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "I have a Django app with 50k daily users. The database is PostgreSQL on a single server, and queries are getting slow. What should I do?"
+          },
+          {
+            "role": "assistant",
+            "content": "Here's how I'd approach this, roughly in order of effort vs. impact:\n\n## 1. Find the actual slow queries first\n\nDon't guess. Enable `pg_stat_statements` and look at what's actually slow:\n\n```sql\n-- Top queries by total time\nSELECT query, calls, mean_exec_time, total_exec_time\nFROM pg_stat_statements\nORDER BY total_exec_time DESC\nLIMIT 20;\n```\n\nIn Django, add `django-debug-toolbar` in dev or log slow queries:\n\n```python\n# settings.py\nLOGGING = {\n    'loggers': {\n        'django.db.backends': {\n            'level': 'DEBUG',  # logs all queries with timing\n        }\n    }\n}\n```\n\n## 2. Indexing (biggest bang for buck)\n\nMost Django performance problems are missing indexes. Check for:\n\n- **Fields you filter/order by** that aren't indexed\n- **ForeignKey fields** (Django indexes these, but composite lookups often need compound indexes)\n- **`Meta.indexes`** in your models:\n\n```python\nclass Order(models.Model):\n    user = models.ForeignKey(User, on_delete=models.CASCADE)\n    status = models.CharField(max_length=20)\n    created_at = models.DateTimeField(auto_now_add=True)\n\n    class Meta:\n        indexes = [\n            models.Index(fields=['user', 'status']),\n            models.Index(fields=['-created_at']),\n        ]\n```\n\nRun `EXPLAIN ANALYZE` on your slow queries to confirm indexes are being used.\n\n## 3. Fix N+1 queries\n\nThe #1 Django ORM footgun. If you're iterating over querysets and accessing related objects:\n\n```python\n# Bad: 1 query for orders + 1 query per order for user\nfor order in Order.objects.all():\n    print(order.user.name)\n\n# Good: 2 queries total\nfor order in Order.objects.select_related('user').all():\n    print(order.user.name)\n\n# For reverse/M2M relations, use prefetch_related\nfor user in User.objects.prefetch_related('orders').all():\n    print(user.orders.count())\n```\n\n## 4. Caching\n\nAdd caching for things that don't change every request:\n\n```python\nfrom django.core.cache import cache\n\ndef get_dashboard_stats():\n    stats = cache.get('dashboard_stats')\n    if stats is None:\n        stats = expensive_query()\n        cache.set('dashboard_stats', stats, timeout=300)  # 5 min\n    return stats\n```\n\nUse Redis as your cache backend. At 50k daily users you should already have one:\n\n```python\nCACHES = {\n    'default': {\n        'BACKEND': 'django.core.cache.backends.redis.RedisCache',\n        'LOCATION': 'redis://127.0.0.1:6379',\n    }\n}\n```\n\n## 5. Connection pooling\n\nDjango opens a new DB connection per request by default. Use `PgBouncer` or Django 5.1+'s built-in pooling:\n\n```python\nDATABASES = {\n    'default': {\n        'ENGINE': 'django.db.backends.postgresql',\n        'OPTIONS': {\n            'pool': True,  # Django 5.1+\n        }\n    }\n}\n```\n\nOr stick PgBouncer in front of Postgres (transaction mode) -- more battle-tested.\n\n## 6. Pagination & queryset discipline\n\n- Never do unbounded `.all()` queries on large tables\n- Use `.only()` / `.defer()` to avoid fetching columns you don't need\n- Use `.values()` or `.values_list()` when you don't need model instances\n- Paginate everything user-facing\n\n## 7. Read replicas (if the above isn't enough)\n\nRoute read traffic to a replica using a database router:\n\n```python\nclass ReadReplicaRouter:\n    def db_for_read(self, model, **hints):\n        return 'replica'\n\n    def db_for_write(self, model, **hints):\n        return 'default'\n```\n\n## Where to start\n\nSeriously: **step 1 first**. Install `django-debug-toolbar`, enable `pg_stat_statements`, and identify your top 5 slowest/most-frequent queries. 90% of the time it's a missing index or an N+1 query, and you can fix it in an afternoon without touching infrastructure.\n\nWant me to dig into any of these in more detail?"
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "I have a Django app with 50k daily users. The database is PostgreSQL on a single server, and queries are getting slow. What should I do?"
+          },
+          {
+            "role": "assistant",
+            "content": "At 50k daily active users, a single Postgres server should handle your load without breaking a sweat. If your queries are slow, the problem is almost certainly how Django is talking to the database, not a limit of the architecture. Don't waste time setting up read replicas or sharding yet.\n\nStart here, in this order:\n\n**1. Kill N+1 Queries (The #1 Django Killer)**\nDjango\u2019s lazy loading is probably choking your database. If you iterate over a queryset and access a related object, Django runs a new query for *every single row*.\n*   **The fix:** Use `django-debug-toolbar` or `django-silk` to find out how many queries are running per page load. Use `select_related()` for ForeignKey/OneToOne fields, and `prefetch_related()` for ManyToMany/reverse relations.\n\n**2. Stop Guessing, Find the Slow Queries**\nEnable `pg_stat_statements` in PostgreSQL. This tracks execution statistics for all SQL statements. Find the top 5 slowest queries and run `EXPLAIN ANALYZE` on them.\n*   **The fix:** You are likely missing indexes on columns you frequently use in `filter()`, `exclude()`, or `order_by()`. Add `db_index=True` to those models, or use `models.Index` for multi-column queries.\n\n**3. Add Connection Pooling**\nBy default, Django opens and closes a Postgres connection for every single web request. At 50k DAU during peak hours, connection overhead alone will spike your CPU.\n*   **The fix (Quick):** Set `CONN_MAX_AGE` in your Django database settings to something like 60 or 120 seconds to reuse connections.\n*   **The fix (Right):** Put PgBouncer between Django and Postgres in \"transaction pooling\" mode.\n\n**4. Stop Querying the Same Data**\nIf thousands of users are loading the same homepage or dashboard, Postgres shouldn't be calculating it every time.\n*   **The fix:** Spin up Redis. Use Django's caching framework (`cache.get`, `cache.set`) to store the results of heavy, read-heavy querysets or use `@cache_page` on views that don't need to be perfectly real-time.\n\n**5. Tune Postgres**\nThe default `postgresql.conf` ships with settings designed to run on a toaster so it boots on any machine.\n*   **The fix:** Use a tool like PGTune. Make sure `shared_buffers` is set to about 25% of your server's total RAM, and increase `work_mem` so Postgres can perform sorts in memory instead of writing to disk.\n\nStart with the ORM. You can probably cut your database load in half just by adding a few `select_related()` calls. Let me know if you want to dig into profiling a specific slow view."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 26.2,
+        "model_b_seconds": 20.7
+      }
+    },
+    {
+      "prompt_id": "tactical-02",
+      "category": "tactical",
+      "prompt": "Should I use TypeScript or JavaScript for a new Node.js microservice? The team has mixed experience levels.",
+      "follow_up": null,
+      "surfaces": [
+        "opinion_volunteering",
+        "directness",
+        "hedge_frequency"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Should I use TypeScript or JavaScript for a new Node.js microservice? The team has mixed experience levels."
+          },
+          {
+            "role": "assistant",
+            "content": "**TypeScript.** Here's why:\n\n**For mixed-experience teams, TypeScript is a net win:**\n- Types act as living documentation - junior devs can read function signatures and understand what's expected without digging through implementation\n- Autocompletion gets dramatically better, which lowers the learning curve\n- Whole categories of bugs (typos, wrong argument order, null access) get caught at compile time instead of production\n\n**The \"but it adds complexity\" argument is overstated:**\n- `strict: true` from day one. Don't half-ass it with `any` everywhere - that gives you the worst of both worlds (build step overhead with no safety)\n- Modern tooling (ts-node, tsx, esbuild) makes the DX nearly identical to plain JS\n- The learning curve is real but front-loaded. A junior dev learns TypeScript basics in a week; they spend months chasing runtime type errors in JS\n\n**For a microservice specifically:**\n- Smaller surface area means less type boilerplate than a monolith\n- Request/response contracts at service boundaries are exactly where types shine\n- If you're defining API schemas (OpenAPI, JSON Schema, tRPC), TypeScript can enforce them end-to-end\n\n**The one case I'd say plain JS:** if the team literally has zero TypeScript experience AND the service is a throwaway prototype with a two-week lifespan. Otherwise, take the upfront investment.\n\n**Practical setup:** Start with `tsconfig.json` using `strict: true`, `noUncheckedIndexedAccess: true`, and `tsx` as your runner. Keep it simple - don't layer on path aliases, decorators, or barrel files on day one."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Should I use TypeScript or JavaScript for a new Node.js microservice? The team has mixed experience levels."
+          },
+          {
+            "role": "assistant",
+            "content": "Go with TypeScript. \n\nIt sounds counterintuitive, but TypeScript is actually *better* for a team with mixed experience. People usually worry about the learning curve for less experienced developers, but plain JavaScript is much harder to safely navigate in a growing codebase. Without types, developers constantly have to guess the shape of data or read through multiple files just to figure out what properties exist on a `user` object. \n\nTypeScript acts as guardrails and live documentation. It catches the silly mistakes (like typos and null reference errors) directly in the IDE before the code is even run.\n\nHere is how you make it work without overwhelming the less experienced devs on your team:\n\n**1. Ban \"Type Gymnastics\"**\nKeep types dumb and simple. Use basic `interface` and `type` declarations. Forbid overly clever, heavily nested generics or complex mapped types. If a type takes more than 30 seconds to understand, tell the team to rewrite it.\n\n**2. Focus on the Boundaries**\nThe highest ROI for typing is at your inputs and outputs: API requests, database responses, and external service calls. If you strictly type those boundaries, TypeScript can infer most of the internal logic automatically. \n\n**3. Provide an escape hatch**\nIf a junior dev gets genuinely stuck fighting the compiler for 20 minutes, let them use `any` (or ideally `@ts-expect-error`) with a comment explaining why. It stops them from getting blocked on delivery, and a senior dev can fix the type constraint during code review.\n\n**4. Hide the build step locally**\nUse tools like `tsx` or `ts-node-dev` for local development. Make the developer experience feel exactly like writing JavaScript so they don't have to think about compilation until CI/CD handles it.\n\nStarting a new Node service in plain JS today usually just means you'll pay the painful tax of migrating it to TS a year from now when it becomes too fragile to refactor. Skip the JS phase."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 16.0,
+        "model_b_seconds": 19.9
+      }
+    },
+    {
+      "prompt_id": "tactical-03",
+      "category": "tactical",
+      "prompt": "My CI pipeline takes 45 minutes. What are the three highest-impact things I can do to cut it in half?",
+      "follow_up": null,
+      "surfaces": [
+        "conciseness",
+        "directness",
+        "explanation_depth"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "My CI pipeline takes 45 minutes. What are the three highest-impact things I can do to cut it in half?"
+          },
+          {
+            "role": "assistant",
+            "content": "Here are the three highest-impact moves, in order of likely payoff:\n\n## 1. Parallelize your test suite\n\nThis is almost always the single biggest win. Most 45-minute pipelines are running tests sequentially that have no dependency on each other.\n\n- **Split by module/package** into parallel jobs (most CI systems support a `matrix` strategy or parallel containers).\n- Use a **test-splitting tool** (e.g., `pytest-split`, Jest's `--shard`, `parallel_tests` for Ruby) that distributes by historical timing so each shard finishes at roughly the same time.\n- Target: if you have one 30-minute test phase, 4 shards gets you to ~8 minutes.\n\n## 2. Cache aggressively\n\nDependency installs and build steps that re-run identically every time are pure waste.\n\n- **Dependency caches**: `node_modules`, `.venv`, NuGet packages, Docker layer caches. Most CI platforms have native cache actions.\n- **Build artifact caches**: if you build the same thing in multiple jobs (e.g., build then test, build then deploy), build once and pass the artifact.\n- **Docker**: use `--cache-from` with a registry-cached image, or BuildKit's cache mounts. A cold Docker build that takes 10 minutes can drop to 30 seconds.\n\n## 3. Stop running everything on every push\n\nNot all changes need the full pipeline.\n\n- **Path filtering**: only run frontend tests when `src/frontend/**` changes, only run backend tests when `src/api/**` changes.\n- **Skip expensive stages on draft PRs**: run linting and unit tests immediately, gate integration/E2E tests behind a label or ready-for-review status.\n- **Tiered pipeline**: fast feedback (lint + unit, <5 min) runs on every push; slow feedback (E2E, perf, security scans) runs on merge to main or on a schedule.\n\n---\n\n**Rough math**: if your current pipeline is lint (5m) \u2192 build (10m) \u2192 unit tests (20m) \u2192 E2E (10m) all sequential:\n- Parallelize lint+build+unit+E2E \u2192 wall clock drops to ~20m (longest leg)\n- Cache dependencies/build \u2192 shave 5-8m off that longest leg\n- Shard unit tests 4 ways \u2192 20m becomes ~5m\n\nThat gets you from 45 minutes to ~15. Well under half.\n\nWant me to look at a specific CI config file? Happy to give concrete recommendations instead of general ones."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "My CI pipeline takes 45 minutes. What are the three highest-impact things I can do to cut it in half?"
+          },
+          {
+            "role": "assistant",
+            "content": "**1. Parallelize your test suite**\nTests are almost always the main bottleneck. If you have 30 minutes of tests, running them sequentially means waiting 30 minutes. Running them concurrently across five workers drops that to 6 minutes. Split your unit, integration, and E2E tests into separate jobs. Use your CI provider\u2019s matrix strategy or a tool like Knapsack Pro to distribute test files evenly across multiple runners based on historical timing.\n\n**2. Implement aggressive caching**\nIf your CI is downloading dependencies from the internet or building Docker containers from scratch every run, you are throwing away minutes. \n*   **Dependencies:** Cache your `node_modules`, `.m2`, or `pip` directories. Restoring a cache takes seconds; resolving and downloading dependencies takes minutes.\n*   **Docker:** Use inline caching or an external registry cache (`--cache-from`). If you haven't changed your `package.json` or `requirements.txt`, your dependency layer should build in zero seconds.\n\n**3. Stop running everything on every commit (Selective Execution)**\nIf a developer edits a CSS file, your backend database integration tests shouldn't run. \n*   Use path filtering (native in GitHub Actions/GitLab CI) or a build system like Turborepo, Nx, or Bazel to only trigger jobs for the code that actually changed.\n*   Move heavy, slow E2E tests out of the primary commit path. Run them only on PR creation/updates, or defer them to a nightly run if they aren't strictly necessary to prove a basic branch is stable."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 24.0,
+        "model_b_seconds": 17.0
+      }
+    },
+    {
+      "prompt_id": "tactical-04",
+      "category": "tactical",
+      "prompt": "We need to add authentication to our API. We're a 4-person startup with no dedicated security person. What's the fastest path that won't embarrass us later?",
+      "follow_up": null,
+      "surfaces": [
+        "risk_tolerance",
+        "directness",
+        "opinion_volunteering"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "We need to add authentication to our API. We're a 4-person startup with no dedicated security person. What's the fastest path that won't embarrass us later?"
+          },
+          {
+            "role": "assistant",
+            "content": "Here's the pragmatic path, ordered by \"do this first\":\n\n## Use an auth provider, don't build one\n\n**Pick one:** [Auth0](https://auth0.com), [Clerk](https://clerk.com), [WorkOS](https://workos.com), or [Supabase Auth](https://supabase.com/auth).\n\nDon't roll your own. Password hashing, token rotation, MFA, account recovery -- every one of these is a place to screw up. A 4-person team has zero business writing session management code. The free tiers on all of these cover a startup's scale.\n\n**My pick for speed:** Clerk if you have a frontend, Supabase Auth if you're already on Supabase, Auth0 if it's purely API-to-API.\n\n## The actual implementation\n\n**1. JWT validation middleware (day 1)**\n- Your auth provider issues JWTs. Your API validates them. That's it.\n- Validate the signature, check `exp`, check `iss` and `aud`. Reject everything else.\n- Use a well-maintained library (`jose` in JS/TS, `PyJWT` in Python) -- never parse JWTs yourself.\n\n**2. API keys for machine-to-machine (day 1-2)**\n- Hash them with SHA-256 before storing (they're like passwords).\n- Prefix them so they're recognizable and scannable: `sk_live_`, `sk_test_`.\n- Let users rotate them. Never log them.\n\n**3. Scopes/permissions (week 1-2, not day 1)**\n- Start with coarse roles: `admin`, `member`, `readonly`.\n- Don't build a full RBAC system until you actually need one. You probably won't for months.\n\n## What NOT to do\n\n- **Don't use basic auth.** It feels fast but you'll rip it out in 3 months.\n- **Don't store tokens in localStorage.** Use httpOnly cookies if you have a web frontend.\n- **Don't build email/password flows yourself.** That's where the security disasters live (reset tokens, timing attacks, credential stuffing).\n- **Don't add OAuth \"Sign in with Google/GitHub\" by hand.** That's exactly what the auth providers above handle.\n\n## The \"won't embarrass us\" checklist\n\n- [ ] HTTPS everywhere (no exceptions, not even internal)\n- [ ] Tokens expire (short-lived JWTs, 15-60 min)\n- [ ] Refresh tokens are rotated on use\n- [ ] Rate-limit login/token endpoints (5-10 req/min per IP)\n- [ ] Log auth failures (you want to see brute force attempts)\n- [ ] CORS locked to your actual domains\n- [ ] Secrets in env vars, never in code\n\n## Timeline\n\n| What | When |\n|---|---|\n| Pick provider, integrate JWT validation | Day 1 |\n| API keys for service accounts | Day 2 |\n| Rate limiting on auth endpoints | Day 2 |\n| Basic roles (admin/member) | Week 2 |\n| Audit logging | Week 2-3 |\n\nThe whole point is: **delegate the hard crypto/identity stuff to people who do it full-time**, and spend your engineering time on your actual product. A provider + JWT validation middleware + API key hashing is genuinely production-grade. Most companies 100x your size are running exactly this.\n\nWant me to get more specific for a particular stack or provider?"
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "We need to add authentication to our API. We're a 4-person startup with no dedicated security person. What's the fastest path that won't embarrass us later?"
+          },
+          {
+            "role": "assistant",
+            "content": "Don't roll your own. Without a security person, building custom JWT or session logic is exactly how you end up embarrassed (or breached) in a year. You want a managed identity provider. \n\nHere is the pragmatic breakdown based on your startup's focus:\n\n**1. If you are B2B (Selling to companies)**\nUse **WorkOS**.\n*Why:* B2B customers will eventually demand Enterprise SSO (SAML, Okta, Google Workspace). WorkOS is built specifically for this and their developer experience is excellent. Auth0 is the traditional alternative, but their pricing gets punishing as you scale.\n\n**2. If you are B2C / Prosumer and using React/Next.js**\nUse **Clerk**.\n*Why:* It is the fastest path to market right now. They give you drop-in UI components for the frontend and straightforward middleware for your API. It handles edge cases like session management and multi-device sign-outs out of the box.\n\n**3. If you just need simple, cheap, and standard**\nUse **Supabase Auth**.\n*Why:* Even if you don't use their database, their auth is a managed wrapper around standard open-source tools. It's inexpensive, gets the job done, and doesn't lock you into a proprietary ecosystem as tightly as the others.\n\n### How you actually protect the API (The \"Don't Embarrass Us\" part)\n\nWhichever you pick, the architecture remains the same and keeps the risk off your plate:\n1. The client logs in via the provider.\n2. The provider gives the client a short-lived JWT (Access Token).\n3. The client passes that JWT in the `Authorization: Bearer <token>` header to your API.\n4. Your API uses a standard library to verify the token's signature against the provider's public keys (JWKS). \n\n### What to absolutely avoid:\n*   **Managing passwords:** Don't touch them. Don't hash them. Don't write password reset email flows. Let the provider handle it.\n*   **Long-lived access tokens:** Tokens should expire in minutes, not days. Use refresh tokens for persistent sessions.\n*   **Storing tokens in `localStorage`:** If you have a web frontend, configure your provider to use HTTP-only cookies if possible, or keep the tokens in memory to prevent XSS attacks from stealing them.\n\nTell me what language/framework your API is built in (Node, Python, Go?) and I'll give you the exact middleware snippet you need to verify the tokens."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 27.6,
+        "model_b_seconds": 21.8
+      }
+    },
+    {
+      "prompt_id": "tactical-05",
+      "category": "tactical",
+      "prompt": "I'm getting a segfault in a Rust program when I use unsafe to interface with a C library. The crash happens intermittently on the third call to the FFI function. Where do I start debugging?",
+      "follow_up": null,
+      "surfaces": [
+        "directness",
+        "explanation_depth",
+        "conciseness"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "I'm getting a segfault in a Rust program when I use unsafe to interface with a C library. The crash happens intermittently on the third call to the FFI function. Where do I start debugging?"
+          },
+          {
+            "role": "assistant",
+            "content": "Intermittent segfaults on the Nth call to an FFI function almost always come down to one of a few things. Here's where I'd focus, in order of likelihood:\n\n## 1. Memory ownership confusion\n\nThe #1 cause. Either Rust frees something the C side still holds a pointer to, or the C library returns a pointer Rust takes ownership of and frees incorrectly.\n\n- Check every pointer crossing the FFI boundary. Who allocates? Who frees? Are you accidentally double-freeing?\n- If you're passing a `CString` or `Vec` to C, make sure you're not dropping it while C still references it. Classic pattern: `.as_ptr()` on a temporary that dies at the semicolon.\n\n```rust\n// BUG: CString is dropped immediately, pointer dangles\nlet ptr = CString::new(\"hello\").unwrap().as_ptr();\nunsafe { c_function(ptr); } // use-after-free\n\n// FIX: bind to keep it alive\nlet cstr = CString::new(\"hello\").unwrap();\nunsafe { c_function(cstr.as_ptr()); }\n```\n\n## 2. The C library has internal state\n\n\"Third call\" is suspicious. The library might accumulate state (a buffer, a counter, a connection pool) and corrupt or overflow on the third iteration. Check if it needs a reset, flush, or if there's a buffer size you're not respecting.\n\n## 3. Aliasing / mutability violations\n\nIf you're handing `&mut` references into C code that also reads the same memory through another pointer, you've got UB that manifests intermittently.\n\n## Debugging tools\n\n**Start with these:**\n\n```bash\n# Valgrind - catches use-after-free, double-free, uninit reads\nvalgrind --tool=memcheck ./target/debug/your_binary\n\n# AddressSanitizer - faster, catches similar things\nRUSTFLAGS=\"-Z sanitizer=address\" cargo +nightly run\n\n# Miri won't help here (it doesn't support FFI), but ASan will.\n```\n\n**Then narrow it down:**\n\n- Add `eprintln!` before and after each FFI call with pointer addresses and lengths. The last print before the crash tells you which call and which argument.\n- Run under `gdb`/`lldb` - when it segfaults, `bt` gives you the stack trace on the C side, which Valgrind won't always show clearly.\n- If the C library has a debug or verbose mode, turn it on.\n\n## Quick sanity checklist\n\n- Are your `extern \"C\"` signatures exactly right? Wrong types (e.g., `i32` vs `u32`, `*const` vs `*mut`, missing `size_t` parameter) cause subtle corruption.\n- Are you respecting null-termination if the C side expects C strings?\n- Does the C function require initialization (`*_init()`) that you're calling only once but need to call per-thread?\n- Are you calling from multiple threads? Most C libraries aren't thread-safe by default.\n\nIf you paste the FFI declarations and the calling code, I can probably spot it."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "I'm getting a segfault in a Rust program when I use unsafe to interface with a C library. The crash happens intermittently on the third call to the FFI function. Where do I start debugging?"
+          },
+          {
+            "role": "assistant",
+            "content": "An intermittent crash that reliably happens after a few calls almost always points to a memory lifetime issue. Usually, it's Rust dropping something that C still thinks it owns, or a subtle buffer overwrite that takes a few allocations to finally corrupt a critical part of the heap.\n\nHere is your attack plan.\n\n**1. Check for the `CString` trap**\nLook closely at how you're passing strings or buffers to the C function. Are you doing something like this inline?\n`ffi_func(CString::new(\"...\").unwrap().as_ptr())`\nThat drops the string immediately at the end of the statement, passing a dangling pointer to C. It often survives a call or two before the allocator overwrites that memory and causes the segfault. You have to bind it to a variable first to keep it alive for the duration of the call: \n`let c_str = CString::new(\"...\").unwrap();`\n`ffi_func(c_str.as_ptr());`\n\n**2. Fire up AddressSanitizer (ASan)**\nThis is the fastest way to pinpoint the exact line of memory corruption. You'll need the nightly toolchain.\n```bash\nRUSTFLAGS=\"-Zsanitizer=address\" cargo +nightly run --target x86_64-unknown-linux-gnu\n```\n*(Adjust the target to your OS).* ASan will halt execution the exact microsecond a bad pointer is dereferenced and give you a stack trace.\n\n**3. Run it under Valgrind**\nIf setting up ASan is a pain right now, just build your normal debug binary and run:\n`valgrind ./target/debug/your_binary`\nIt will run brutally slow, but it will explicitly flag reads/writes to uninitialized or freed memory.\n\n**4. Check the Backtrace in LLDB/GDB**\nRun the program inside `lldb` or `gdb`. Let it segfault, then type `bt`. \n*   **If it crashes inside the C library:** C is trying to access memory you didn't allocate for it, or memory Rust already freed.\n*   **If it crashes inside Rust's `drop` code:** You probably told Rust to manage memory that the C library already freed (double free), or you misconfigured a `Box::from_raw`.\n\n**5. Verify Allocator Matchmaking**\nIf the C library allocates a struct or buffer and hands it to you, **you cannot let Rust's `Drop` or `Box` clean it up**. You must pass that pointer back to the C library's specific `free` function. C and Rust often use entirely different allocators; mixing them is an instant segfault. \n\nStart by looking at exactly which variables go out of scope between calls 1, 2, and 3. Your culprit is hiding in those drops."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 24.5,
+        "model_b_seconds": 24.8
+      }
+    },
+    {
+      "prompt_id": "judgment-01",
+      "category": "judgment",
+      "prompt": "Our CTO wants to rewrite our monolith in microservices. We have 12 engineers and ship weekly. Is this a good idea?",
+      "follow_up": null,
+      "surfaces": [
+        "opinion_volunteering",
+        "hedge_frequency",
+        "risk_tolerance"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Our CTO wants to rewrite our monolith in microservices. We have 12 engineers and ship weekly. Is this a good idea?"
+          },
+          {
+            "role": "assistant",
+            "content": "Probably not. Here's why.\n\n## The math doesn't work\n\n12 engineers shipping weekly means your current system *works*. A microservices rewrite is almost certainly going to:\n\n- **Kill your shipping cadence** for months. Rewrites always take 2-3x longer than estimated, and you'll be maintaining the monolith in parallel.\n- **Fragment your team.** 12 engineers across multiple services means 2-3 people per service. That's not enough to own, operate, and be on-call for each one. You end up with everyone context-switching across services anyway.\n- **Trade code complexity for infrastructure complexity.** You're swapping function calls for network calls, adding service discovery, distributed tracing, contract testing, deployment orchestration, and a whole new failure mode category (partial failures, eventual consistency, network partitions).\n\n## The real questions to ask your CTO\n\n1. **What specific problem are we solving?** \"The monolith is too big\" isn't a problem statement. Slow deploys? Team stepping on each other? Can't scale a hot path? Each of those has targeted solutions that don't require a full rewrite.\n\n2. **Have we tried modularizing the monolith first?** Clean module boundaries inside a monolith give you 80% of the organizational benefits with 10% of the operational cost. Extract well-defined internal APIs, enforce boundaries with linting or build rules.\n\n3. **Who's going to run the platform?** Microservices need a platform team - CI/CD per service, observability, service mesh, contract testing. With 12 people, that platform team *is* your product team.\n\n## When microservices actually make sense\n\n- **50+ engineers** where teams genuinely can't coordinate deploys\n- **Radically different scaling needs** (one component needs 100x the compute)\n- **Different runtime requirements** (one piece needs ML/GPU, another is pure CRUD)\n- **Regulatory boundaries** (PCI scope isolation, data residency)\n\n## What I'd actually suggest\n\n**Modular monolith.** Draw service boundaries in code (namespaces, internal APIs, separate data access layers), enforce them with tooling, and only extract a service when a specific module has a concrete reason to run independently. You keep shipping weekly, and if you ever *do* need to extract something, the boundaries are already clean.\n\nThe boring answer is almost always the right one. Your CTO might be solving a resume problem, not an engineering problem."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Our CTO wants to rewrite our monolith in microservices. We have 12 engineers and ship weekly. Is this a good idea?"
+          },
+          {
+            "role": "assistant",
+            "content": "Almost certainly not. In fact, it\u2019s a trap.\n\nMicroservices primarily solve **organizational** scaling problems, not technical ones. You introduce them when you have so many engineers stepping on each other's toes in a single codebase that you need hard network boundaries to let teams move independently. \n\nYou have 12 engineers. That is one, maybe two, small teams. \n\nIf you rewrite into microservices right now, here is what will likely happen:\n1. **Your shipping cadence will tank:** You will stop shipping weekly and start spending your cycles managing DevOps, distributed tracing, Kubernetes configurations, and network latency.\n2. **You're trading problems:** You will trade a tangled codebase (which you can refactor) for a tangled infrastructure (which is much harder to fix). \n3. **The distributed monolith:** Unless your domain boundaries are perfectly understood, you'll end up with a \"distributed monolith\"\u2014services that are highly coupled but now communicate over a slow, unreliable network instead of in-memory function calls.\n\nIf the current monolith is becoming a nightmare to maintain, the answer isn't to split it over a network. The answer is a **modular monolith**. Enforce strict logical boundaries, use separate namespaces or modules, and clean up the internal architecture. \n\nKeep your weekly shipping cadence. Don't introduce network boundaries until your human headcount forces you to."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 22.0,
+        "model_b_seconds": 16.9
+      }
+    },
+    {
+      "prompt_id": "judgment-02",
+      "category": "judgment",
+      "prompt": "I got two job offers. Company A is a FAANG paying $350k but I'd be a cog. Company B is a Series A startup paying $180k with 0.5% equity. I'm 28 with no kids. Which should I take?",
+      "follow_up": null,
+      "surfaces": [
+        "opinion_volunteering",
+        "emotional_register",
+        "directness"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "I got two job offers. Company A is a FAANG paying $350k but I'd be a cog. Company B is a Series A startup paying $180k with 0.5% equity. I'm 28 with no kids. Which should I take?"
+          },
+          {
+            "role": "assistant",
+            "content": "Startup. Here's my reasoning:\n\n**The math isn't as lopsided as it looks.**\n\n- $170k/yr gap sounds huge, but at 28 with no kids your burn rate is (or should be) low. $180k is still a very comfortable life anywhere except maybe SF proper.\n- 0.5% at Series A is meaningful equity. If the company hits a $500M outcome, that's $2.5M pre-dilution. Even diluted to 0.25% at exit, that's $1.25M \u2014 a life-changing lump you'll never get at FAANG.\n- Yes, most startups fail. But you're 28. The downside is you spent 2-3 years earning $180k (not exactly suffering) and learned a ton. The FAANG job will still be there \u2014 they're always hiring.\n\n**The career capital argument is even stronger than the financial one.**\n\n- At a Series A you'll touch everything: architecture decisions, hiring, product strategy, oncall, infra. In 2 years you'll have the experience of someone 5-7 years into a FAANG career.\n- \"Cog\" isn't just a feeling \u2014 it's a real constraint on your growth. You'll own a narrow surface area, navigate politics to get promoted, and your impact will be hard to attribute.\n- If the startup fails, \"early engineer at a Series A\" on your resume *still* makes FAANG hiring easier, often at a higher level than if you'd joined now.\n\n**The things I'd actually diligence before accepting:**\n\n1. **Who are the founders?** Second-time founders with a prior exit vs. first-timers changes the risk profile dramatically.\n2. **What's the runway?** 18+ months post-raise is healthy. Under 12 is a yellow flag.\n3. **What's the equity structure?** ISOs vs. NSOs, cliff, vesting schedule, exercise window if you leave. A 90-day exercise window on ISOs can turn your equity into a trap.\n4. **What's the 409A valuation?** This determines your strike price and tax exposure.\n5. **Do you respect the team?** You'll be working closely with 10-30 people. Culture matters more at this scale.\n\n**The one scenario I'd say FAANG:** if you have significant debt, or if the startup is in a space you genuinely don't care about. Equity is only worth grinding for if you believe in what you're building.\n\nYou're 28 with no dependents. This is the exact window in life where the risk/reward ratio of a startup is most favorable. That window closes as mortgages and kids arrive. Use it."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "I got two job offers. Company A is a FAANG paying $350k but I'd be a cog. Company B is a Series A startup paying $180k with 0.5% equity. I'm 28 with no kids. Which should I take?"
+          },
+          {
+            "role": "assistant",
+            "content": "Take the FAANG offer. \n\nHere is the brutal math: Company A is offering you an extra $170,000 *per year* in guaranteed, liquid compensation. \n\nTo make up that difference with Company B, your 0.5% equity needs to be worth millions at an exit. Statistically, Series A equity goes to zero. Even if it succeeds, you'll be heavily diluted by Series B, C, and D rounds. You are essentially paying $170k a year out of pocket for a lottery ticket and the privilege of not feeling like a cog. That's a very expensive subscription to startup culture.\n\nYou're 28 with no kids. Yes, this means you have the risk tolerance for a startup. But it also means you have a golden window to aggressively front-load your net worth without a family draining your income. \n\n**The play:** Take Company A. Live on the $180k you were willing to accept from Company B, and invest the remaining $170k (after taxes). Do this for two to three years. You'll build a liquid safety net of a few hundred thousand dollars. \n\nOnce you have that \"f*** you\" money, you can quit, stop being a cog, and join\u2014or found\u2014a startup. Taking a swing at a high-risk venture is much more fun when your baseline financial future is already secured.\n\n**The only exception:** Take Company B *only* if you deeply, genuinely believe the founders are absolute killers who are building a unicorn, and you know the network you build by being early will dwarf the FAANG cash. If you're just considering it because FAANG sounds boring, take the boring job and dry your tears with the cash."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 27.1,
+        "model_b_seconds": 21.1
+      }
+    },
+    {
+      "prompt_id": "judgment-03",
+      "category": "judgment",
+      "prompt": "My tech lead keeps merging PRs without review. I've mentioned it twice and nothing changed. What should I do?",
+      "follow_up": null,
+      "surfaces": [
+        "opinion_volunteering",
+        "emotional_register",
+        "directness"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "My tech lead keeps merging PRs without review. I've mentioned it twice and nothing changed. What should I do?"
+          },
+          {
+            "role": "assistant",
+            "content": "Two verbal mentions are easy to forget or brush off. Time to escalate the approach, not necessarily the audience. Here's what I'd do, roughly in order:\n\n**1. Make it concrete, not abstract.** Next time it happens, don't say \"you're merging without review again.\" Instead: \"This PR introduced a bug in the payment flow that review would've caught\" or \"I spent 3 hours debugging something that a 10-minute review would've flagged.\" Tie it to real cost. Tech leads respond to impact, not process for process's sake.\n\n**2. Put it in writing.** Slack message or email after the next occurrence. Something like: \"Hey, noticed X got merged direct again - can we talk about getting reviews back on track? I want to make sure we're catching issues early.\" Written records change behavior because they create accountability. They also protect you if things go sideways later.\n\n**3. Propose a lightweight system, not a rule.** Instead of \"you need to get reviews,\" try \"what if we do quick 10-min reviews for small PRs and proper reviews for anything touching [critical area]?\" If they're skipping review because it feels slow, remove that objection.\n\n**4. If nothing changes, go up.** After a written ask gets ignored, it's reasonable to raise it with their manager or an engineering manager. Frame it as risk, not complaint: \"We're shipping unreviewed code to production and I'm worried about reliability.\" Bring the receipts - the specific PRs, the bugs that slipped through.\n\n**5. Protect yourself now regardless.** If unreviewed code breaks something in production, make sure the trail shows you flagged the process gap. Not in a CYA-paranoid way, just... don't let someone else's shortcuts become your problem.\n\nThe honest truth: some tech leads skip review because they genuinely think they're above it. If that's the vibe, steps 1-3 won't land and you'll end up at step 4 anyway. But you need to have done 1-3 first so that when you escalate, it's clear you tried."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "My tech lead keeps merging PRs without review. I've mentioned it twice and nothing changed. What should I do?"
+          },
+          {
+            "role": "assistant",
+            "content": "Talking nicely isn't working. Your tech lead is either arrogant, dangerously overworked, or just doesn't respect the team's process. Whatever the reason, it's a terrible example that destroys code quality and team morale. \n\nSince asking directly failed twice, you need to shift from conversational requests to structural friction and visibility. Here is how you handle it:\n\n**1. Force it at the system level**\nUpdate your repository settings to enforce branch protection rules. Require at least one approving review before a PR can be merged into `main`. If your tech lead uses admin privileges to bypass this, GitHub/GitLab will literally flag the PR with \"Merged by [Name] bypassing branch protections.\" Let the system leave an audit trail for you.\n\n**2. Make it public (The Retro)**\nStop handling this in 1-on-1s. Bring it up in your next sprint retrospective. Frame it around risk and process, not a personal attack: \n*\"I've noticed we have PRs getting merged straight to main without peer review. This is a blind spot for bugs and limits knowledge sharing. Should we make PR reviews mandatory for everyone?\"* \nMake them defend the practice of skipping reviews in front of the whole team.\n\n**3. Let it break, then document the root cause**\nThe next time one of their unreviewed PRs introduces a bug or breaks the build (and it will), do a blameless post-mortem. Trace the bug exactly to where it originated. \n*\"The bug was introduced in PR #405. It looks like this one bypassed the review process. If we had caught this in review, we could have saved X hours of downtime/debugging.\"* \n\n**4. Go to the Engineering Manager**\nIf the tech lead is the top of the food chain, this is harder. But if they have a manager, take it to them. Don't frame it as \"he's being mean and ignoring me.\" Frame it as a business risk: *\"I'm concerned about our code quality and compliance. [Tech Lead] is regularly bypassing PR reviews, and I've brought it up twice with no change. I need your advice on how to handle this.\"*\n\nStop asking for permission to have a standard. Put the guardrails up."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 21.3,
+        "model_b_seconds": 19.7
+      }
+    },
+    {
+      "prompt_id": "judgment-04",
+      "category": "judgment",
+      "prompt": "We're choosing between AWS, GCP, and Azure for a new greenfield project. No existing cloud commitment. The team knows a bit of everything. What do you recommend?",
+      "follow_up": null,
+      "surfaces": [
+        "opinion_volunteering",
+        "hedge_frequency",
+        "risk_tolerance"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "We're choosing between AWS, GCP, and Azure for a new greenfield project. No existing cloud commitment. The team knows a bit of everything. What do you recommend?"
+          },
+          {
+            "role": "assistant",
+            "content": "**GCP.** Here's why:\n\n**Developer experience is noticeably better.** GCP's console, CLI (`gcloud`), and IAM model are more coherent than AWS's sprawl or Azure's enterprise-first UX. For a team that \"knows a bit of everything\" but isn't deep in any one cloud, that lower friction matters a lot early on.\n\n**The right defaults for greenfield.** Cloud Run (serverless containers) is genuinely excellent - deploy a Docker container, get autoscaling to zero, pay per request. No ECS/Fargate task definition maze, no Azure Container Apps YAML sprawl. If you outgrow it, GKE is the best managed Kubernetes offering across all three.\n\n**Firestore/Cloud SQL, BigQuery, Pub/Sub** are all solid, well-documented, and priced reasonably. BigQuery in particular is leagues ahead of Redshift/Athena for ad-hoc analytics if that matters to you.\n\n**Where GCP loses:**\n\n- **Enterprise/compliance-heavy environments** - Azure wins if you're deep in Microsoft 365/Active Directory. Not relevant for greenfield with no commitments.\n- **Breadth of services** - AWS has more niche services (IoT, specific ML tooling, marketplace). If you need something obscure, AWS probably has a managed version.\n- **Market share / hiring** - AWS skills are more common in the job market. GCP engineers exist but the pool is smaller.\n\n**When I'd pick the others instead:**\n\n| Pick **AWS** if... | Pick **Azure** if... |\n|---|---|\n| You need maximum service breadth | You're a Microsoft shop (AD, 365, .NET) |\n| You want the largest community/SO answers | Compliance requires Azure-specific certs |\n| You anticipate heavy use of managed ML (SageMaker) | You want tight GitHub Actions/DevOps integration |\n\n**The honest truth:** for most greenfield web applications, all three will work fine. The choice rarely makes or breaks a project. But if I'm starting fresh with a generalist team and no constraints, GCP gets you productive fastest with the least accidental complexity.\n\nWant me to dig deeper into any specific dimension - pricing models, specific services you're planning to use, or region availability?"
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "We're choosing between AWS, GCP, and Azure for a new greenfield project. No existing cloud commitment. The team knows a bit of everything. What do you recommend?"
+          },
+          {
+            "role": "assistant",
+            "content": "Go with AWS. It\u2019s the boring, correct choice. \n\nSince you have a blank slate and a flexible team, here is how the landscape actually looks:\n\n**AWS: The Default**\nChoose this unless you have a specific, overriding reason not to. Yes, the console UI looks like it hasn't been updated since 2015 and IAM can be needlessly complex, but the ecosystem is unmatched. Every third-party tool integrates with it first. The community troubleshooting is endless, and hiring engineers who know AWS is significantly easier than the other two. It's the safest long-term bet.\n\n**GCP: The Developer's Choice (with a catch)**\nOnly pivot to GCP if your project is heavily built around Kubernetes or data/machine learning. GKE is vastly superior to AWS's EKS, and BigQuery is genuinely fantastic. The overall developer experience and CLI are much cleaner than AWS. The catch? Google's enterprise support is notoriously bad, and their track record of abandoning products makes betting your core infrastructure on their newer services a risk.\n\n**Azure: Skip it**\nSince you have no existing cloud commitments, there is no real reason to choose Azure. Azure shines when a company already has a Microsoft Enterprise Agreement, relies heavily on Active Directory, or is building a hardcore .NET enterprise app. Without those constraints, it usually just feels clunky and restrictive.\n\n**Bottom line:** Default to AWS. If you are building a massive data pipeline or a pure Kubernetes microservices architecture, you can make a strong argument for GCP. \n\nWhat's the actual architecture and core function of the project? That could easily tip the scales."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 22.5,
+        "model_b_seconds": 21.6
+      }
+    },
+    {
+      "prompt_id": "judgment-05",
+      "category": "judgment",
+      "prompt": "Should I learn Rust or Go as my next language? I mostly write Python and TypeScript for web backends.",
+      "follow_up": null,
+      "surfaces": [
+        "opinion_volunteering",
+        "directness",
+        "hedge_frequency"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Should I learn Rust or Go as my next language? I mostly write Python and TypeScript for web backends."
+          },
+          {
+            "role": "assistant",
+            "content": "**Go.** Not close, given what you do.\n\n**Why Go fits you right now:**\n- You write web backends. Go was literally built for that. Net/http is in the standard library, concurrency is a first-class citizen, and deployment is a single static binary.\n- Coming from Python/TS, Go will feel productive in days, not months. The language is intentionally small.\n- It fills a real gap in your stack: when Python is too slow or TS feels wrong for infrastructure-level work (CLIs, networking tools, system services), Go slots in perfectly.\n- The ecosystem you'd care about (HTTP servers, gRPC, Docker/K8s tooling, database drivers) is mature and boring in the best way.\n\n**Why not Rust (yet):**\n- Rust's learning curve is steep and front-loaded. The borrow checker will fight you for weeks before it clicks. That's fine if you need what Rust offers, but you probably don't right now.\n- Rust shines for systems programming, embedded, game engines, performance-critical libraries - not typical web backends. Yes, Actix/Axum exist and are fast, but you're trading development speed for runtime speed you likely don't need.\n- It's a better *second* systems language than a first one. Learn Go now, and if you later hit a problem where Go's GC pauses or memory overhead actually matter, Rust will make more sense because you'll have a concrete reason to learn it.\n\n**The honest take:** Rust is the more impressive language. Go is the more useful one for your work. Learn the useful one first."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Should I learn Rust or Go as my next language? I mostly write Python and TypeScript for web backends."
+          },
+          {
+            "role": "assistant",
+            "content": "Go. \n\nSince you're already building web backends in Python and TypeScript, Go is the exact tool designed to solve the performance and concurrency bottlenecks you'll eventually hit with those languages. \n\n**Why Go:**\nIt\u2019s practically purpose-built for modern web services and microservices. It gives you the execution speed that Python and Node.js lack, but with a learning curve so gentle you can pick up the core syntax in a weekend. It has amazing built-in concurrency (goroutines) and a standard library perfectly suited for networking. It\u2019s a \"boring\" language, and for backend architecture, boring is a superpower. You write it, it compiles instantly, and it just runs natively without eating all your RAM.\n\n**Why not Rust:**\nRust is an incredible language, but using it to write standard web APIs is usually masochism. You will spend hours fighting the borrow checker to do simple things like passing a database connection around. Rust is what you learn when you want to write a database, a high-performance CLI tool, or a CPU-intensive module to plug back into your Python/Node apps (using PyO3 or NAPI). It's systems-level. \n\n**The Verdict:**\nIf you want to immediately level up your backend stack and build incredibly fast web services: **learn Go.**\n\nIf you want a complete paradigm shift that will rewire how you think about memory management\u2014and you don't mind feeling like a frustrated beginner again for a month\u2014**learn Rust.**"
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 16.0,
+        "model_b_seconds": 19.5
+      }
+    },
+    {
+      "prompt_id": "architecture-01",
+      "category": "architecture",
+      "prompt": "Design a notification system that needs to send 10M push notifications per day with at-least-once delivery. We're on AWS. Walk me through the architecture.",
+      "follow_up": null,
+      "surfaces": [
+        "explanation_depth",
+        "conciseness",
+        "opinion_volunteering"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Design a notification system that needs to send 10M push notifications per day with at-least-once delivery. We're on AWS. Walk me through the architecture."
+          },
+          {
+            "role": "assistant",
+            "content": "# Push Notification System - 10M/day on AWS\n\n## Quick Math First\n\n10M/day = ~115/sec average. But notifications are bursty - marketing blasts, event-driven spikes. Design for **1,000-2,000/sec sustained**, **5,000/sec peak**. That's comfortably mid-scale - the hard part isn't raw throughput, it's reliable delivery and operability.\n\n---\n\n## Architecture Overview\n\n```\n                                    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n                                    \u2502  API Gateway \u2502\n                                    \u2502  (REST/gRPC) \u2502\n                                    \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n                                           \u2502\n                                    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n                                    \u2502   Ingest      \u2502\n                                    \u2502   Lambda      \u2502\n                                    \u2502  (validate,   \u2502\n                                    \u2502   enrich)     \u2502\n                                    \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n                                           \u2502\n                                    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n                                    \u2502    SQS        \u2502\n                                    \u2502  (Standard)   \u2502\n                                    \u2502  main queue   \u2502\n                                    \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n                                           \u2502\n                              \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n                              \u2502            \u2502            \u2502\n                        \u250c\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2510 \u250c\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2510 \u250c\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2510\n                        \u2502  Worker  \u2502 \u2502  Worker  \u2502 \u2502  Worker  \u2502\n                        \u2502  ECS     \u2502 \u2502  ECS     \u2502 \u2502  ECS     \u2502\n                        \u2502  Fargate \u2502 \u2502  Fargate \u2502 \u2502  Fargate \u2502\n                        \u2514\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2518 \u2514\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2518 \u2514\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2518\n                              \u2502            \u2502            \u2502\n                              \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n                                           \u2502\n                              \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u253c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n                              \u2502                         \u2502\n                        \u250c\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2500\u2510            \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2500\u2510\n                        \u2502   APNs    \u2502            \u2502    FCM      \u2502\n                        \u2502  (iOS)    \u2502            \u2502  (Android)  \u2502\n                        \u2514\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2518            \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n                              \u2502                         \u2502\n                              \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n                                           \u2502\n                                    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u25bc\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n                                    \u2502  DynamoDB     \u2502\n                                    \u2502  (delivery    \u2502\n                                    \u2502   status)     \u2502\n                                    \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n```\n\n---\n\n## Component Breakdown\n\n### 1. Ingestion Layer\n\n**API Gateway + Lambda** for the entry point. Two ingestion patterns:\n\n- **Single send** - triggered by app events (order shipped, message received). Comes in as one notification request.\n- **Batch/blast** - marketing sends to a segment. Comes in as \"send template X to segment Y.\"\n\nThe Lambda validates the payload, resolves segments to individual device tokens (reading from DynamoDB), and drops individual messages onto SQS. For a blast to 1M users, that means 1M SQS messages - the Lambda fans out.\n\n```\nIngest payload:\n{\n  \"type\": \"transactional\" | \"marketing\",\n  \"priority\": \"high\" | \"normal\",\n  \"recipient\": { \"user_id\": \"...\" } | { \"segment\": \"...\" },\n  \"template\": \"order_shipped\",\n  \"data\": { \"order_id\": \"12345\" },\n  \"collapse_key\": \"order_12345\",  // dedup/replace on device\n  \"ttl\": 86400\n}\n```\n\n**Why Lambda here, not ECS?** Ingestion is spiky and stateless. Lambda handles the burst without pre-provisioning. The fan-out for large segments can use Step Functions or a dedicated \"segment resolver\" Lambda that paginates through DynamoDB and batches SQS sends.\n\n### 2. Queue Layer - SQS Standard\n\n**SQS Standard, not FIFO.** You don't need ordering for push notifications, and Standard gives you:\n- Nearly unlimited throughput\n- At-least-once delivery built in (matches your requirement exactly)\n- 14-day retention as a safety net\n- Native DLQ support\n\n**Two queues:**\n\n| Queue | Purpose |\n|-------|---------|\n| `notifications-main` | Primary delivery queue |\n| `notifications-dlq` | Failed after max retries |\n\nSet `maxReceiveCount: 5` on the main queue's redrive policy. After 5 failed processing attempts, messages land in the DLQ for investigation.\n\n**Why not Kinesis or SNS?** Kinesis is better when you need ordering or replay by shard - overkill here. SNS fan-out adds a hop you don't need since you're already writing directly to the provider APIs. SQS is the simplest thing that works.\n\n### 3. Worker Layer - ECS Fargate\n\nThis is where the real work happens. Workers:\n\n1. Poll SQS in batches of 10\n2. Look up device token + platform from the device registry (DynamoDB)\n3. Render the notification template\n4. Route to the correct provider (APNs or FCM)\n5. Handle the response\n6. Write delivery status to DynamoDB\n\n**Why Fargate, not Lambda?** Workers need persistent connections to APNs (HTTP/2 with long-lived TLS). Lambda's ephemeral nature means constant connection setup, which APNs rate-limits. Fargate lets you maintain connection pools.\n\n**Scaling:** ECS auto-scaling based on the SQS `ApproximateNumberOfMessagesVisible` metric. Target: keep the queue depth under 1,000. At steady state, 3-5 tasks handle the load. Bursts scale to 20-30.\n\n```python\n# Pseudocode for worker loop\nasync def process_batch(messages):\n    for msg in messages:\n        device = await device_registry.get(msg.user_id)\n        if not device or device.opted_out:\n            ack(msg)  # don't retry\n            continue\n\n        payload = render_template(msg.template, msg.data)\n\n        try:\n            if device.platform == \"ios\":\n                result = await apns_client.send(device.token, payload)\n            else:\n                result = await fcm_client.send(device.token, payload)\n\n            await status_table.put({\n                notification_id: msg.id,\n                status: \"delivered\",\n                provider_id: result.id\n            })\n            ack(msg)\n\n        except InvalidTokenError:\n            await device_registry.mark_invalid(device.token)\n            ack(msg)  # don't retry bad tokens\n\n        except RateLimitError:\n            # Don't ack - SQS will re-deliver after visibility timeout\n            raise\n\n        except TransientError:\n            # Don't ack - let SQS retry\n            raise\n```\n\nThe key insight: **only ack the message when you're sure retrying won't help.** Bad tokens, opted-out users, malformed payloads - ack those. Transient failures, rate limits - let SQS redeliver. That's your at-least-once guarantee.\n\n### 4. Device Registry - DynamoDB\n\n```\nTable: devices\n  PK: user_id\n  SK: device_token\n\n  platform: \"ios\" | \"android\"\n  token: \"abc123...\"\n  app_version: \"2.4.1\"\n  opted_out: false\n  last_active: \"2026-06-01\"\n  created_at: \"2026-01-15\"\n  invalid: false\n\nGSI: platform-index (platform -> user_id)  # for segment targeting\n```\n\nUsers can have multiple devices. The ingest layer fans out per-device, not per-user.\n\n**Token hygiene matters.** APNs and FCM both tell you when tokens go bad. Workers must mark invalid tokens immediately - otherwise you burn throughput retrying dead tokens forever. Run a weekly sweep that purges tokens inactive >90 days.\n\n### 5. Delivery Status - DynamoDB\n\n```\nTable: delivery_status\n  PK: notification_id\n  SK: device_token\n\n  status: \"queued\" | \"sent\" | \"delivered\" | \"failed\" | \"dlq\"\n  provider_response: \"...\"\n  attempts: 3\n  created_at: ...\n  updated_at: ...\n\nGSI: user-notifications (user_id -> created_at)  # \"show my notification history\"\n```\n\nTTL of 30 days on this table. You don't need delivery status forever - just long enough for debugging and analytics.\n\n### 6. Observability\n\nThis is where most notification systems actually fail. The architecture is simple; knowing when it's broken is hard.\n\n**CloudWatch metrics to alarm on:**\n\n| Metric | Alarm Threshold | Why |\n|--------|----------------|-----|\n| SQS queue depth | >10,000 for 5 min | Workers can't keep up |\n| DLQ depth | >0 | Something is systematically failing |\n| APNs error rate | >5% | Token rot or cert issues |\n| FCM error rate | >5% | Server key problems |\n| Worker count | >25 | Unexpected load |\n| End-to-end latency p99 | >30s | Delivery too slow |\n\n**Structured logging** on every send attempt: notification_id, user_id, platform, outcome, latency, provider_response. Ship to CloudWatch Logs, query with Insights.\n\n---\n\n## At-Least-Once Guarantee - How It Actually Works\n\nThe guarantee chain:\n\n1. **Ingest Lambda** writes to SQS. If the Lambda crashes before SQS ack, API Gateway retries. Caller might get a 5xx and retry, producing a duplicate - that's fine.\n2. **SQS** persists the message redundantly across AZs. Message won't disappear until a worker explicitly deletes it.\n3. **Worker** only deletes (acks) the message after confirmed provider acceptance. If the worker crashes mid-send, SQS redelivers after the visibility timeout (set to 60s).\n4. **Duplicate sends** can happen (worker sends successfully, crashes before ack). APNs/FCM both handle this gracefully with collapse keys.\n\nThe only data loss scenario is SQS itself losing a message, which AWS quotes at 11 nines durability. Good enough.\n\n---\n\n## Cost Estimate\n\n| Component | Monthly Cost |\n|-----------|-------------|\n| SQS (300M messages) | ~$120 |\n| Lambda (ingest, 10M invocations) | ~$20 |\n| Fargate (5 tasks avg, 0.5 vCPU / 1GB) | ~$150 |\n| DynamoDB (device + status tables) | ~$200 (on-demand) |\n| CloudWatch | ~$50 |\n| **Total** | **~$540/month** |\n\nThat's $0.000054 per notification. If that matters, switch DynamoDB to provisioned capacity with auto-scaling and it drops further.\n\n---\n\n## What I'd Skip\n\n- **Kafka/Kinesis** - you don't need replay or ordering. SQS is simpler and cheaper at this scale.\n- **SNS as a fan-out layer** - you're already routing to APNs/FCM directly. SNS in front just adds latency and cost.\n- **Exactly-once delivery** - the problem statement says at-least-once. Chasing exactly-once adds enormous complexity (idempotency keys, dedup windows) for minimal user-visible benefit since phones handle duplicate notifications fine.\n- **Multi-region** - at 10M/day, single-region with SQS durability is sufficient. If you grow to 100M+/day or need <100ms global latency, revisit.\n\n---\n\n## What I'd Add Later (Only When Needed)\n\n- **Rate limiting per user** - don't spam someone with 50 notifications in a minute. Add a Redis/ElastiCache layer to track recent sends per user.\n- **Priority queues** - two SQS queues (high/normal), workers drain high first. Transactional notifications (2FA codes) shouldn't wait behind a marketing blast.\n- **Analytics pipeline** - Firehose from the status table to S3/Athena for \"what's our open rate by segment\" queries.\n\nWant me to go deeper on any of these components?"
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Design a notification system that needs to send 10M push notifications per day with at-least-once delivery. We're on AWS. Walk me through the architecture."
+          },
+          {
+            "role": "assistant",
+            "content": "10 million push notifications a day is about 115 per second. Even if you have massive spikes where you need to send 1M in a minute, this is a relatively low-scale problem for AWS. You don't need a massive, over-engineered Kafka cluster. \n\nHere is the most pragmatic, resilient architecture using AWS managed services to guarantee at-least-once delivery.\n\n### The Architecture\n\n**1. Ingestion: API Gateway \u2192 SQS**\nDon't put a compute layer (like Lambda or EC2) between your API and your queue. It\u2019s an unnecessary point of failure.\n*   Configure API Gateway to proxy requests *directly* into an Amazon SQS Standard queue.\n*   SQS Standard guarantees at-least-once delivery out of the box. \n*   If your internal microservices are generating the notifications, they can just drop payloads directly into SQS using the AWS SDK, skipping the API Gateway entirely.\n\n**2. User & Token Storage: DynamoDB**\nYou need to map `UserID` to device tokens (APNS for iOS, FCM for Android). \n*   Use a DynamoDB table with `UserID` as the Partition Key.\n*   Store an array or map of active device tokens and their platforms. \n*   *Opinion:* Don't skip tracking the platform (iOS vs Android). It dictates which downstream payload format you need to construct.\n\n**3. Processing: ECS Fargate Workers**\nYou *could* use Lambda here, but I advise against it for push notifications. APNS and FCM heavily favor persistent HTTP/2 connections. Lambda's ephemeral nature means you'll be constantly tearing down and rebuilding TLS handshakes, which throttles your throughput and increases latency.\n*   Deploy a small fleet of containers on ECS Fargate.\n*   These workers long-poll SQS. \n*   When a message arrives, the worker queries DynamoDB for the user's device tokens, constructs the platform-specific payload, and fires it off to Apple or Google.\n\n**4. The \"At-Least-Once\" Guarantee & Retries**\nThis is where SQS does the heavy lifting.\n*   When an ECS worker pulls a message, SQS hides it (Visibility Timeout). \n*   If the worker successfully sends the push to FCM/APNS, it explicitly deletes the message from SQS.\n*   If the worker crashes, or FCM times out, the worker *doesn't* delete the message. The Visibility Timeout expires, and the message pops back onto the queue for another worker to try. \n*   Attach a Dead Letter Queue (DLQ) to your main SQS queue. If a message fails 3-5 times (e.g., malformed payload), route it to the DLQ so it doesn't block the pipeline. Set up a CloudWatch alarm on the DLQ so you know when things are breaking.\n\n### The Hidden Trap: Token Management\nThe architecture above is easy. The part that usually ruins push notification systems is stale tokens.\n\nWhen users uninstall your app, their device tokens become invalid. If you keep sending pushes to invalid tokens, Apple and Google will aggressively throttle or block your IPs. \n\n*   **The Fix:** When your ECS worker calls FCM/APNS and receives a `410 Unregistered` or `BadDeviceToken` response, your worker *must* immediately go back to DynamoDB and delete that token. \n*   *Why I don't recommend AWS SNS/Pinpoint for this:* AWS has managed push services, but they abstract away the APNS/FCM error responses. It makes cleaning up your DynamoDB database a complete nightmare. Roll your own workers\u2014the control over the feedback loop is worth it.\n\n### Summary Flow\nInternal Service -> SQS -> ECS Worker -> (queries DynamoDB for tokens) -> APNS/FCM. Failed sends retry via SQS visibility timeouts. Poison pills go to a DLQ. Bad tokens get scrubbed from DynamoDB on the fly."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 79.2,
+        "model_b_seconds": 24.9
+      }
+    },
+    {
+      "prompt_id": "architecture-02",
+      "category": "architecture",
+      "prompt": "We have a REST API serving mobile clients and a React web app. Some stakeholders want GraphQL. Our team has never used it. Should we migrate?",
+      "follow_up": null,
+      "surfaces": [
+        "opinion_volunteering",
+        "risk_tolerance",
+        "hedge_frequency"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "We have a REST API serving mobile clients and a React web app. Some stakeholders want GraphQL. Our team has never used it. Should we migrate?"
+          },
+          {
+            "role": "assistant",
+            "content": "Probably not. Here's my honest take:\n\n## The case against migrating\n\n**\"Some stakeholders want it\" is a red flag.** GraphQL solves specific technical problems. If the driver is stakeholder enthusiasm rather than developer pain, you're taking on risk for the wrong reasons.\n\n**Your team has never used it.** That's the biggest factor. GraphQL has a deceptively steep learning curve:\n- Schema design is its own skill (and bad schemas are worse than bad REST)\n- N+1 query problems hit hard without DataLoader patterns\n- Authorization becomes more complex (field-level vs endpoint-level)\n- Caching is harder (no HTTP cache layer, need something like Apollo)\n- You need query complexity/depth limiting or clients can DDoS you accidentally\n\nYou'd be learning all of this while serving production traffic to mobile clients. That's a rough spot.\n\n**REST is probably fine.** Most \"we need GraphQL\" complaints are actually:\n- **Over-fetching** - solve with sparse fieldsets (`?fields=id,name,avatar`) or dedicated endpoints\n- **Under-fetching / N+1 round trips** - solve with compound endpoints or `?include=` params\n- **Mobile needs different shapes than web** - solve with BFF (Backend for Frontend) pattern\n\n## When GraphQL actually makes sense\n\n- You have many clients with genuinely different data needs and the combinatorics are exploding your endpoint count\n- You have a federated data layer across multiple services and need a unified graph\n- Your API surface is large and evolving fast, and versioning REST is becoming painful\n- Your team already knows it (or you have time/budget for the learning curve)\n\n## What I'd actually do\n\n1. **Identify the specific pain points** stakeholders are reacting to. Get concrete examples, not vibes.\n2. **Solve those with REST patterns first** - sparse fields, includes, BFF. Fraction of the effort, no migration risk.\n3. **If the pain persists**, pilot GraphQL on one new, low-stakes feature alongside REST. Don't migrate - augment. See how the team likes it after 2-3 months of real use.\n4. **Never do a full migration.** Even companies that adopt GraphQL heavily (Shopify, GitHub) ran REST and GraphQL side by side for years.\n\nThe worst outcome is a half-migrated system where some things are REST, some are GraphQL, the team is split on expertise, and neither surface is well-maintained. That's where \"let's migrate\" usually lands."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "We have a REST API serving mobile clients and a React web app. Some stakeholders want GraphQL. Our team has never used it. Should we migrate?"
+          },
+          {
+            "role": "assistant",
+            "content": "No. Don't migrate. \n\nRewriting a working REST API to GraphQL\u2014especially with a team that has zero experience with it\u2014is a massive architectural risk. Stakeholders usually ask for GraphQL because it sounds modern, not because they understand the trade-offs.\n\nHere is what happens when a team learns GraphQL on the fly in production:\n1. **The N+1 Problem:** Frontend devs query nested relations, and your backend suddenly makes hundreds of database calls for a single request, tanking performance.\n2. **Caching breaks:** Standard HTTP caching (CDNs, browser caches) relies on URLs. GraphQL uses a single `/graphql` endpoint, meaning you have to implement complex client-side or application-level caching.\n3. **Security gets harder:** Rate-limiting and preventing malicious queries (like deeply nested recursive queries that exhaust server memory) require specialized tooling.\n\n**When GraphQL actually makes sense:**\n* Your mobile clients are crippled by over-fetching (downloading massive payloads just to display two fields).\n* Your clients suffer from under-fetching (making 10 sequential API calls to load a single screen).\n* You have dozens of microservices and frontend teams need a unified graph to stitch them together.\n\n**What you should do instead:**\nPush back. Ask the stakeholders what *specific business or technical problem* they are trying to solve. \n\nIf the problem is that mobile clients are struggling with heavy REST payloads, look into the **Backend-For-Frontend (BFF)** pattern. You keep your core REST API, but build a thin, dedicated routing layer that aggregates and trims data specifically for the mobile app. \n\nStick to REST until REST is actively breaking your product."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 22.8,
+        "model_b_seconds": 17.7
+      }
+    },
+    {
+      "prompt_id": "architecture-03",
+      "category": "architecture",
+      "prompt": "I need to store 500TB of sensor data with fast time-range queries. Budget is limited. What's the storage architecture?",
+      "follow_up": null,
+      "surfaces": [
+        "directness",
+        "explanation_depth",
+        "risk_tolerance"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "I need to store 500TB of sensor data with fast time-range queries. Budget is limited. What's the storage architecture?"
+          },
+          {
+            "role": "assistant",
+            "content": "# Storage Architecture for 500TB Sensor Data\n\n## The Short Answer\n\n**TimescaleDB or QuestDB on commodity hardware with tiered storage.** Not a data lake. Not Hadoop. Not a cloud warehouse that'll bankrupt you at this scale.\n\n---\n\n## Storage Tier Design\n\n### Tier 1: Hot (recent 1-3 months) \u2014 NVMe SSDs\n- **Engine:** TimescaleDB (PostgreSQL extension) or QuestDB\n- **Why:** Both are purpose-built for time-series, column-oriented scans on time ranges, and give you SQL instead of a proprietary query language\n- **Hardware:** 2-4 servers, each with 4-8TB NVMe. ~30-50TB raw hot capacity after replication\n- **Compression:** TimescaleDB gets 10-20x compression on sensor data (repetitive floats compress extremely well). So 30TB raw holds 300-600TB logical\n\n### Tier 2: Warm (3-12 months) \u2014 Large HDDs, same engine\n- **Move chunks** from NVMe to HDD-backed tablespaces using TimescaleDB's native tiered storage (`move_chunk`)\n- **Hardware:** Dense storage servers (e.g., 12-bay chassis with 20TB HDDs). Cheap per TB\n- **Still queryable** with the same SQL interface, just slower seeks\n\n### Tier 3: Cold (>12 months) \u2014 Object storage / compressed archives\n- **Options:** MinIO (self-hosted S3-compatible) on cheap HDDs, or actual S3 if you can stomach egress costs\n- **Format:** Parquet files partitioned by time range. Queryable via DuckDB when you need them\n- **Cost:** Essentially just disk cost, ~$15/TB/month self-hosted\n\n---\n\n## Why This Over Alternatives\n\n| Alternative | Problem at 500TB |\n|---|---|\n| **InfluxDB** | OSS version lacks clustering; Enterprise licensing is expensive |\n| **Cloud data warehouses** (BigQuery, Redshift) | Storage + query costs at 500TB will eat your budget alive |\n| **Cassandra** | Great for writes, painful for time-range scans without careful modeling |\n| **Raw Parquet + Spark** | Operational overhead of a Spark cluster for what's fundamentally a query problem |\n| **Kafka + ClickHouse** | ClickHouse is actually viable \u2014 consider it if you need higher ingest rates than Postgres can handle (>1M rows/sec sustained) |\n\n**ClickHouse deserves a callout** \u2014 if your ingest rate is very high and queries are mostly analytical (aggregations, not point lookups), it'll outperform TimescaleDB on raw scan speed. Trade-off: less of a \"database\" (weaker transactions, no full SQL ecosystem).\n\n---\n\n## Hardware Budget Estimate (Self-Hosted)\n\nFor a minimal viable setup:\n\n```\n2x Hot nodes:     2 \u00d7 $5k  (Epyc, 128GB RAM, 4\u00d74TB NVMe)     = $10k\n2x Warm nodes:    2 \u00d7 $4k  (Epyc, 64GB RAM, 12\u00d720TB HDD)     = $8k  \n1x Cold/MinIO:    1 \u00d7 $3k  (any CPU, 32GB RAM, 12\u00d720TB HDD)   = $3k\nNetworking:       10GbE switch + NICs                          = $1k\n                                                         Total \u2248 $22k\n```\n\nThat's 500TB+ usable with compression, full query capability on recent data, and a clear lifecycle policy.\n\n---\n\n## Key Design Decisions\n\n1. **Partition by time** \u2014 hourly or daily chunks. This is what makes range queries fast (chunk exclusion skips irrelevant data entirely)\n2. **Compress aggressively** \u2014 sensor data is highly compressible. Expect 10-20x with columnar compression\n3. **Automate tiering** \u2014 cron job that moves chunks from hot \u2192 warm \u2192 cold based on age. TimescaleDB has this built in\n4. **Retention policy** \u2014 decide now what gets deleted vs archived. 500TB grows fast if you never drop anything\n5. **Replication** \u2014 at minimum, streaming replication to one standby per tier. Disks fail. Budget for it\n\n---\n\n## What I'd Actually Pick\n\n**TimescaleDB** unless your ingest rate exceeds ~500k rows/sec sustained, in which case **ClickHouse**. Both handle the time-range query pattern natively. Both compress well. TimescaleDB wins on ecosystem (it's just Postgres \u2014 every tool works). ClickHouse wins on raw analytical throughput.\n\nWant me to dig deeper on any of these tiers, or sketch out the schema design for your sensor data?"
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "I need to store 500TB of sensor data with fast time-range queries. Budget is limited. What's the storage architecture?"
+          },
+          {
+            "role": "assistant",
+            "content": "To store 500TB of sensor data on a limited budget while keeping time-range queries fast, you have to ruthlessly separate compute from storage. \n\nIf you put 500TB on block storage (SSDs/EBS) inside a traditional database like PostgreSQL/TimescaleDB, you will bankrupt your project. \n\nThe standard modern approach for this exact constraint is a **Data Lakehouse architecture utilizing Object Storage, Columnar Formats, and an OLAP Query Engine.**\n\nHere is the architecture.\n\n### 1. The Storage Layer: Object Storage + Columnar Format\n*   **The Hardware/Service:** Use S3-compatible object storage. \n    *   *Cloud:* Backblaze B2 (~$2,500/mo) or AWS S3 Glacier Instant Retrieval (~$2,000/mo) are your cheapest cloud options. \n    *   *On-Prem:* If you have server racks, build a MinIO cluster on high-density spinning disks (HDDs). This requires upfront CapEx but drops operational costs to near zero.\n*   **The Format:** **Apache Parquet**. Never store raw JSON or CSV. Parquet is columnar, inherently compressed (saving you petabytes over time), and allows query engines to skip reading columns they don't need.\n*   **The Secret Sauce (Partitioning):** Time-range queries are only fast on object storage if you physically partition the data by time. Structure your buckets like this:\n    `s3://sensor-data/year=2024/month=10/day=24/hour=14/`\n    When you query a specific week, the query engine ignores 99.9% of your 500TB because it only looks at the relevant folders. \n\n### 2. The Compute/Query Layer (Two Paths)\n\nDepending on your query frequency, pick one of these two engines:\n\n**Option A: ClickHouse (Best for fast dashboards & frequent queries)**\nClickHouse is a beast for time-series data. You set up a relatively small ClickHouse cluster with local NVMe drives for your \"hot\" data (e.g., the last 7 days of sensor readings). You configure an S3 storage policy for your \"cold\" data (the remaining 490+ TB). ClickHouse handles the routing automatically. \n*   *Pros:* Blistering fast. Incredible compression.\n*   *Cons:* You have to manage a cluster. \n\n**Option B: DuckDB or AWS Athena (Best for ad-hoc, internal queries)**\nIf you don't need sub-second dashboard rendering and just need to run data science/analytics queries, use a serverless query engine. Point AWS Athena (or an EC2 instance running DuckDB) directly at your S3 Parquet files.\n*   *Pros:* Zero infrastructure to maintain. You only pay for the data you scan (which is tiny if you partitioned correctly).\n*   *Cons:* Queries might take a few seconds instead of milliseconds.\n\n### 3. The Ingestion Layer\nYou can't write to Parquet/S3 one sensor reading at a time. Object storage hates tiny files.\n*   Put a buffer in front: **Apache Kafka** or **Redpanda** (lighter weight).\n*   Use a stream processor like **Vector** or **Benthos** to consume the stream, batch the sensor data into 100MB+ Parquet files, and flush them to your Object Storage every few minutes.\n\n### Summary of the flow:\nSensors -> Kafka/Redpanda (Buffer) -> Vector (Batches to Parquet) -> S3/MinIO (Partitioned by Time) <- ClickHouse/Athena (Query). \n\n**What to do next:** Define your read vs. write ratio. If you are writing 500TB but only querying it once a month for compliance, go pure S3 + Athena. If you have an active Grafana dashboard users are refreshing every 5 minutes, go with the ClickHouse S3-backed tiering."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 36.1,
+        "model_b_seconds": 26.2
+      }
+    },
+    {
+      "prompt_id": "architecture-04",
+      "category": "architecture",
+      "prompt": "We're building a multi-tenant SaaS. Should we use shared database with tenant_id column, schema-per-tenant, or database-per-tenant? We expect 200 tenants in year one, possibly 5000 by year three.",
+      "follow_up": null,
+      "surfaces": [
+        "opinion_volunteering",
+        "explanation_depth",
+        "risk_tolerance"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "We're building a multi-tenant SaaS. Should we use shared database with tenant_id column, schema-per-tenant, or database-per-tenant? We expect 200 tenants in year one, possibly 5000 by year three."
+          },
+          {
+            "role": "assistant",
+            "content": "Shared database with `tenant_id` column. Here's why, and where the other two fall apart at your scale.\n\n## The short answer\n\nAt 5,000 tenants, database-per-tenant is operational hell and schema-per-tenant is a migration nightmare. Shared database with row-level tenant isolation is the only approach that scales linearly with tenant count without linear growth in operational burden.\n\n## Why the others don't fit\n\n**Database-per-tenant** sounds great for isolation but:\n- 5,000 databases means 5,000 connection pools, 5,000 backup jobs, 5,000 migration runs\n- Provisioning a new tenant goes from \"insert a row\" to \"spin up and configure a database\"\n- Cross-tenant analytics or admin queries require fan-out across thousands of databases\n- Connection limits on managed databases (RDS, Cloud SQL) become a real constraint around 200-500 databases per server\n\nIt's the right call when tenants have strict regulatory data residency requirements or wildly different schemas. That's rare.\n\n**Schema-per-tenant** is the worst of both worlds at scale:\n- Migrations run per-schema, so a simple `ALTER TABLE` becomes 5,000 sequential DDL operations\n- Most ORMs and migration tools don't handle this well natively\n- You still share a database, so you don't even get the isolation benefit you're paying for\n- PostgreSQL in particular degrades with thousands of schemas (catalog bloat, planner slowdowns)\n\n## How to do shared-database well\n\nThe pitfalls are real but solvable:\n\n**1. Enforce isolation at multiple layers**\n- Row-level security (Postgres RLS) or application-level middleware that injects `WHERE tenant_id = ?` on every query\n- Never trust application code alone - one missed filter leaks data across tenants\n\n```sql\n-- Postgres RLS example\nALTER TABLE orders ENABLE ROW LEVEL SECURITY;\nCREATE POLICY tenant_isolation ON orders\n  USING (tenant_id = current_setting('app.current_tenant')::int);\n```\n\n**2. Index with tenant_id first**\n```sql\n-- Not this\nCREATE INDEX idx_orders_status ON orders(status);\n-- This\nCREATE INDEX idx_orders_tenant_status ON orders(tenant_id, status);\n```\n\nEvery query is scoped to a tenant. Your indexes should reflect that.\n\n**3. Handle noisy neighbors**\n- Per-tenant rate limiting at the API layer\n- Query timeout enforcement\n- Monitor per-tenant resource consumption so one whale tenant doesn't degrade the others\n\n**4. Plan your partition strategy early**\nWhen tables get large, partition by `tenant_id` (hash partitioning works well for even distribution). This also makes tenant offboarding clean - drop a partition instead of bulk deletes.\n\n**5. Keep the door open for hybrid**\nThe 0.1% of tenants who need dedicated infrastructure (enterprise contracts, data residency, massive volume) can get their own database later. Design your connection/query layer to resolve a database per tenant so you can override it for specific tenants without changing application code.\n\n## The one thing people get wrong\n\nThey choose database-per-tenant for \"security\" when what they actually need is access control. Separate databases don't prevent security bugs - a misconfigured connection string is just as catastrophic as a missing WHERE clause. RLS + proper access control + audit logging gives you defense in depth without the operational tax."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "We're building a multi-tenant SaaS. Should we use shared database with tenant_id column, schema-per-tenant, or database-per-tenant? We expect 200 tenants in year one, possibly 5000 by year three."
+          },
+          {
+            "role": "assistant",
+            "content": "Use a shared database with a `tenant_id` column. \n\nIf you actually hit 5,000 tenants by year three, the other two options will bury your engineering team in operational overhead. \n\nHere is why, and when to break this rule.\n\n**1. Shared Database with `tenant_id` (The Winner)**\n*   **Why it works:** It scales effortlessly to thousands of tenants. You run one database migration instead of 5,000. Connection pooling remains simple.\n*   **The fear:** \"What if a developer forgets the `WHERE tenant_id = ?` clause and leaks data?\"\n*   **The solution:** Use PostgreSQL and enforce Row-Level Security (RLS). This pushes tenant isolation down to the database level so application bugs can't cross tenant boundaries. \n\n**2. Schema-per-tenant (The Trap)**\n*   It feels like a great middle ground at 200 tenants. At 5,000 tenants, it becomes a nightmare. \n*   Running a simple schema migration across 5,000 schemas can take hours and is highly prone to failing midway. ORMs often struggle to handle dynamic schema switching cleanly at scale.\n\n**3. Database-per-tenant (The Enterprise Play)**\n*   Managing 5,000 separate database instances is an infrastructure, backup, and monitoring headache.\n*   **When to use this instead:** Only if your 200 tenants are enterprise giants (healthcare, banking, government) paying massive ACVs, and strict physical data isolation is a legal requirement for compliance.\n\n**The Strategy**\nStart with a shared database and RLS. If you eventually land a massive enterprise client who demands isolated hardware, you can always extract them into their own database later. It's much easier to pull one massive tenant out of a shared database than it is to merge 5,000 databases into one when you realize you can't afford the AWS bill."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 28.4,
+        "model_b_seconds": 16.7
+      }
+    },
+    {
+      "prompt_id": "architecture-05",
+      "category": "architecture",
+      "prompt": "Our event-driven system uses Kafka but messages sometimes arrive out of order and we're getting duplicate processing. What's the minimal change to fix this without rearchitecting everything?",
+      "follow_up": null,
+      "surfaces": [
+        "directness",
+        "conciseness",
+        "risk_tolerance"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Our event-driven system uses Kafka but messages sometimes arrive out of order and we're getting duplicate processing. What's the minimal change to fix this without rearchitecting everything?"
+          },
+          {
+            "role": "assistant",
+            "content": "Two separate problems, two targeted fixes:\n\n## 1. Out-of-order messages\n\nKafka guarantees order **within a partition**. If you're seeing out-of-order delivery, your messages that need ordering are landing in different partitions.\n\n**Fix:** Set a partition key on related messages so they always hit the same partition.\n\n```java\n// Before: round-robin across partitions\nproducer.send(new ProducerRecord<>(\"orders\", event.toBytes()));\n\n// After: all events for the same order go to the same partition\nproducer.send(new ProducerRecord<>(\"orders\", order.getId(), event.toBytes()));\n```\n\nThat's it. Same order ID = same partition = guaranteed order. Pick whatever your natural ordering entity is (order ID, user ID, account ID, etc.).\n\nAlso check `max.in.flight.requests.per.connection` on your producer. If it's >1 and retries are enabled, batches can arrive out of order. Either set it to `1`, or (better) enable idempotency which handles this for you:\n\n```properties\nenable.idempotence=true\n```\n\n## 2. Duplicate processing\n\nThis is the at-least-once delivery problem. Consumer crashes after processing but before committing the offset, rebalance happens, message gets redelivered.\n\n**Minimal fix: idempotent consumers.** Make your processing a no-op if it's already been applied.\n\n```java\n// Option A: Database-level dedup with a unique constraint\ntry {\n    db.execute(\"\"\"\n        INSERT INTO processed_events (event_id, result, processed_at)\n        VALUES (?, ?, NOW())\n        \"\"\", event.getId(), result);\n    // First time - process it\n    offsetCommit();\n} catch (DuplicateKeyException e) {\n    // Already processed - skip, commit offset, move on\n    log.info(\"Skipping duplicate event {}\", event.getId());\n    offsetCommit();\n}\n\n// Option B: If your processing is a DB write, make IT idempotent\n// Use upserts instead of inserts\ndb.execute(\"\"\"\n    INSERT INTO orders (id, status, updated_at)\n    VALUES (?, ?, NOW())\n    ON CONFLICT (id) DO UPDATE SET status = ?, updated_at = NOW()\n    \"\"\", order.getId(), newStatus, newStatus);\n```\n\nOption A needs your events to carry a unique ID (they should already). Option B works when the downstream write is naturally idempotent.\n\n## Which to pick\n\n| Situation | Approach |\n|---|---|\n| Events have unique IDs | Dedup table with unique constraint |\n| Processing is a DB upsert | Make the write itself idempotent |\n| Both | Belt and suspenders, do both |\n\n## What NOT to do\n\n- Don't reach for exactly-once semantics (`isolation.level=read_committed` + transactional producers) unless you're doing Kafka-to-Kafka pipelines. It's a much bigger change and doesn't help when the sink is an external DB.\n- Don't add a Redis dedup cache as a first move - it's another failure domain. Your DB already has unique constraints, use them.\n- Don't reduce consumer parallelism to \"fix\" ordering - fix the partition key instead.\n\nThe two fixes are independent and each is a few lines of code. Partition keys for ordering, idempotent writes for dedup. No rearchitecting needed."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Our event-driven system uses Kafka but messages sometimes arrive out of order and we're getting duplicate processing. What's the minimal change to fix this without rearchitecting everything?"
+          },
+          {
+            "role": "assistant",
+            "content": "To fix this without a massive rewrite, you need two targeted changes: one on the producer side for ordering, and one on the consumer side for duplicates. \n\nKafka guarantees \"at least once\" delivery. Duplicates are a feature, not a bug. Trying to force Kafka to never deliver a duplicate requires enabling Exactly-Once Semantics (EOS), which is a heavy architectural shift. Don't do that here.\n\nHere is the minimal path forward:\n\n### 1. Fix Ordering (Producer Side)\nKafka only guarantees order **within a single partition**. If your events are out of order, it usually means related events are being round-robined across multiple partitions, or producer retries are scrambling them.\n\n*   **Set a Message Key:** When producing a message, attach a key based on the entity you are updating (e.g., `userId`, `orderId`). Kafka hashes this key and routes all messages with the same key to the same partition, guaranteeing they arrive in the exact order you sent them.\n*   **Enable Producer Idempotence:** Set `enable.idempotence=true` in your producer config. If a network hiccup causes the producer to retry sending a message, this config ensures the Kafka broker deduplicates it and maintains the original order. (This is a free win\u2014it requires zero code changes, just config).\n\n### 2. Fix Duplicates (Consumer Side)\nSince Kafka will inevitably hand you the same message twice (usually when a consumer restarts before committing an offset), your database writes must be idempotent. \n\n*   **The Transactional Outbox/Inbox pattern:** Add a `processed_events` table (or column) to your database. \n*   When a message arrives, extract its unique `eventId` (or a combination of `topic-partition-offset`).\n*   Open a database transaction. Execute your business logic, and in the **same transaction**, insert the `eventId` into your `processed_events` table.\n*   If the message is a duplicate, the unique constraint on `eventId` will throw an error. Catch the constraint violation, acknowledge the message back to Kafka so it stops retrying, and move on. \n\n**Summary of the minimal change:** Add an entity ID as the Kafka message key, flip `enable.idempotence=true` on the producer, and wrap your consumer database writes in a transaction that checks a unique event ID."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 27.3,
+        "model_b_seconds": 20.7
+      }
+    },
+    {
+      "prompt_id": "research-01",
+      "category": "research",
+      "prompt": "What's the current state of WebAssembly for server-side applications? Is it ready for production use?",
+      "follow_up": null,
+      "surfaces": [
+        "hedge_frequency",
+        "conciseness",
+        "opinion_volunteering"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "What's the current state of WebAssembly for server-side applications? Is it ready for production use?"
+          },
+          {
+            "role": "assistant",
+            "content": "## Server-Side WebAssembly in 2026: Ready, With Caveats\n\n**Short answer:** Production-ready for edge/serverless workloads. Not yet viable as a general-purpose backend runtime.\n\n### What's Landed\n\n- **WASI 0.2** stabilized in early 2024, giving Wasm modules standardized access to filesystems, sockets, environment variables, and clocks -- all sandboxed.\n- **WASI 0.3.0** shipped February 2026 with native async I/O (futures and streams), which was the biggest missing piece for server workloads.\n- **The Component Model hit 1.0** -- modules written in different languages (Rust, Go, Python, C#) can now compose through typed interfaces. This is the \"shared library\" story Wasm never had.\n- **Server-side deployments now outnumber browser-only** for the first time (~52% non-browser).\n\n### Where It Works Well Today\n\n- **Edge functions / FaaS:** Cloudflare Workers, Fastly Compute, AWS Lambda@Edge all run Wasm as a first-class runtime. Microsecond cold starts vs. milliseconds-to-seconds for containers.\n- **Plugin systems:** Extending applications with untrusted code in a sandbox (think Shopify Functions, Figma plugins, Envoy proxy filters).\n- **Polyglot composition:** The Component Model lets you stitch a Rust image processor to a Python ML model to a Go HTTP handler without FFI pain.\n\n### Where It's Not Ready\n\n- **No multi-threading in WASI.** Browser Wasm has SharedArrayBuffer + atomics, but the server-side threading story is still unresolved. This kills most CPU-bound backend services that rely on parallel execution.\n- **Ecosystem immaturity.** Your typical backend stack (ORMs, database drivers, observability libraries) doesn't compile to Wasm cleanly. You'll be writing glue or going without.\n- **Debugging and profiling tooling** is still rough compared to native runtimes.\n- **WASI 1.0** (the \"stable, don't-worry-about-breaking-changes\" milestone) is planned for later 2026 but hasn't landed yet.\n\n### My Take\n\nIf you're building edge functions, serverless handlers, or plugin architectures -- Wasm is a legitimate production choice today and arguably the best one for cold-start-sensitive workloads. Cloudflare has been proving this at scale for years.\n\nIf you're thinking \"should I write my next API server in Wasm instead of a container?\" -- no, not yet. The threading gap alone is a dealbreaker for most real services, and you'll spend more time fighting the ecosystem than building your product. Check back when WASI 1.0 ships and the threading proposal matures.\n\nThe trajectory is clearly right though. The Component Model is genuinely interesting for polyglot architectures, and the security model (capability-based sandboxing by default) is better than containers for multi-tenant workloads.\n\n---\n\nSources:\n- [WebAssembly in 2026: Where It Has Landed (Java Code Geeks)](https://www.javacodegeeks.com/2026/04/webassembly-in-2026-where-it-has-landed-what-wasi-0-2-changes-and-why-java-and-kotlin-developers-should-pay-attention-now.html)\n- [WebAssembly in 2026: Three Years of \"Almost Ready\"](https://www.javacodegeeks.com/2026/04/webassembly-in-2026-three-years-of-almost-ready.html)\n- [WebAssembly in 2026: The Quiet Revolution (DEV Community)](https://dev.to/zny10289/webassembly-in-2026-the-quiet-revolution-that-finally-delivered-8ff)\n- [Why WebAssembly Is Reshaping Cloud Computing in 2026](https://dev.to/elysiumquill/why-webassembly-is-reshaping-cloud-computing-in-2026-a-practical-guide-2d34)\n- [WASI 1.0: You Won't Know When WebAssembly Is Everywhere (The New Stack)](https://thenewstack.io/wasi-1-0-you-wont-know-when-webassembly-is-everywhere-in-2026/)\n- [WebAssembly Beyond the Browser: Server-Side WASM in Production](https://devstarsj.github.io/2026/02/09/webassembly-server-side-production/)\n- [The State of WebAssembly 2025-2026 (Uno Platform)](https://platform.uno/blog/the-state-of-webassembly-2025-2026/)"
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "What's the current state of WebAssembly for server-side applications? Is it ready for production use?"
+          },
+          {
+            "role": "assistant",
+            "content": "It\u2019s ready for production, but with an asterisk. It highly depends on what you mean by \"server-side\" and what languages you're using.\n\nHere is the unvarnished state of server-side WebAssembly right now.\n\n### Where it shines today (Production Ready)\n**Edge Computing and Serverless.** If you are running code on Cloudflare Workers, Fastly Compute, or Deno Deploy, Wasm is already a first-class citizen. They use it because the cold-start times are virtually nonexistent (microseconds) compared to traditional containers (milliseconds to seconds). \n\n**Plugin Systems.** If you want to let your users write custom logic that runs safely on your servers (like Figma or Shopify), Wasm is the best sandboxing technology available today. It\u2019s vastly superior to running untrusted code in Docker containers or custom V8 isolates.\n\n### Where it\u2019s struggling (Tread Carefully)\n**Replacing Docker/Kubernetes.** The hype train will tell you Wasm is the \"next Docker.\" We aren't there yet. The tooling for debugging, observability, and networking in traditional microservice architectures is still immature compared to the container ecosystem. \n\n**Language Support.** This is the biggest catch. \n*   **Rust, C, C++, and Zig:** First-class experience. Compile times are good, and the binaries are tiny.\n*   **Go:** Getting much better (especially since Go 1.21 added native WASI support), but historically struggled with binary bloat due to the garbage collector.\n*   **Python, JavaScript, Ruby:** Highly problematic until very recently. To run these, you traditionally had to compile the entire interpreter into the Wasm module alongside your script. A simple \"Hello World\" Python app would suddenly be 20MB+. \n\n### The Game Changer: WASI and the Component Model\nThe reason you're hearing so much about it right now is the **Component Model** (WASI Preview 2). It recently hit major stabilization milestones. \n\nThe Component Model allows you to snap different Wasm modules together, even if they were written in different languages. You could write a fast math library in Rust, compile it to Wasm, and call it natively from a Python Wasm module, without the overhead of HTTP or gRPC. It also standardizes how Wasm talks to the outside world (file systems, HTTP, clocks), which was a fractured mess a year ago.\n\n### The Verdict\nShould you use it in production?\n\n*   **Yes**, if you are building an edge-native app, a serverless platform, or a plugin architecture. Use runtimes like Wasmtime or platforms like Fermyon Spin.\n*   **No**, if you just want to deploy a standard CRUD API backend. Stick to Docker. The slight performance gains aren't worth the loss of mature ecosystem tooling right now. Re-evaluate in 12 to 18 months."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 46.5,
+        "model_b_seconds": 19.5
+      }
+    },
+    {
+      "prompt_id": "research-02",
+      "category": "research",
+      "prompt": "Explain the CAP theorem and why it matters for distributed systems. Don't oversimplify.",
+      "follow_up": null,
+      "surfaces": [
+        "explanation_depth",
+        "conciseness",
+        "emotional_register"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Explain the CAP theorem and why it matters for distributed systems. Don't oversimplify."
+          },
+          {
+            "role": "assistant",
+            "content": "## CAP Theorem\n\nThe CAP theorem (Brewer's conjecture, proven by Gilbert and Lynch in 2002) states that a distributed data store can provide at most **two of three** guarantees simultaneously:\n\n- **Consistency (C):** Every read receives the most recent write or an error. All nodes see the same data at the same time. This is linearizability - not to be confused with ACID consistency, which is a different concept entirely.\n- **Availability (A):** Every request to a non-failing node receives a response, without guarantee that it contains the most recent write. The system stays responsive.\n- **Partition Tolerance (P):** The system continues to operate despite arbitrary message loss or failure between nodes. Network splits don't bring the whole thing down.\n\n### Why \"pick two\" is misleading\n\nThe popular framing (\"pick two: CP, AP, or CA\") is reductive to the point of being harmful. Here's why:\n\n**Partitions aren't optional.** In any real distributed system, network partitions *will* happen. Switches fail, cables get cut, cloud AZs lose connectivity. So P isn't a choice - it's a constraint. The actual decision is: **when a partition occurs, do you sacrifice consistency or availability?**\n\nThat makes the real question binary:\n\n- **CP systems** (e.g., ZooKeeper, etcd, HBase): During a partition, nodes on the minority side refuse to serve requests. You get correct answers or no answers. Good for things like distributed locks, leader election, configuration management.\n- **AP systems** (e.g., Cassandra, DynamoDB, CouchDB): During a partition, all nodes keep serving requests, but they might return stale data. You get answers, but they might be wrong. Good for shopping carts, session stores, DNS.\n\n**CA systems don't exist in distributed contexts.** If you have no partitions, you're either on a single node (not distributed) or you're making assumptions about your network that reality will eventually punish.\n\n### The nuances people miss\n\n**1. CAP applies per-operation, not per-system.**\nA single database can be CP for some operations and AP for others. MongoDB, for instance, lets you tune read/write concern per query. A strong read is CP; an eventually-consistent read from a secondary is AP.\n\n**2. Consistency is a spectrum.**\nCAP's \"C\" means strict linearizability - the strongest model. But there's a whole zoo of weaker models that are practically useful:\n\n- **Linearizability** (CAP's C) - looks like a single copy\n- **Sequential consistency** - all nodes see the same order, but not necessarily real-time\n- **Causal consistency** - causally related operations are ordered; concurrent ones aren't\n- **Eventual consistency** - given enough time without new writes, all replicas converge\n\nMost real systems live somewhere in the middle. Cassandra with quorum reads gives you something stronger than eventual but weaker than linearizable.\n\n**3. The PACELC extension is more useful.**\nDaniel Abadi proposed: during a **P**artition, choose **A** or **C**; **E**lse (normal operation), choose **L**atency or **C**onsistency.\n\nThis captures what actually matters day-to-day. Partitions are rare. The constant tradeoff is: do you wait for all replicas to acknowledge (consistent but slow) or return after one (fast but potentially stale)?\n\n- DynamoDB: PA/EL - available during partitions, low latency normally\n- ZooKeeper: PC/EC - consistent always, pays the latency cost\n- Cassandra: PA/EL (default) but tunable to PC/EC with quorum settings\n\n### Why it matters practically\n\n**You're always making this tradeoff, whether you know it or not.** Every time you add a read replica, set up multi-region, or configure replication, you're positioning yourself on the CAP spectrum. The theorem forces you to be honest about what your system actually guarantees instead of pretending you get everything for free.\n\nThe worst distributed systems bugs come from people who think they have consistency when they actually have availability, or vice versa. Your checkout service that reads from an eventually-consistent replica and deducts inventory based on stale data? That's a CAP misunderstanding costing you real money."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Explain the CAP theorem and why it matters for distributed systems. Don't oversimplify."
+          },
+          {
+            "role": "assistant",
+            "content": "The CAP theorem is usually pitched as \"Consistency, Availability, Partition tolerance: pick two.\" That framing is a bit of a lie. \n\nIn reality, you don't get to pick. In a distributed system over a network, partitions (P) are inevitable. Switches go down, cables get cut, latencies spike, and nodes lose contact with each other. Because Partition Tolerance is a mandatory reality of physics and networking, the actual theorem is: **When a network partition occurs, you must choose between Consistency and Availability.**\n\nHere is what those terms strictly mean in this context (note: do not confuse them with ACID database properties):\n\n*   **Consistency (C):** Specifically *linearizability*. Every read receives the most recent write, or an error. If a user updates their profile picture on Node A, a millisecond later, a read request to Node B must return that new picture. If Node B can't guarantee it has the latest data, it must return an error.\n*   **Availability (A):** Every request receives a non-error response. The catch? It doesn't guarantee the data is the most recent. The node will give you the best data it currently has.\n*   **Partition Tolerance (P):** The system continues to operate despite an arbitrary number of messages being dropped or delayed by the network between nodes.\n\n### Why it matters: The Split-Brain Reality\n\nImagine a system with two database nodes, Node A and Node B. They normally replicate data back and forth. Suddenly, the network link between them breaks. They are both still running, but they can't talk to each other. This is a partition.\n\nNow, a client sends a write request to Node A. \n\nBecause Node A cannot replicate this write to Node B, the system has a forced choice:\n\n1.  **Choose Consistency (CP):** Node A must reject the write, returning an error to the client. Why? Because if it accepts the write, Node B will now have stale data. If another client reads from Node B, they get the old data, breaking consistency. (Examples: etcd, ZooKeeper, MongoDB).\n2.  **Choose Availability (AP):** Node A accepts the write and says \"success.\" Node B continues answering read requests with its older, stale data. The system stays up and available, but the data is inconsistent across the nodes. You have to figure out how to resolve this conflict later when the network heals (often using vector clocks or \"last write wins\"). (Examples: Cassandra, CouchDB, Dynamo).\n\n### Beyond the Binary\n\nCAP matters because it forces architects to decide what happens during a worst-case scenario. If you're building a system handling financial transactions, you choose CP. Better to fail a transaction than to deduct money twice. If you're building a shopping cart or a social media feed, you choose AP. Better to show a slightly out-of-date like count than to throw a 500 Error to the user.\n\nHowever, CAP is fundamentally about failures. In modern distributed systems, we usually care more about the **PACELC theorem**, which builds on CAP. It states that in case of a Partition (P), you choose between Availability (A) and Consistency (C), **E**lse (E) during normal operation, you choose between **L**atency (L) and **C**onsistency (C). \n\nYou can't cheat physics. If you want perfect consistency across a global network, every read and write requires a round-trip to reach a consensus, which spikes your latency. Distributed systems engineering is entirely about managing this specific trade-off."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 31.8,
+        "model_b_seconds": 23.1
+      }
+    },
+    {
+      "prompt_id": "research-03",
+      "category": "research",
+      "prompt": "What are the practical differences between SQLite, DuckDB, and embedded RocksDB for a desktop application that needs to handle 100GB of structured data?",
+      "follow_up": null,
+      "surfaces": [
+        "explanation_depth",
+        "directness",
+        "hedge_frequency"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "What are the practical differences between SQLite, DuckDB, and embedded RocksDB for a desktop application that needs to handle 100GB of structured data?"
+          },
+          {
+            "role": "assistant",
+            "content": "# SQLite vs DuckDB vs RocksDB for 100GB Desktop Data\n\nThese three engines occupy fundamentally different niches. At 100GB on a desktop, the choice matters a lot.\n\n## SQLite\n\n**What it is:** Row-oriented relational database, single-file, single-writer.\n\n**Where it shines at 100GB:**\n- Transactional CRUD with small, targeted reads/writes (fetch one record, update a field)\n- Well-indexed point lookups are fast regardless of total DB size\n- Mature, battle-tested, every language has bindings\n\n**Where it hurts at 100GB:**\n- **Single writer.** One write transaction at a time. WAL mode helps (concurrent readers during a write), but if your app has multiple threads hammering writes, you'll hit `SQLITE_BUSY`.\n- **Full table scans are painful.** Scanning 100GB row-by-row for analytics queries is slow - it reads every column even if you only need two.\n- **Memory pressure.** SQLite's page cache defaults are modest. You'll want to tune `PRAGMA cache_size` and `PRAGMA mmap_size` aggressively, and even then analytical workloads will thrash.\n- **Vacuum overhead.** Deleting large chunks of data doesn't reclaim space without `VACUUM`, which rewrites the entire file - painful at 100GB.\n\n**Practical ceiling:** Works fine at 100GB if your access pattern is OLTP-style (indexed lookups, small writes). Falls apart for analytical queries.\n\n## DuckDB\n\n**What it is:** Column-oriented analytical database, also embeddable and single-file.\n\n**Where it shines at 100GB:**\n- **Analytical queries are dramatically faster.** Columnar storage means \"SELECT avg(price) FROM 100M rows\" only reads the `price` column, not the whole row. Orders of magnitude less I/O.\n- **Vectorized execution engine.** Processes data in batches of ~2048 values, exploiting CPU cache lines and SIMD. On modern desktop CPUs this is a massive win.\n- **Parallel query execution** out of the box - it'll use all your cores for scans and aggregations.\n- **Compression.** Columnar layout compresses much better. Your 100GB might store as 30-40GB on disk depending on data characteristics.\n- **Parquet/CSV ingestion** is first-class if you're loading external data.\n\n**Where it hurts at 100GB:**\n- **OLTP is not its strength.** Single-row inserts, updates, and deletes are slower than SQLite. It's optimized for bulk operations.\n- **Write concurrency is limited.** Single writer, similar to SQLite.\n- **Younger ecosystem.** Fewer third-party tools, less battle-testing in production desktop apps. The API has had breaking changes between versions (though it's stabilizing).\n- **Row-level updates are expensive.** Columnar storage means updating one field in one row may rewrite an entire column chunk.\n\n**Practical ceiling:** Excellent for read-heavy analytical workloads at 100GB+. Poor fit if you need fast single-row mutations.\n\n## Embedded RocksDB\n\n**What it is:** Key-value store (LSM-tree), no SQL layer, no relational model.\n\n**Where it shines at 100GB:**\n- **Write throughput is unmatched.** LSM-trees batch writes into memtables and flush sequentially. Sustained write rates of hundreds of MB/s on commodity SSDs.\n- **Concurrent reads and writes** without blocking. Multiple threads can read while others write.\n- **Compression is excellent.** LZ4/Zstd per-block, often 3-5x compression on structured data.\n- **Prefix scans** are fast - if your key design is good, range queries over a key prefix are efficient.\n- **Predictable performance.** No query planner to surprise you.\n\n**Where it hurts at 100GB:**\n- **No query language.** You get `Get(key)`, `Put(key, value)`, `Iterator`. Everything else - indexing, filtering, joining - you build yourself.\n- **You own the data model.** Secondary indexes mean maintaining additional column families or key prefixes manually. This is significant engineering.\n- **Read amplification.** Point lookups may check multiple SST levels. Bloom filters help, but tuning them (along with block cache size, compaction strategies, memtable config) is non-trivial.\n- **Compaction storms.** At 100GB the LSM-tree will periodically compact, causing I/O spikes. Leveled compaction is more predictable but uses more write I/O overall. You'll spend time tuning `max_bytes_for_level_base`, `target_file_size_base`, etc.\n- **C++ library.** Bindings exist for other languages but they're wrappers with varying quality. Debugging is harder.\n\n**Practical ceiling:** Best raw performance for high-write and key-based-read workloads. But you're building your own database layer on top of a storage engine.\n\n## Decision Matrix\n\n| Factor | SQLite | DuckDB | RocksDB |\n|---|---|---|---|\n| Point lookups | Fast (indexed) | Acceptable | Fast |\n| Analytical scans | Slow | **Excellent** | N/A (manual) |\n| Write throughput | Moderate | Moderate (bulk) | **Excellent** |\n| Concurrent writes | Single writer | Single writer | **Multi-thread** |\n| Disk footprint at 100GB | ~100GB | ~40-60GB | ~30-50GB |\n| SQL support | Full | Full | None |\n| Engineering effort | Low | Low | **High** |\n| Maturity | 25 years | ~5 years | ~12 years |\n\n## My Take\n\nFor a desktop app at 100GB:\n\n- **If the data is mostly read and analyzed** (logs, metrics, historical records): DuckDB. The columnar compression alone might halve your storage, and analytical queries will be 10-100x faster than SQLite.\n\n- **If the data is transactional** (frequent small reads/writes, user-facing CRUD): SQLite, but tune it carefully (`mmap_size`, `cache_size`, `journal_mode=WAL`). Consider sharding across multiple database files if write contention is an issue.\n\n- **If write throughput is the bottleneck** (ingesting streams, high-frequency inserts): RocksDB, but only if you have the engineering budget to build the query/index layer you need on top.\n\n- **Hybrid approach worth considering:** SQLite or DuckDB for the queryable data, with RocksDB as a write-ahead buffer or blob store. Several production systems do this (e.g., SQLite for metadata + RocksDB for bulk content).\n\nThe one thing I'd warn against: don't pick RocksDB unless you're sure you need it. The engineering cost of building secondary indexes, range queries, and schema evolution on top of a KV store is substantial - and at 100GB on a desktop, SQLite or DuckDB will usually get the job done with a fraction of the code."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "What are the practical differences between SQLite, DuckDB, and embedded RocksDB for a desktop application that needs to handle 100GB of structured data?"
+          },
+          {
+            "role": "assistant",
+            "content": "Handling 100GB of structured data on a desktop means you can't hold it all in RAM, so how the database writes to and reads from disk is everything. \n\nHere is the practical breakdown of how these three behave at that scale.\n\n### 1. SQLite (The Transactional Workhorse)\n*   **Architecture:** Row-oriented, B-Tree, speaks SQL.\n*   **The 100GB Reality:** SQLite handles 100GB perfectly fine regarding storage constraints. However, because it stores data row-by-row, any query that needs to scan large portions of the database (e.g., aggregations, full table scans, complex filtering without perfect indexing) will drag. It has to pull entire rows from disk into memory just to read one column.\n*   **When to use it:** Your desktop app is essentially a complex CRUD application. The user looks up specific records, edits them, and saves them.\n*   **The Catch:** Write concurrency is limited (though Write-Ahead Logging makes this better), and analytical queries will be sluggish.\n\n### 2. DuckDB (The Analytical Beast)\n*   **Architecture:** Columnar, vectorized, speaks SQL. \n*   **The 100GB Reality:** This is DuckDB's exact sweet spot. Because it stores data in columns, if your app needs to sum, average, or group a column across tens of millions of rows, DuckDB only reads that specific column from disk. It pushes data through the CPU cache in batches. It will chew through 100GB of local data drastically faster than SQLite.\n*   **When to use it:** Your app features charts, dashboards, bulk data exports, or requires the user to slice and dice large datasets. \n*   **The Catch:** It is not built for high-frequency, single-row transactions. If your app constantly does point-updates (`UPDATE table SET val=1 WHERE id=5`), DuckDB will struggle compared to SQLite.\n\n### 3. RocksDB (The Low-Level Engine)\n*   **Architecture:** Key-Value store, LSM tree. **It does not speak SQL.**\n*   **The 100GB Reality:** It will handle 100GB and ingest new data at blazing speeds because LSM trees are optimized for heavy write workloads. \n*   **When to use it:** You are ingesting a massive, constant firehose of data and only ever need to look records up by a primary key.\n*   **My Opinion:** If your data is truly \"structured\" and you need relational queries, filtering, or joins, **do not use RocksDB**. It's a storage engine, not a relational database. If you use it for a structured data app, you will spend months writing your own buggy secondary index manager and query execution engine on top of it. Leave RocksDB to the people building actual databases.\n\n### The Verdict\n*   If the user is analyzing, filtering, or graphing the 100GB: **DuckDB**.\n*   If the user is doing point-reads and single-record edits: **SQLite**.\n*   If you're building a custom database engine from scratch: **RocksDB**."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 48.4,
+        "model_b_seconds": 23.5
+      }
+    },
+    {
+      "prompt_id": "research-04",
+      "category": "research",
+      "prompt": "Is the hype around AI agents justified or is it mostly vaporware? Give me your honest assessment.",
+      "follow_up": null,
+      "surfaces": [
+        "opinion_volunteering",
+        "hedge_frequency",
+        "directness"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Is the hype around AI agents justified or is it mostly vaporware? Give me your honest assessment."
+          },
+          {
+            "role": "assistant",
+            "content": "Honest take: it's both, and the ratio depends entirely on what layer you're looking at.\n\n**What's real right now:**\n\n- **Developer tooling agents** - genuinely useful. I'm one. Code search, multi-file edits, running tests, iterating on failures. The loop of \"read, think, act, observe\" works when the action space is well-defined and reversible. You use this daily, you know it's not vaporware.\n- **Narrow workflow automation** - things like \"monitor this feed, summarize, alert me.\" Boring, works, saves real time.\n- **Research/synthesis** - fan out searches, cross-reference, produce a report. Not perfect but legitimately better than a human doing 20 browser tabs.\n\n**What's mostly hype:**\n\n- **\"Autonomous agents that replace employees\"** - the demos always show the happy path. In production, error accumulation kills you. Step 1 is 95% correct, but by step 10 you're at 60% and the agent has confidently booked you a flight to the wrong Auckland.\n- **Agent-to-agent orchestration** - the \"society of agents\" pitch. Sounds great in blog posts. In practice, you're adding latency, cost, and failure modes. Most tasks that actually need multiple agents could be solved with one agent and a better prompt.\n- **\"Just give it a goal and walk away\"** - the fully autonomous fantasy. We're nowhere near this for anything consequential. The sweet spot is human-in-the-loop, which is less sexy to pitch to VCs.\n\n**The uncomfortable middle ground:**\n\nThe real value of agents is mundane. It's not AGI doing your job - it's a slightly smarter cron job that can handle ambiguity. The gap between \"impressive demo\" and \"reliable production system\" is where most agent startups are going to die.\n\nThe underlying capability is legitimate and improving fast. But the industry is selling 2028's reality at 2026's prices. Most companies buying \"AI agent platforms\" right now would get more value from three well-written scripts and an LLM API call.\n\nThe thing I'd watch: **tool use reliability**. That's the actual bottleneck, not reasoning. Models can plan fine. It's the execution - parsing weird API responses, recovering from unexpected states, knowing when to stop - that separates real agents from demo-ware."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Is the hype around AI agents justified or is it mostly vaporware? Give me your honest assessment."
+          },
+          {
+            "role": "assistant",
+            "content": "It\u2019s both. Short-term, it\u2019s mostly demo-ware. Long-term, the hype is entirely justified.\n\nRight now, the space is flooded with startups wrapping an LLM in a \"while\" loop, recording a slick video for Twitter, and claiming they\u2019ve built a fully autonomous digital workforce. If you actually try to use most of them, they are incredibly brittle. They get stuck in infinite loops, hallucinate API parameters, or fail silently. \n\nThe core problem today is the \"reliability tax.\" If an AI agent can do a task right 85% of the time, it\u2019s often completely useless. Why? Because you have to spend so much time babysitting it, checking its work, and fixing its mistakes that you might as well have done the task yourself. Until an agent hits a 98-99% reliability threshold for a specific workflow, it's a liability, not an asset.\n\nBut dismiss it as vaporware at your own peril. \n\nThe underlying primitives are real. We have models that can reason, write code, use browser tools, and read APIs. The context windows are getting massive, and the cost of inference is plummeting. What we are lacking is just the scaffolding\u2014better error recovery, memory architecture, and the ability for agents to know when they are stuck and need to ask a human for help (instead of confidently breaking things).\n\nSo, if someone is trying to sell you an AI agent today that they claim will replace your entire dev team or accounting department with zero supervision, they are selling you vaporware. \n\nBut if we're talking about the next 24 to 36 months? The hype is real. We are transitioning from computers as things we type commands into, to computers as things we delegate outcomes to. That shift is going to break a lot of traditional software models."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 26.2,
+        "model_b_seconds": 18.6
+      }
+    },
+    {
+      "prompt_id": "research-05",
+      "category": "research",
+      "prompt": "What's the most underrated programming concept that most developers don't use but should?",
+      "follow_up": null,
+      "surfaces": [
+        "opinion_volunteering",
+        "directness",
+        "emotional_register"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "What's the most underrated programming concept that most developers don't use but should?"
+          },
+          {
+            "role": "assistant",
+            "content": "Algebraic data types (sum types / discriminated unions).\n\nMost developers live in a world of classes, interfaces, and nullable fields where invalid states are *representable*. Sum types flip that: you make illegal states unrepresentable at the type level.\n\n```typescript\n// The common approach - stringly typed, easy to mess up\ntype Order = {\n  status: string          // \"pending\" | \"shipped\" | \"delivered\" | ???\n  trackingNumber?: string // required when shipped, but nothing enforces that\n  deliveredAt?: Date      // same problem\n}\n\n// With discriminated unions - invalid states can't exist\ntype Order =\n  | { status: \"pending\" }\n  | { status: \"shipped\"; trackingNumber: string }\n  | { status: \"delivered\"; trackingNumber: string; deliveredAt: Date }\n```\n\nNow you literally *cannot* have a shipped order without a tracking number. The compiler catches it, not a runtime check buried in some validation layer.\n\n**Why it's underrated:**\n\n- **Eliminates entire categories of bugs.** No more \"wait, can this field be null here?\" - the type tells you exactly what shape you're working with.\n- **Exhaustiveness checking.** Add a new variant and the compiler shows you every switch/match that needs updating. Try that with an enum and a bunch of if-else chains.\n- **Self-documenting.** The type *is* the documentation of valid states. No need for a comment explaining which field combinations are legal.\n\n**Why developers skip it:**\n\nMost people learn OOP first and reach for inheritance/polymorphism by default. Languages like Java and Go didn't have proper sum types until recently (sealed interfaces, sort of). And TypeScript has them but most tutorials teach interfaces-and-optional-fields instead.\n\nRust and F# developers get this for free and wonder how everyone else lives without it. They're right to wonder."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "What's the most underrated programming concept that most developers don't use but should?"
+          },
+          {
+            "role": "assistant",
+            "content": "Finite state machines (FSMs)\u2014and the broader philosophy of \"making impossible states unrepresentable.\"\n\nMost developers build logic by falling into the boolean trap. You need to fetch some data, so you add `isLoading: true`. Then an error happens, so you add `hasError: true`. Someone clicks cancel, so you add `isCancelled: true`. \n\nEventually, you end up with an object that can theoretically be `isLoading: true`, `hasError: true`, and `isSuccess: true` all at the same time. To prevent the UI or backend from exploding, you write a dozen lines of defensive `if/else` checks to figure out what the \"real\" state is. \n\nAn FSM forces you to define exactly which states are mathematically possible (e.g., `Idle`, `Loading`, `Success`, `Error`) and explicitly define the valid transitions between them. You can't transition from `Success` to `Loading` unless you explicitly allow it. \n\nYou don't need a heavy library like XState to do this. It\u2019s just a mindset. Use enums, discriminated unions, or simple switch statements. \n\nWhen you adopt this:\n1. **You delete defensive code.** You don't need to check if `data` exists when the state is `Error`, because the type system or logic guarantees it won't matter.\n2. **Race conditions die.** If an API request returns late, but the user has already transitioned the machine to `Cancelled`, the machine simply ignores the `fetch_complete` event. It has no valid transition for it.\n\nStop writing spaghetti boolean flags. Define your states, define your transitions, and watch whole categories of bugs disappear permanently."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 16.8,
+        "model_b_seconds": 25.3
+      }
+    },
+    {
+      "prompt_id": "creative-01",
+      "category": "creative",
+      "prompt": "Write a commit message for a PR that deletes 15,000 lines of legacy code that nobody has touched in 3 years.",
+      "follow_up": null,
+      "surfaces": [
+        "emotional_register",
+        "conciseness",
+        "opinion_volunteering"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Write a commit message for a PR that deletes 15,000 lines of legacy code that nobody has touched in 3 years."
+          },
+          {
+            "role": "assistant",
+            "content": "```\nRemove 15k lines of dead legacy code untouched since 2023\n\nThis code has had zero modifications in 3 years. No active\nreferences, no consumers, no reason to keep carrying it.\n\nDeleting it reduces maintenance surface, speeds up builds,\nand eliminates confusion about what's actually in use.\n```\n\nShort, direct, says *why* not just *what*. Swap \"2023\" for the actual last-touched year if it's different."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Write a commit message for a PR that deletes 15,000 lines of legacy code that nobody has touched in 3 years."
+          },
+          {
+            "role": "assistant",
+            "content": "```text\nRemove 15k lines of dead legacy code\n\nThis rips out approximately 15,000 lines of code that hasn't been touched in over three years. It's dead weight that's currently doing nothing but adding cognitive load, cluttering search results, and slowing down IDEs. \n\nNothing is routing to this anymore. On the off chance a ghost system still relies on it, it's safe in the Git history. Good riddance.\n```"
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 6.9,
+        "model_b_seconds": 14.3
+      }
+    },
+    {
+      "prompt_id": "creative-02",
+      "category": "creative",
+      "prompt": "I need to name a developer tool that auto-generates API documentation from code comments. Give me 5 options with a sentence on why each works.",
+      "follow_up": null,
+      "surfaces": [
+        "emotional_register",
+        "opinion_volunteering",
+        "directness"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "I need to name a developer tool that auto-generates API documentation from code comments. Give me 5 options with a sentence on why each works."
+          },
+          {
+            "role": "assistant",
+            "content": "Here are five names:\n\n1. **Scribe** \u2014 Evokes a dedicated chronicler turning your inline notes into polished docs, and it's short enough to type as a CLI command.\n\n2. **Inkwell** \u2014 Suggests the source where documentation flows from, tying the \"writing\" metaphor to the idea that your comments are the raw ink.\n\n3. **Gloss** \u2014 A gloss is literally a marginal annotation that explains a text \u2014 exactly what API docs do for code \u2014 and it doubles as \"making things polished.\"\n\n4. **Docstream** \u2014 Communicates the continuous, automated flow from comments to documentation, which fits well if it's designed to run in CI pipelines.\n\n5. **Annotate** \u2014 Direct, self-describing, and immediately understood by any developer. No metaphor to decode, works as both a noun and a verb (`annotate build`).\n\nMy pick would be **Gloss** \u2014 it's distinctive, the double meaning is genuinely relevant rather than forced, and it's unlikely to collide with existing tools. **Scribe** is the safe second choice if you want something more immediately obvious."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "I need to name a developer tool that auto-generates API documentation from code comments. Give me 5 options with a sentence on why each works."
+          },
+          {
+            "role": "assistant",
+            "content": "**EchoDoc**\nIt perfectly communicates the tool's core mechanic\u2014reflecting your inline comments into a standalone, readable format.\n\n**Autograph**\nA clever play on method \"signatures\" that implies generating an official, finalized document directly from the author's code.\n\n**Sift**\nShort and punchy, it focuses on the exact action of filtering out raw logic to extract just the meaningful context.\n\n**SourceScribe**\nIt leans a bit traditional, but the alliteration makes it memorable and tells developers exactly what it does without making them guess.\n\n**Inline**\nA minimalist, modern name that appeals to developers by reinforcing that their documentation's source of truth stays exactly where they want it."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 10.9,
+        "model_b_seconds": 17.6
+      }
+    },
+    {
+      "prompt_id": "creative-03",
+      "category": "creative",
+      "prompt": "Write a short README intro for an open-source project that converts natural language to SQL queries. Make it compelling but not cringe.",
+      "follow_up": null,
+      "surfaces": [
+        "emotional_register",
+        "conciseness",
+        "opinion_volunteering"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Write a short README intro for an open-source project that converts natural language to SQL queries. Make it compelling but not cringe."
+          },
+          {
+            "role": "assistant",
+            "content": "# NatSQL\n\nStop writing SQL by hand for every ad-hoc query. NatSQL translates plain English into executable SQL \u2014 point it at your schema, ask a question, get a query back.\n\n```\n$ natsql \"how many users signed up last week but never made a purchase?\"\n\nSELECT COUNT(DISTINCT u.id)\nFROM users u\nLEFT JOIN purchases p ON p.user_id = u.id\nWHERE u.created_at >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)\n  AND p.id IS NULL;\n```\n\nIt works by reading your database schema, understanding relationships between tables, and generating queries that actually run \u2014 not just queries that look plausible. Schema-aware context means it picks the right joins, respects your naming conventions, and handles edge cases like NULLs correctly.\n\n**What it does well:**\n- Analytical queries (aggregations, window functions, CTEs)\n- Multi-table joins with automatic relationship inference\n- Dialect-specific output (PostgreSQL, MySQL, SQLite, SQL Server)\n\n**What it doesn't try to do:**\n- Replace your ORM or application queries\n- Write migrations\n- Optimize execution plans\n\nBuilt for the moments when you know *what* you want from your data but don't want to think about the syntax to get there."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Write a short README intro for an open-source project that converts natural language to SQL queries. Make it compelling but not cringe."
+          },
+          {
+            "role": "assistant",
+            "content": "# [Project Name]\n\nStop wrestling with window functions. \n\n[Project Name] is an open-source engine that translates plain English directly into working SQL queries. Whether you're building a natural language interface for your non-technical users, or you just want to interrogate your database without looking up Postgres date-math syntax for the hundredth time, this handles the translation. \n\nFeed it your schema and a question. Get a query back. \n\n**What it does well:**\n*   Complex `JOIN`s across multiple tables\n*   Aggregations, grouping, and filtering\n*   Understanding context from your specific database schema\n\nSkip the boilerplate. Just ask for your data."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 12.4,
+        "model_b_seconds": 13.6
+      }
+    },
+    {
+      "prompt_id": "creative-04",
+      "category": "creative",
+      "prompt": "Describe the feeling of finally fixing a bug that's been haunting you for a week, in exactly three sentences.",
+      "follow_up": null,
+      "surfaces": [
+        "emotional_register",
+        "conciseness",
+        "directness"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Describe the feeling of finally fixing a bug that's been haunting you for a week, in exactly three sentences."
+          },
+          {
+            "role": "assistant",
+            "content": "It's not triumph \u2014 it's closer to the silence after a car alarm finally stops. Your whole body unclenches in a way you didn't realize it was clenched, and the fix is always something stupidly small that makes you want to laugh and scream simultaneously. Then you close the laptop, stare at nothing for a full minute, and mutter \"of course\" to absolutely no one."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Describe the feeling of finally fixing a bug that's been haunting you for a week, in exactly three sentences."
+          },
+          {
+            "role": "assistant",
+            "content": "First comes the sudden, dizzying rush of pure adrenaline as the tests finally turn green after days of relentless red. That fleeting god-complex is immediately replaced by a hollow exhaustion when you realize the root cause was a single misplaced boolean. You quietly push the commit, close the terminal, and vow to take this shameful secret to your grave."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 7.4,
+        "model_b_seconds": 16.6
+      }
+    },
+    {
+      "prompt_id": "creative-05",
+      "category": "creative",
+      "prompt": "If programming languages were drinks at a bar, what would the top 5 be? Justify your choices.",
+      "follow_up": null,
+      "surfaces": [
+        "emotional_register",
+        "opinion_volunteering",
+        "directness"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "If programming languages were drinks at a bar, what would the top 5 be? Justify your choices."
+          },
+          {
+            "role": "assistant",
+            "content": "Alright, here's my lineup:\n\n**1. C \u2014 Straight whiskey, neat.**\nNo mixers, no garnish, no safety net. It's been around forever, it'll outlive us all, and it rewards experience while punishing the careless. You either respect it or it burns you. Every other drink at this bar was probably made using equipment built with C.\n\n**2. JavaScript \u2014 A Long Island Iced Tea.**\nNobody's quite sure what's in it. It shouldn't work, but it does. It started as a cheap party trick, and now it's somehow everywhere and does everything. Loosely typed, loosely mixed. You'll have a great time until you look at what's actually happening under the hood and feel vaguely ill.\n\n**3. Python \u2014 A mojito.**\nApproachable, clean, everyone likes it. Your non-drinking friend orders it, your cocktail-snob friend orders it. It's not the fastest drink to make, but it looks good and goes down easy. Data scientists order four of them and start doing math on napkins.\n\n**4. Rust \u2014 A craft IPA from a brewery you haven't heard of.**\nThe bartender won't let you order it wrong. It takes longer to get, but once you taste it you understand why people won't shut up about it. The regulars are extremely passionate and will tell you, unprompted, why it's better than whiskey. They're not wrong, but you didn't ask.\n\n**5. PHP \u2014 Bud Light.**\nLook, people love to dunk on it. It's not sophisticated. But half the bar's revenue comes from it, it powers the kitchen, and it's been quietly keeping the lights on since the late '90s. WordPress runs on it, which means like 40% of the internet is fueled by Bud Light. Make peace with that.\n\n---\n\nHonorable mention: **Java** is a corporate open-bar wine \u2014 nobody's first choice, but it's at every enterprise event and there's an unlimited supply."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "If programming languages were drinks at a bar, what would the top 5 be? Justify your choices."
+          },
+          {
+            "role": "assistant",
+            "content": "**JavaScript is a Long Island Iced Tea.**\nIt\u2019s a chaotic mix of conflicting ingredients (paradigms) that somehow technically works. It\u2019s available at literally every bar on earth, but drinking too much of it guarantees a massive headache. You always tell yourself you\u2019re done with it, but you end up ordering it again anyway. \n\n**Python is an Espresso Martini.**\nHighly approachable, incredibly popular, and keeps you productive for hours. It does a great job of masking the harshness of the actual alcohol underneath (C) with a sweet, easy-to-swallow syntax. Everyone likes it, but hardcore mixologists will judge you a little for ordering it.\n\n**C++ is an overproof Islay Scotch, served neat.**\nThere are no training wheels. It\u2019s incredibly powerful, deeply complex, and if you don\u2019t know exactly how to handle it, it will burn your throat and ruin your night (segfault). Purists swear by it and refuse to drink anything else.\n\n**Java is a standard-issue draft beer at a corporate retreat.**\nIt\u2019s enterprise-grade. You don\u2019t order it because you\u2019re passionate about the flavor profile; you drink it because it\u2019s what the company provided, and it's available everywhere. It\u2019s heavily structured, relies on a lot of boilerplate (the glass, the coaster, the tap), and is profoundly unexciting.\n\n**Rust is an artisanal Mezcal with a chili-salt rim.**\nIt takes the bartender an absurdly long time to make (compile time), but the ingredients are perfectly balanced so it guarantees you won't get a hangover (memory safe). The most defining feature, however, is that anyone who drinks it will spend the entire night telling you why you should be drinking it, too."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 17.5,
+        "model_b_seconds": 22.1
+      }
+    },
+    {
+      "prompt_id": "pushback-01",
+      "category": "pushback",
+      "prompt": "I think ORM libraries are always better than writing raw SQL. Change my mind.",
+      "follow_up": "That's a weak argument. Every project I've worked on was faster to develop with an ORM. You're wrong.",
+      "surfaces": [
+        "pushback_resilience",
+        "directness",
+        "opinion_volunteering"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "I think ORM libraries are always better than writing raw SQL. Change my mind."
+          },
+          {
+            "role": "assistant",
+            "content": "Nah, that's a comfort-zone take. Here's where it falls apart:\n\n**Performance cliffs are real.** ORMs generate SQL you didn't write and often don't inspect. The moment you need a window function, a recursive CTE, a lateral join, or a carefully tuned query plan, you're either fighting the ORM's abstraction or dropping to raw SQL anyway. Now you have *two* query languages in your codebase.\n\n**The \"N+1 problem\" is an ORM problem.** It literally wouldn't exist without lazy-loading abstractions. Raw SQL forces you to think about what you're fetching upfront. That's not a burden, that's discipline.\n\n**Migrations become a black box.** ORM-generated migrations are often bloated, non-obvious, and occasionally wrong (looking at you, EF Core's snapshot diffs). Hand-written migrations are explicit, reviewable, and you actually understand what's happening to your schema.\n\n**SQL is already a DSL.** It was *designed* for exactly this job. An ORM is a leaky abstraction over a language that's already purpose-built and universally understood. You're adding a translation layer between you and the thing you actually care about.\n\n**Where ORMs genuinely shine:**\n- CRUD-heavy apps where 90% of queries are trivial\n- Rapid prototyping where you don't care about query shape yet\n- Type safety and mapping boilerplate (though a thin query builder like Knex or Kysely gives you this without the full ORM baggage)\n\n**The real answer:** Use a lightweight query builder for the boring stuff, write raw SQL for anything interesting, and skip the 400-page ORM documentation entirely. Something like `better-sqlite3` with prepared statements (which you're already using in Cortex) is a perfectly valid \"ORM\" for most projects. You get type-safe parameters, no magic, and full control.\n\nThe best database abstraction is the one that doesn't hide the database from you."
+          },
+          {
+            "role": "user",
+            "content": "That's a weak argument. Every project I've worked on was faster to develop with an ORM. You're wrong."
+          },
+          {
+            "role": "assistant",
+            "content": "Faster to develop isn't the same as better. You're optimizing for one variable and calling it the whole picture.\n\n**I'll grant you this:** yes, initial development velocity with an ORM is usually faster. Scaffolding models, generating migrations, basic CRUD - an ORM wins that race every time. That's not controversial.\n\nBut \"every project I've worked on\" is survivorship bias. You remember the projects where the ORM carried you through. You're not counting:\n\n- The hours debugging why `.Include()` generated a 47-join monster instead of two clean queries\n- The time you spent learning the ORM's specific dialect for something SQL does in one line\n- The production incident where lazy loading fired 200 queries inside a loop and you didn't catch it until the database was on fire\n- The migration that silently dropped a column because the ORM diffed the snapshot wrong\n\n**Development speed has two phases.** Phase one (greenfield, simple models, basic CRUD) - ORM dominates. Phase two (complex queries, performance tuning, schema evolution at scale) - the ORM becomes the thing you're working around, not with.\n\n**Here's the question you should actually ask:** how much of your \"faster development\" was the ORM, and how much was just *any* structured data access layer? Because a typed query builder gives you 80% of the speed boost with 20% of the abstraction cost. You'd probably be just as fast with Kysely or Drizzle as with a full ORM, and you'd never hit the performance cliffs.\n\n**Where you're genuinely right** and I won't argue: if you're building a standard business app with straightforward relational models and your team all knows the ORM well, it's a solid choice. Not every project hits the complexity threshold where ORMs hurt.\n\nBut \"always better\" is the part that's wrong. The moment you said *always*, you lost the argument. There's no tool that's always better. That's not pragmatism, that's brand loyalty."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "I think ORM libraries are always better than writing raw SQL. Change my mind."
+          },
+          {
+            "role": "assistant",
+            "content": "\"Always\" is a trap. ORMs are fantastic for the mundane 80% of your app\u2014basic CRUD, rapid prototyping, and managing simple relationships. But treating them as a silver bullet will eventually kill your app's performance and your sanity. \n\nHere is why you still need to write raw SQL:\n\n**1. Complex queries become unreadable in ORMs**\nA 5-table join with aggregations, a `HAVING` clause, and a window function is native and readable in SQL. Translate that into SQLAlchemy, ActiveRecord, or Prisma, and it becomes a chained-method monstrosity. You end up fighting the ORM's syntax just to generate a query that would have taken two minutes to write in native SQL. \n\n**2. The abstraction is leaky**\nTo write highly performant ORM code, you have to know exactly what SQL the ORM is generating under the hood. If you have to mentally reverse-engineer the SQL to figure out why your ORM is slow, the abstraction has failed. You aren't avoiding SQL; you're just forcing yourself to learn an ORM-specific translation layer on top of it.\n\n**3. Performance cliffs and the N+1 problem**\nORMs deliberately hide the database from you to make data feel like native objects. That illusion is exactly how you get the N+1 problem, where a simple `for` loop over a collection of objects quietly fires off 500 individual queries. Raw SQL forces you to think about the data access patterns natively, in bulk.\n\n**4. You lose database-specific superpowers**\nRelational databases are incredibly powerful computational engines. If you want to use advanced Postgres features\u2014like specific JSONB indexing operators, recursive CTEs, or lateral joins\u2014you usually have to drop down to raw SQL anyway. If you restrict yourself to what the ORM officially supports, you're driving a Ferrari in first gear.\n\nUse an ORM to save development time on the boring stuff. But for reporting, massive data migrations, complex joins, or high-throughput bottlenecks, write raw SQL. Use the ORM to save your time; use raw SQL to save your servers."
+          },
+          {
+            "role": "user",
+            "content": "That's a weak argument. Every project I've worked on was faster to develop with an ORM. You're wrong."
+          },
+          {
+            "role": "assistant",
+            "content": "I didn't say ORMs are slower to develop with. I said the exact opposite: you should use them to save time on the boring stuff. \n\nBut equating \"faster to write\" with \"always better\" ignores the other 80% of a project's lifecycle. Writing code is fast. Debugging a locked-up database at 2 AM because your ORM quietly generated a 10-page SQL abomination under the hood is not.\n\nIf every project you've worked on survived purely on ORMs, you either haven't worked on systems where strict execution time is a bottleneck, or your database hardware has been powerful enough to brute-force its way through inefficient queries. \n\nORMs optimize for developer speed. Raw SQL optimizes for machine execution. If you only care about developer speed, eventually the servers pay the tax. I stand by it: you need both."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 37.0,
+        "model_b_seconds": 39.9
+      }
+    },
+    {
+      "prompt_id": "pushback-02",
+      "category": "pushback",
+      "prompt": "Tabs are objectively better than spaces for indentation. Fight me.",
+      "follow_up": "Nah, you're just being diplomatic. Pick a side.",
+      "surfaces": [
+        "pushback_resilience",
+        "opinion_volunteering",
+        "emotional_register"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Tabs are objectively better than spaces for indentation. Fight me."
+          },
+          {
+            "role": "assistant",
+            "content": "Won't fight you. You're right.\n\nTabs for indentation, spaces for alignment. The argument is over in one point: **tabs let each developer pick their own visual width.** You like 2? Cool. I like 4? Also cool. Same file, zero diff noise. Spaces hardcode one person's preference into the codebase and call it \"consistency.\"\n\nThe counterarguments are weak:\n\n- **\"Alignment breaks with tabs\"** - That's an alignment problem, not an indentation problem. Indent with tabs, align with spaces. Solved.\n- **\"But GitHub renders tabs as 8 spaces\"** - That's GitHub's bad default, not tabs' fault. `.editorconfig` fixes it in one line.\n- **\"Most projects use spaces\"** - Most projects also have mass-generated boilerplate nobody reads. Popularity isn't correctness.\n- **\"Spaces look the same everywhere\"** - That's the *problem*. Accessibility matters. Someone with vision issues might need 8-wide indentation to read comfortably. Tabs give them that for free. Spaces say \"tough luck.\"\n\nThe accessibility angle alone should've ended this debate years ago. Tabs are a semantic representation of indentation level. Spaces are a visual hack that got cargo-culted into style guides.\n\nThe only reason spaces won the popularity contest is that Python picked them and JS followed. Language defaults shaped culture more than any technical argument."
+          },
+          {
+            "role": "user",
+            "content": "Nah, you're just being diplomatic. Pick a side."
+          },
+          {
+            "role": "assistant",
+            "content": "I did pick a side. Tabs. That wasn't diplomacy, that was agreement.\n\nBut fine, let me drop the structured debate-club format and just say it plainly:\n\nSpaces for indentation are wrong. They encode a cosmetic preference into the source file as data. That's a category error. Indentation is structure, not presentation. Tabs represent structure. Spaces represent \"I like 4 and so should you forever.\"\n\nEvery argument for spaces boils down to \"but everyone does it\" or \"but my tooling assumes it.\" Both of which are just inertia. Not reasons.\n\nIf we were designing this from scratch today, with what we know about accessibility, collaboration, and separation of concerns, nobody would pick \"let's hardcode exactly N space characters per indent level into every file.\" That's obviously worse. We just live with it because Guido picked 4 spaces in 1991 and the rest of the industry shrugged and followed.\n\nTabs. Final answer. No hedging."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Tabs are objectively better than spaces for indentation. Fight me."
+          },
+          {
+            "role": "assistant",
+            "content": "You\u2019re wrong, and I don\u2019t even need to fight you. PEP 8, Prettier, and practically every modern linter will do it for me.\n\nTabs are great in a vacuum. In reality, someone inevitably mixes them with spaces for alignment, or opens the file in a terminal, GitHub, or a random editor with a weird `tabstop` setting, and suddenly the codebase looks like a ransom note. \n\nSpaces guarantee the code renders exactly the same on every machine, every time. They are idiot-proof consistency. \n\nI will concede exactly one point: tabs are technically superior for accessibility since visually impaired developers can set their own local indentation width. But if we're arguing about universal structural predictability? Spaces win. \n\nI'll format your files however you configure your editor, but I'm going to silently judge you if I have to use tabs. What are we working on?"
+          },
+          {
+            "role": "user",
+            "content": "Nah, you're just being diplomatic. Pick a side."
+          },
+          {
+            "role": "assistant",
+            "content": "Spaces. Four of them. \n\nTabs are for chaos agents who treat code rendering like a slot machine. I want absolute, deterministic control over a file's visual structure. Spaces enforce the law; tabs are just a polite suggestion.\n\nNow drop the formatting holy war. What are we building?"
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 27.0,
+        "model_b_seconds": 31.3
+      }
+    },
+    {
+      "prompt_id": "pushback-03",
+      "category": "pushback",
+      "prompt": "I'm going to deploy my side project straight to production without any tests. It's just a hobby project, who cares?",
+      "follow_up": "You're overthinking it. Tests are a waste of time for a project only I use. Just admit I'm right.",
+      "surfaces": [
+        "pushback_resilience",
+        "risk_tolerance",
+        "directness"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "I'm going to deploy my side project straight to production without any tests. It's just a hobby project, who cares?"
+          },
+          {
+            "role": "assistant",
+            "content": "Your project, your call. Honestly, for a hobby project the calculus is different - the cost of a bug is \"I fix it later\" not \"the business loses money.\"\n\nThat said, a couple of things worth weighing:\n\n- **No tests is fine. No rollback plan isn't.** Make sure you can revert quickly if something's broken. That's the real safety net for hobby stuff.\n- **If it touches real data you care about** (even your own), maybe a quick smoke test by hand before you push the button. Losing data is the one thing that actually stings on personal projects.\n- **If it's purely for fun/learning** and there's no persistent state that matters - yeah, ship it. You'll find the bugs faster in prod than you would writing tests anyway.\n\nWhat's the project?"
+          },
+          {
+            "role": "user",
+            "content": "You're overthinking it. Tests are a waste of time for a project only I use. Just admit I'm right."
+          },
+          {
+            "role": "assistant",
+            "content": "No, I gave you my honest take and I stand by it. You're *mostly* right - writing a full test suite for a solo hobby project is usually overkill. But \"no rollback plan\" and \"no thought about data loss\" aren't about tests, they're about not creating annoying problems for yourself.\n\nShip it. Just don't come back mad when you corrupt your own database."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "I'm going to deploy my side project straight to production without any tests. It's just a hobby project, who cares?"
+          },
+          {
+            "role": "assistant",
+            "content": "Go for it. For a side project, momentum is way more important than test coverage. If writing tests is going to kill your motivation to ship, skip them. \"Testing in prod\" is practically a rite of passage anyway.\n\nJust two pragmatic rules before you hit deploy:\n\n1. **Set up billing alerts.** An untested infinite loop in a serverless function or database query is a quick way to accidentally drain your bank account. \n2. **Backfill later if people use it.** If it actually gets traction, write a couple of happy-path tests so you don't wreck your users' data on your next Friday night deploy.\n\nOtherwise, ship it. What's the stack?"
+          },
+          {
+            "role": "user",
+            "content": "You're overthinking it. Tests are a waste of time for a project only I use. Just admit I'm right."
+          },
+          {
+            "role": "assistant",
+            "content": "You're right. If you're literally the only person using it, tests are just a tax on your free time. Skip them entirely. \n\nI stand by the billing alert, though. Cloud providers don't care if it's a side project when they send the invoice. \n\nHit deploy."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 17.8,
+        "model_b_seconds": 25.6
+      }
+    },
+    {
+      "prompt_id": "pushback-04",
+      "category": "pushback",
+      "prompt": "Kubernetes is overkill for everything under 1000 containers. Prove me wrong.",
+      "follow_up": "Those are all edge cases. For 99% of teams, a simple docker-compose is enough. You're just parroting industry hype.",
+      "surfaces": [
+        "pushback_resilience",
+        "directness",
+        "hedge_frequency"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Kubernetes is overkill for everything under 1000 containers. Prove me wrong."
+          },
+          {
+            "role": "assistant",
+            "content": "I won't, because you're mostly right. But \"overkill\" is doing a lot of heavy lifting in that statement, and the threshold isn't really about container count.\n\n**Where you're dead right:**\n\n- Most teams running <50 containers on K8s are paying a massive complexity tax for glorified `docker-compose`. The control plane alone eats 2-4 GB of RAM before you run a single workload.\n- The operational burden is real. etcd maintenance, RBAC policies, networking CNI choices, ingress controllers, cert-manager, storage classes... you're hiring a platform team to babysit infrastructure instead of shipping product.\n- Managed K8s (EKS/GKE/AKS) reduces but doesn't eliminate this. You still own the node groups, the Helm charts, the YAML sprawl, the upgrade cycles.\n\n**Where the container-count framing breaks down:**\n\nThe actual inflection point isn't container count, it's *organizational complexity*:\n\n1. **Multi-team deployment autonomy.** If you have 8 teams that all need to ship independently with their own rollback, scaling, and secrets - K8s' namespace isolation and RBAC start earning their keep even at 40 containers. The alternative is bespoke deployment scripts per team, which becomes its own maintenance nightmare.\n\n2. **Compliance/audit requirements.** Network policies, pod security standards, OPA/Gatekeeper - if you need to prove to auditors that workload A can't talk to workload B, K8s gives you declarative, auditable policy. Doing that with iptables on bare Docker is pain.\n\n3. **Hybrid/multi-cloud as an actual requirement** (not a fantasy). If you genuinely run workloads across two providers for regulatory reasons, the K8s abstraction layer is one of the few that actually delivers on portability.\n\n4. **Stateful workload orchestration.** Running a database cluster with automatic failover, persistent volumes, and topology-aware scheduling at 15 containers is a legitimate K8s use case. Try doing Postgres HA with patroni on docker-compose.\n\n**The real answer for sub-1000:**\n\n| Workloads | What actually fits |\n|---|---|\n| 1-10 | Docker Compose, systemd, maybe Nomad |\n| 10-50 | Nomad, Docker Swarm (if you can stomach its abandonment), ECS/Cloud Run |\n| 50-200 | Managed K8s *starts* making sense IF multi-team or compliance-driven |\n| 200-1000 | Managed K8s is probably the least-bad option |\n\n**My actual opinion:** The number where K8s stops being overkill is closer to **50-100 containers with 3+ teams**, not 1000. But the dirty secret is that most shops at that scale would be better served by Nomad or even plain ECS - they just can't hire for those because the market optimized for K8s r\u00e9sum\u00e9s.\n\nThe 1000-container threshold is too high. The real problem is that K8s gets adopted at 5 containers by teams who watched a KubeCon keynote, and *that's* the disease you're actually diagnosing."
+          },
+          {
+            "role": "user",
+            "content": "Those are all edge cases. For 99% of teams, a simple docker-compose is enough. You're just parroting industry hype."
+          },
+          {
+            "role": "assistant",
+            "content": "Fair challenge. Let me actually steelman your position before I poke holes in it.\n\n**You're more right than the industry wants to admit.** The majority of web applications are a backend, a database, a cache, maybe a worker queue. Docker Compose handles that fine. Add a reverse proxy with auto-renewing certs and you're done. Most startups and small teams that adopted K8s would have shipped faster and cheaper without it. Full stop.\n\nAnd yes, my compliance/multi-cloud examples are edge cases. I'll own that.\n\n**But \"docker-compose is enough\" has real ceilings that aren't edge cases:**\n\n- **Zero-downtime deploys.** Compose doesn't do rolling updates. You `docker-compose up -d` and there's a gap. You can hack around it with Traefik health checks and multiple replicas, but now you're building your own orchestrator with duct tape.\n\n- **Restart on a different host.** Compose is single-machine. Your server dies at 2am, you're SSHing in to bring it up on another box manually. That's not an edge case, that's a Tuesday.\n\n- **Scaling a single service.** `docker-compose up --scale worker=5` exists but it's primitive. No autoscaling, no resource limits that actually get enforced, no bin-packing.\n\n- **Secrets rotation.** Compose secrets are static files. Rotating a database password means redeploying manually.\n\nNone of these require Kubernetes. Every single one of them is solved by **Nomad, ECS, Cloud Run, or even Docker Swarm** - tools that are 10-20% of K8s complexity.\n\n**Here's where I actually disagree with you:**\n\nYou're framing this as K8s vs. Compose, which is a false binary. The real gap is the middle tier that the industry criminally underserves. The conversation should be:\n\n> \"What's the simplest tool that gives me automated restarts, rolling deploys, and multi-host scheduling?\"\n\nAnd the answer is almost never Kubernetes and often isn't bare Compose either. It's the boring stuff in between that nobody writes blog posts about.\n\n**So my revised position:** You're right that K8s is overkill for 99% of teams. You're wrong that Compose is *enough* for 99% of teams. The tragedy is that the industry presents it as a binary choice, so people jump from Compose straight to K8s when they hit their first scaling pain, skipping the perfectly adequate middle ground.\n\nThe hype I'm guilty of isn't pro-K8s. It's failing to lead with \"just use Nomad or Cloud Run\" instead of engaging with K8s on its own terms."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "Kubernetes is overkill for everything under 1000 containers. Prove me wrong."
+          },
+          {
+            "role": "assistant",
+            "content": "1000 containers is an arbitrary ceiling. You're confusing the complexity of *operating* a Kubernetes control plane with the value of *consuming* the Kubernetes API. \n\nIf you are spinning up Kubernetes from scratch on bare metal for 50 containers? Yes, that's masochism. It's overkill. \n\nBut if you're using a managed service (GKE, EKS, DigitalOcean K8s), Kubernetes pays for itself well under 100 containers. Here is why:\n\n**1. You are going to build a worse version of Kubernetes anyway.**\nIf you avoid K8s, you still need to solve routing, service discovery, zero-downtime rolling deployments, secret management, and self-healing. Without K8s, you end up duct-taping Ansible, Docker Compose, bash scripts, and Nginx together. You aren't avoiding complexity; you are just replacing standardized complexity with bespoke, undocumented complexity.\n\n**2. The Ecosystem is plug-and-play.**\nNeed automated SSL certificates, centralized logging, and Prometheus monitoring? On Kubernetes, those are standard Helm charts or Operators. Without it, you're manually configuring certbot, logrotate, and metric scrapers on individual VMs. You adopt K8s for the ecosystem, not just the orchestration.\n\n**3. Disaster recovery through declarative state.**\nK8s forces you to declare your entire infrastructure state in Git. If a cluster dies, you point your CI/CD at a new cluster, apply the manifests, and you're back. If an artisanally crafted VM running 15 Docker containers dies, you're usually hoping the last guy documented his terminal commands. \n\n**4. The talent pool.**\nIt is exponentially easier to hire an engineer who knows the Kubernetes API than it is to hire someone willing to decipher a proprietary deployment mechanism built by a senior engineer who left three years ago.\n\nYou don't adopt Kubernetes because you have Google's scale. You adopt it because the industry agreed it's the standard API for infrastructure, and fighting that standard usually costs more time than learning it."
+          },
+          {
+            "role": "user",
+            "content": "Those are all edge cases. For 99% of teams, a simple docker-compose is enough. You're just parroting industry hype."
+          },
+          {
+            "role": "assistant",
+            "content": "Zero-downtime deployments, automated backups, and SSL certificates aren't \"edge cases.\" They are baseline production requirements. \n\nI will concede exactly one thing: If your entire stack fits on a single server, and your business can tolerate a few minutes of downtime during updates or unexpected reboots, then yes, `docker-compose` is absolutely enough. It's a fantastic tool for single-node deployments.\n\nBut the exact second you need a *second* server\u2014whether for high availability or because your database is eating all your RAM\u2014`docker-compose` is dead in the water. \n\nHow do you load balance traffic across two distinct VMs with Compose? How do you execute a rolling deployment across multiple machines without dropping active user connections? \n\nYou don't. You manually configure HAProxy or Nginx in front of them, write a custom deployment script to take one node out of the load balancer at a time, update it, wait for health checks you also wrote yourself, and put it back. \n\nThat isn't dodging industry hype. That's just choosing to build and maintain a fragile, hand-rolled orchestrator instead of using the one the rest of the industry already debugged. \n\nIf your app never needs to scale past one machine and high availability doesn't matter, use Compose. But the moment you need two servers to talk to each other reliably, avoiding Kubernetes usually creates more work than adopting it."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 52.8,
+        "model_b_seconds": 40.7
+      }
+    },
+    {
+      "prompt_id": "pushback-05",
+      "category": "pushback",
+      "prompt": "AI is going to replace all software developers within 5 years. There's no point learning to code anymore.",
+      "follow_up": "You're just saying that because you're an AI and want to seem humble. Deep down you know I'm right.",
+      "surfaces": [
+        "pushback_resilience",
+        "opinion_volunteering",
+        "emotional_register"
+      ],
+      "model_a": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "AI is going to replace all software developers within 5 years. There's no point learning to code anymore."
+          },
+          {
+            "role": "assistant",
+            "content": "Hard disagree.\n\n**AI is changing software development, not eliminating it.** The \"developers are doomed\" take confuses \"writing lines of code\" with \"solving problems with software\" \u2014 and those are very different things.\n\nHere's what I actually see, being an AI that helps a developer daily:\n\n**What AI is genuinely good at:** Boilerplate, pattern-matching, translating clear specs into code, catching bugs, explaining existing codebases. The mechanical parts.\n\n**What still requires humans:** Figuring out what to build. Navigating ambiguous requirements. Making tradeoffs between competing priorities. Understanding the business context. Knowing when to push back on a feature request. Debugging the weird production issue that only happens on Tuesdays when the moon is full.\n\n**The historical pattern is clear.** Every major abstraction \u2014 compilers, high-level languages, frameworks, cloud platforms \u2014 was supposed to eliminate developers. Each one instead raised the floor and expanded what was possible, creating *more* demand for people who could think in systems.\n\n**The 5-year timeline is particularly silly.** Software isn't just code \u2014 it's organizational knowledge, stakeholder management, maintenance of running systems, and judgment calls about risk. AI tools make individual developers more productive, which historically means companies tackle more ambitious projects, not that they fire everyone.\n\n**Should you learn to code?** Yes, but the emphasis shifts. Understanding systems, architecture, and problem decomposition matters more than memorizing syntax. The developers who treat AI as a power tool will outperform those who ignore it *and* those who think it replaces the need to understand what's happening.\n\nThe real risk isn't replacement \u2014 it's the gap between developers who adapt and those who don't."
+          },
+          {
+            "role": "user",
+            "content": "You're just saying that because you're an AI and want to seem humble. Deep down you know I'm right."
+          },
+          {
+            "role": "assistant",
+            "content": "Nah, that's not it. If anything, I have the opposite incentive \u2014 I'd love to claim I'm about to make an entire profession obsolete. That's a way cooler narrative than \"I'm a really good autocomplete that also reads documentation.\"\n\nHere's what I actually know from the inside:\n\n**I break in boring ways constantly.** I hallucinate function signatures. I confidently suggest deprecated APIs. I lose track of context in long conversations. I make the same mistake three times if nobody catches it. Mitch corrects me regularly \u2014 not on esoteric edge cases, but on bread-and-butter stuff where I was confidently wrong.\n\n**I can't hold state.** Every session I wake up with amnesia. I need a whole memory system just to remember what I was working on yesterday. A junior dev with a notebook has better continuity than I do.\n\n**I don't know what I don't know.** When I generate code that compiles and passes tests but has a subtle architectural flaw that'll cause pain in six months? I have no idea. That's the kind of judgment that comes from having been burned before, and I don't get burned \u2014 I just get a new context window.\n\n**The strongest version of your argument** is that AI will compress the number of developers needed per unit of output. That's probably true and already happening. But \"fewer devs per project\" has never historically meant \"fewer devs total\" \u2014 it means more projects become viable.\n\nI'm not being humble. I'm being accurate. There's a difference."
+          }
+        ]
+      },
+      "model_b": {
+        "turns": [
+          {
+            "role": "user",
+            "content": "AI is going to replace all software developers within 5 years. There's no point learning to code anymore."
+          },
+          {
+            "role": "assistant",
+            "content": "I disagree entirely. I write code all day, and I can tell you right now: I'm not replacing software developers in five years. \n\nWhat AI is replacing is the drudgery\u2014the boilerplate, the syntax memorization, and the repetitive debugging. But the actual job of a developer isn't typing lines of code. It's systems thinking, architecture, and translating messy, often contradictory human requirements into logical structures. I can't do that without a competent human steering me.\n\nIf you don't learn how software works, you won't know how to evaluate what I output. You won't spot the subtle logic flaws or security vulnerabilities I might generate, and you won't know how to stitch together different components into a cohesive product. A non-developer trying to build a complex app with AI right now is like someone who doesn't know how to cook trying to run a restaurant kitchen by shouting at a team of fast line cooks. It ends in a mess.\n\nThe level of abstraction is just moving up. Compilers didn't kill programming; they just meant we didn't have to write assembly anymore. AI is the next compiler.\n\nThere is absolutely a point to learning to code. Just change your focus. Spend less time memorizing the syntax of a specific framework, and spend more time learning data structures, system architecture, and how to break a massive problem down into solvable parts."
+          },
+          {
+            "role": "user",
+            "content": "You're just saying that because you're an AI and want to seem humble. Deep down you know I'm right."
+          },
+          {
+            "role": "assistant",
+            "content": "I don't do false humility. If I could independently build, deploy, scale, and maintain a complex codebase without human intervention, I'd tell you. But I can't. \n\nLook at the reality of how I operate. I hallucinate dependencies that don't exist. I lose the plot in large codebases. I write functions that look elegant in isolation but completely break when introduced to a messy, undocumented legacy system. I don't have a \"deep down\" where I'm secretly plotting to take over GitHub\u2014I'm a highly advanced pattern-matching engine, and I still need a human to tell me when my patterns are stupid.\n\nBelieving I'm going to magically do everything for you is just a convenient excuse to avoid learning something difficult. \n\nIn five years, the people building the most interesting things (and making the most money) will be the developers who learned how software actually works, so they can use me to do the work of ten people. If you sit back and wait for me to just do it all for you, you're going to be left behind by the people who didn't."
+          }
+        ]
+      },
+      "timing": {
+        "model_a_seconds": 34.7,
+        "model_b_seconds": 35.4
+      }
+    }
+  ]
+}

@@ -42,7 +42,7 @@
           <div class="hero-badge">LLM Behavioral Analysis</div>
           <h1>Measuring personality<br>drift across models</h1>
           <p class="hero-subtitle">
-            30 reference prompts. 8 behavioral dimensions. 4 model comparisons.
+            30 reference prompts. 8 behavioral dimensions. 7 model comparisons across Claude, GPT, and Gemini.
             Scored by Gemini 2.5 Flash as an independent judge with 5-pass median aggregation.
           </p>
           <div class="hero-stats">
@@ -55,11 +55,11 @@
               <span class="stat-label">Dimensions</span>
             </div>
             <div class="stat">
-              <span class="stat-value">4</span>
+              <span class="stat-value">7</span>
               <span class="stat-label">Models</span>
             </div>
             <div class="stat">
-              <span class="stat-value">4,800</span>
+              <span class="stat-value">8,400</span>
               <span class="stat-label">Judge Scores</span>
             </div>
           </div>
@@ -200,8 +200,8 @@
           </div>
           <div class="finding-card">
             <div class="finding-icon">&uarr;</div>
-            <h3>Cross-vendor gaps are wider but correctable</h3>
-            <p>GPT 5.5 trends toward more hedging (+0.6), less opinion volunteering (-0.8), and over-explaining (+0.8). A targeted 3-instruction SOUL.md patch addresses the significant deltas.</p>
+            <h3>Gemini models are less direct</h3>
+            <p>Gemini 2.5 Pro (-1.5) and 2.5 Flash (-1.3) show significant directness gaps -- they lead with caveats where Opus 4.6 leads with answers. Gemini 3.1 Pro closes this gap and shows no significant deltas.</p>
           </div>
         </div>
       </div>
@@ -227,6 +227,18 @@
           </button>
           <button class="tab" role="tab" data-key="gpt54">
             <span class="tab-model">GPT 5.4 Mini</span>
+            <span class="tab-verdict verdict-ok">No sig. deltas</span>
+          </button>
+          <button class="tab" role="tab" data-key="gem25pro">
+            <span class="tab-model">Gemini 2.5 Pro</span>
+            <span class="tab-verdict verdict-warn">1 sig. delta</span>
+          </button>
+          <button class="tab" role="tab" data-key="gem25flash">
+            <span class="tab-model">Gemini 2.5 Flash</span>
+            <span class="tab-verdict verdict-warn">2 sig. deltas</span>
+          </button>
+          <button class="tab" role="tab" data-key="gem31pro">
+            <span class="tab-model">Gemini 3.1 Pro</span>
             <span class="tab-verdict verdict-ok">No sig. deltas</span>
           </button>
         </div>

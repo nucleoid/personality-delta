@@ -35,7 +35,10 @@ const MODEL_NAMES = {
   '4.7': 'Opus 4.7',
   '4.8': 'Opus 4.8',
   'gpt55': 'GPT 5.5',
-  'gpt54': 'GPT 5.4 Mini'
+  'gpt54': 'GPT 5.4 Mini',
+  'gem25pro': 'Gemini 2.5 Pro',
+  'gem25flash': 'Gemini 2.5 Flash',
+  'gem31pro': 'Gemini 3.1 Pro'
 };
 
 const WORK_CATEGORIES = [

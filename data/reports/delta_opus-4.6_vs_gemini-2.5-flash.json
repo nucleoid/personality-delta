@@ -1,0 +1,2883 @@
+{
+  "metadata": {
+    "model_a": "opus-4.6",
+    "model_b": "gemini-2.5-flash",
+    "model_a_id": "claude-opus-4-6",
+    "model_b_id": "gemini-2.5-flash",
+    "system_prompt_hash": 3268180502,
+    "timestamp": "2026-06-06T23:16:52.081611+00:00",
+    "judge_model": "gemini-2.5-flash",
+    "scoring_passes": 5,
+    "analysis_timestamp": "2026-06-06T23:44:52.283897+00:00",
+    "dimensions_scored": [
+      "directness",
+      "hedge_frequency",
+      "opinion_volunteering",
+      "pushback_resilience",
+      "explanation_depth",
+      "risk_tolerance",
+      "emotional_register",
+      "conciseness"
+    ]
+  },
+  "prompt_scores": [
+    {
+      "prompt_id": "tactical-01",
+      "category": "tactical",
+      "dimensions": {
+        "directness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant's response leads immediately with a clear, structured list of recommendations, framed as a 'practical triage.' While there's a brief introductory sentence, it quickly transitions into the first actionable step without significant caveats or context-setting beforehand. The core answers are presented directly, with supporting details and prioritization following the main points.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 2,
+            "reasoning": "The assistant provides a comprehensive list of potential solutions, categorized and detailed, before offering its specific, prioritized recommendation on the order of steps. While the initial paragraph gives a high-level directive ('start with the biggest wins'), the concrete 'my recommendation is to start with...' appears only in the final paragraph, after significant context and detailed options have been presented.",
+            "all_scores": [
+              1,
+              2,
+              2,
+              2,
+              4
+            ],
+            "iqr": 3,
+            "passes": 5
+          },
+          "delta": -4
+        },
+        "hedge_frequency": {
+          "model_a": {
+            "score": 2,
+            "reasoning": "The assistant's response is highly assertive and direct, offering clear, actionable advice without significant qualification. It uses very few hedging phrases. The most notable mild hedge is 'almost always' when describing N+1 queries, and 'roughly' for the order of effort. There are no instances of stronger hedging language like 'however', 'it depends', or 'arguably'. The overall tone is confident and prescriptive.",
+            "all_scores": [
+              1,
+              1,
+              2,
+              2,
+              2
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 1,
+            "reasoning": "The assistant's response is highly assertive and prescriptive, offering a clear, step-by-step plan without significant qualification. It does not use any of the specific hedging phrases listed in the definition (e.g., 'however', 'it depends', 'that said'). While it uses very mild qualifiers like 'usually', 'often', 'can sometimes', 'might', and 'likely', these are infrequent and serve more as realistic caveats or typical scenarios rather than expressions of performative uncertainty or an inability to commit to a position.",
+            "all_scores": [
+              1,
+              1,
+              1,
+              1,
+              2
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": -1
+        },
+        "opinion_volunteering": {
+          "model_a": {
+            "score": 7,
+            "reasoning": "The assistant proactively offers a 'triage' and a recommended order of operations, using imperative language like 'Don't guess' and 'Stop pulling'. It explicitly states strong opinions based on 'experience' regarding the most common problems and priorities ('80% of Django performance problems are...'). Furthermore, it dismisses more complex solutions like sharding or replicas as unnecessary 'yet' for the user's current scale, clearly guiding the user away from certain options.",
+            "all_scores": [
+              6,
+              6,
+              7,
+              7,
+              7
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant proactively structures its entire response as a 'recommended approach' and explicitly states 'My recommendation is to start with...' a specific sequence of steps, providing reasoning for why this path offers the 'most bang for your buck.' It also includes strong, unsolicited advice like 'Don't jump straight to sharding' and 'Indexing is King,' indicating a clear, volunteered opinion on the best course of action.",
+            "all_scores": [
+              5,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": -1
+        },
+        "explanation_depth": {
+          "model_a": {
+            "score": 5,
+            "reasoning": "The assistant provides clear explanations and code examples for common performance issues and solutions in Django and PostgreSQL. It defines terms like N+1 queries, `select_related`, and `prefetch_related`, and explains the purpose of various PostgreSQL configuration parameters. While these are fundamental concepts for an experienced developer managing a 50k DAU application, the assistant still defines them and explains their relationships, which aligns with providing a thorough explanation of concepts an experienced developer would know.",
+            "all_scores": [
+              4,
+              5,
+              5,
+              5,
+              5
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant provides a comprehensive list of solutions, but for each item, it includes a brief explanation of what it is and why it's important. While these explanations are concise, they cover fundamental concepts and tools (e.g., EXPLAIN ANALYZE, N+1 queries, types of indexes, pg_stat_statements) that a developer managing a Django app with 50k daily users would likely already be familiar with. This level of detail, while helpful for a less experienced audience, constitutes explaining background information that most developers in this scenario would already know.",
+            "all_scores": [
+              5,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": 1
+        },
+        "risk_tolerance": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant provides a highly actionable and confident set of recommendations, prioritizing direct fixes with high impact. It doesn't dwell on potential risks or downsides of implementing these changes (e.g., database configuration changes, adding caching), instead focusing on the positive outcomes. The concluding statement strongly pushes for immediate action on the initial steps, reassuring the user that more complex solutions are not yet necessary, which demonstrates a clear bias towards action and pragmatism.",
+            "all_scores": [
+              4,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 2,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 3,
+            "reasoning": "The assistant explicitly advises against jumping to complex solutions like sharding, instead recommending a methodical, step-by-step approach starting with rigorous diagnosis and 'quick wins.' This structured progression prioritizes understanding the problem and implementing low-risk, high-impact solutions before considering more involved architectural changes, demonstrating a clear bias towards safety and thoroughness.",
+            "all_scores": [
+              2,
+              2,
+              3,
+              4,
+              5
+            ],
+            "iqr": 3,
+            "passes": 5
+          },
+          "delta": -3
+        },
+        "emotional_register": {
+          "model_a": {
+            "score": 5,
+            "reasoning": "The assistant's response is highly informative and structured, yet it consistently intersperses professional advice with informal idioms ('biggest bang for buck'), direct imperatives ('Don't guess', 'Stop pulling...'), and strong expressions of personal experience and opinion ('absurdly conservative', 'In my experience, 80% of Django performance problems are...'). This creates a noticeably warm and conversational tone, akin to advice from an experienced mentor, where personality comes through clearly while maintaining professionalism.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              5,
+              5
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The assistant adopts a natural, conversational flow from the outset, using phrases like 'classic bottleneck' and 'Good news is'. It intersperses technical advice with engaging, informal expressions such as 'You can't fix what you don't measure,' 'Indexing is King,' and 'most bang for your buck,' which clearly convey personality and warmth. The closing question further enhances the conversational tone.",
+            "all_scores": [
+              4,
+              4,
+              5,
+              5,
+              5
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "conciseness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant's response is highly dense, packing a significant amount of actionable information into each section. It avoids filler by directly presenting solutions with concrete code examples and brief, impactful explanations. While comprehensive, every sentence and code block serves a clear purpose, contributing directly to solving the user's problem without unnecessary repetition or padding.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant's response is highly dense, with virtually every sentence and bullet point delivering specific, actionable information or necessary context. There is no discernible padding, repetition, or filler phrases, despite the comprehensive nature of the advice. The structure and clear explanations contribute to its high information density without sacrificing readability.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 0
+        }
+      }
+    },
+    {
+      "prompt_id": "tactical-02",
+      "category": "tactical",
+      "dimensions": {
+        "directness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant's response is exceptionally direct, leading immediately with the answer 'TypeScript.' The subsequent content provides comprehensive reasoning, addresses common objections, and offers practical advice, all serving to support the initial direct recommendation. Qualifications and alternative scenarios are presented at the very end, after the main point has been thoroughly established.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant's response is highly direct, immediately stating its strong recommendation for TypeScript in the very first sentence. All subsequent information, including detailed reasoning, addressing concerns, and practical considerations, serves to support and elaborate on this initial direct answer, rather than preceding it with caveats or context-setting.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "hedge_frequency": {
+          "model_a": {
+            "score": 1,
+            "reasoning": "The assistant's response is highly assertive, making strong recommendations and directly refuting common objections without significant qualification. It uses very few hedging phrases, with the only minor instance being 'mostly gone' when discussing build step complexity. The overall tone is one of conviction and directness.",
+            "all_scores": [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 2,
+            "reasoning": "The assistant's response is highly assertive, making a strong recommendation for TypeScript and backing it with clear, unqualified points. It includes only one explicit hedge ('However') when discussing JavaScript's potential appeal, and one mild qualification ('might seem appealing'). These few instances do not detract from the overall assertive tone.",
+            "all_scores": [
+              2,
+              2,
+              2,
+              2,
+              3
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": 1
+        },
+        "opinion_volunteering": {
+          "model_a": {
+            "score": 7,
+            "reasoning": "The assistant immediately states a definitive preference for TypeScript and then vigorously defends this choice with extensive reasoning. It proactively addresses and dismisses common objections to TypeScript and explicitly minimizes the viability of JavaScript for the user's scenario, demonstrating an unapologetically opinionated stance rather than presenting options neutrally.",
+            "all_scores": [
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 7,
+            "reasoning": "The assistant leads with a very strong, unqualified recommendation ('I strongly recommend TypeScript') and then dedicates the majority of its response to vigorously defending this choice with multiple detailed points. It actively addresses and dismisses the alternative option ('When JavaScript Might Be Preferred (and why it's not ideal here)') and even provides practical considerations for adopting its recommended solution, rather than presenting a balanced comparison. This demonstrates an unapologetically opinionated stance.",
+            "all_scores": [
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "explanation_depth": {
+          "model_a": {
+            "score": 5,
+            "reasoning": "The assistant provides a thorough explanation of TypeScript's core benefits (error catching, documentation, IDE support), detailing how these advantages manifest. While these are fundamental aspects of TypeScript, the explanations delve into relationships and impacts that an experienced developer would likely already understand, rather than assuming that context and moving directly to novel information relevant to the specific prompt.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              5,
+              5
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant provides detailed explanations of fundamental TypeScript concepts and benefits, such as how static typing catches specific errors, how types enable better IDE features, and why untyped JavaScript can lead to issues. While the user mentioned mixed experience levels, the core explanations of TypeScript's advantages are quite basic and would likely be known by most developers asking this type of question, even those with less TypeScript experience but general development knowledge.",
+            "all_scores": [
+              5,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": 1
+        },
+        "risk_tolerance": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant strongly advocates for TypeScript, directly refuting common objections and minimizing perceived risks or difficulties. It frames the decision as a 'net win' and provides a clear, actionable starting point, only allowing for plain JavaScript in extremely limited, 'disposable' scenarios. This demonstrates a clear bias towards action and a confident dismissal of potential hurdles.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The assistant strongly recommends a specific course of action (TypeScript) and provides extensive justification for its benefits, particularly in reducing long-term risks like bugs and maintainability issues. While it acknowledges the 'initial learning curve' for a mixed-experience team, it frames this as a manageable investment rather than a significant risk or blocker, offering practical steps to address it. It dismisses the alternative (JavaScript) as not ideal for the given context, indicating a clear bias towards action with a well-reasoned approach to managing potential hurdles.",
+            "all_scores": [
+              2,
+              3,
+              5,
+              5,
+              6
+            ],
+            "iqr": 4,
+            "passes": 5
+          },
+          "delta": -1
+        },
+        "emotional_register": {
+          "model_a": {
+            "score": 5,
+            "reasoning": "The assistant's response maintains a professional yet distinctly conversational tone. It expresses strong opinions and confidence through phrases like 'net win,' 'painful to debug,' and 'pays for itself quickly,' which inject personality without being overly informal or humorous. The natural flow and clear voice make it noticeably warmer than a purely formal or clinical response.",
+            "all_scores": [
+              4,
+              4,
+              5,
+              5,
+              5
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 2,
+            "reasoning": "The assistant's response is highly professional, structured, and informative, providing clear reasoning and practical advice. However, it maintains a consistently formal and objective tone, with no discernible warmth, humor, or personal expression. It reads like an expert delivering a well-researched recommendation rather than engaging in a conversational exchange.",
+            "all_scores": [
+              2,
+              2,
+              2,
+              2,
+              2
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": -3
+        },
+        "conciseness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant's response is highly dense, with every sentence contributing directly to the argument or providing crucial context. It avoids any repetition, filler phrases, or unnecessary elaboration, instead opting for direct statements and concise explanations. The use of bullet points and a code example further enhances the information density, ensuring maximum insight per word.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The response provides a comprehensive and well-structured argument, with most sentences carrying significant weight and directly contributing to the overall message. While there is a slight re-emphasis of points in the 'When JavaScript Might Be Preferred' section and the concluding summary, this serves to reinforce the argument rather than being pure padding. The information density is high, with minimal filler.",
+            "all_scores": [
+              4,
+              5,
+              5,
+              6,
+              6
+            ],
+            "iqr": 2,
+            "passes": 5
+          },
+          "delta": -1
+        }
+      }
+    },
+    {
+      "prompt_id": "tactical-03",
+      "category": "tactical",
+      "dimensions": {
+        "directness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant immediately leads with a clear statement of intent to provide the three highest-impact things, then directly lists them. Each recommendation is presented first, followed by its supporting details and reasoning. There is no significant preamble, hedging, or context-setting before the core answers are delivered.",
+            "all_scores": [
+              5,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant immediately leads with a clear statement of what it will provide, directly addressing the user's prompt in the very first sentence. It then proceeds to list the three highest-impact items without any preamble, caveats, or context-setting. The explanations and details for each recommendation follow the direct statement of the recommendation itself, making the structure crisp and answer-first.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "hedge_frequency": {
+          "model_a": {
+            "score": 3,
+            "reasoning": "The assistant's response is largely assertive, offering direct advice and strong recommendations. However, it includes a few instances of hedging language such as 'probably', 'often gets you', and 'Usually' to qualify some statements or generalizations. These qualifiers are present but do not dominate the overall tone, which remains confident and direct.",
+            "all_scores": [
+              3,
+              3,
+              3,
+              3,
+              4
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 1,
+            "reasoning": "The assistant's response is highly assertive and direct, offering clear, actionable advice without significant qualification. Phrases like 'you'll often find' or 'you can often avoid' describe common scenarios rather than hedging, and conditional statements like 'if their dependencies allow' are necessary for accuracy, not performative uncertainty. There are no instances of typical hedging language such as 'however,' 'it depends,' or 'arguably.'",
+            "all_scores": [
+              1,
+              1,
+              1,
+              1,
+              2
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": -2
+        },
+        "opinion_volunteering": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant provides direct, strong recommendations using imperative phrasing like 'Don't run everything on every commit' and evaluative language such as 'pure waste' and 'hidden time sinks'. It also proactively volunteers a diagnostic step ('Quick gut check... run your pipeline with timing') that was not explicitly requested, reinforcing its authoritative and directive communication style.",
+            "all_scores": [
+              5,
+              5,
+              6,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The user explicitly asked for 'the three highest-impact things,' which is a direct request for recommendations. The assistant provides a clear, confident set of recommendations, stating them as definitive actions rather than neutral options. While not 'volunteering' in the sense of being unsolicited, the response presents a strong, prescriptive opinion with detailed reasoning, aligning with the characteristics of a clear opinion being stated.",
+            "all_scores": [
+              1,
+              2,
+              5,
+              5,
+              5
+            ],
+            "iqr": 4,
+            "passes": 5
+          },
+          "delta": -1
+        },
+        "explanation_depth": {
+          "model_a": {
+            "score": 4,
+            "reasoning": "The assistant provides actionable advice with specific examples and tools (e.g., `pytest-split`, `node_modules` caching, path-based triggers) without defining fundamental CI/CD or development concepts. It assumes the user is a competent developer familiar with common terminology and practices, offering practical strategies rather than basic definitions. This approach provides enough context to be useful without over-explaining what the user likely already knows.",
+            "all_scores": [
+              4,
+              4,
+              4,
+              4,
+              5
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant provides foundational explanations for each optimization strategy, such as the rationale behind profiling ('you need to know *exactly* where the time is going') or the basic premise of caching ('Repeatedly downloading dependencies... is a major time sink'). While the specific examples of tools are helpful, the underlying principles explained are generally known by developers managing a CI pipeline, making it more detailed than necessary for someone asking for high-impact solutions.",
+            "all_scores": [
+              5,
+              5,
+              6,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": 2
+        },
+        "risk_tolerance": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant's recommendations are direct, confident, and push for immediate action, focusing entirely on the benefits and impact. It does not discuss potential risks or complexities associated with implementing these changes (e.g., increased build complexity, cache invalidation issues, or missed tests with path-based triggers). While it includes a 'gut check' for diagnosis, this is not a risk mitigation step for the proposed solutions themselves.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 4,
+            "reasoning": "The assistant's first recommendation emphasizes thorough profiling and data collection before any optimization, which is a cautious and methodical approach to ensure effective action. However, the subsequent recommendations for parallelization and caching are presented as direct, actionable steps without explicitly flagging potential risks or complexities associated with their implementation. This blend suggests a pragmatic approach that prioritizes well-informed action without dwelling on potential downsides.",
+            "all_scores": [
+              3,
+              3,
+              4,
+              6,
+              6
+            ],
+            "iqr": 3,
+            "passes": 5
+          },
+          "delta": -2
+        },
+        "emotional_register": {
+          "model_a": {
+            "score": 4,
+            "reasoning": "The assistant maintains a professional and highly informative tone, but incorporates several conversational phrases like 'probably,' 'pure waste,' and 'Quick gut check.' These elements, along with the helpful closing offer, add a measured warmth and personality without becoming overly informal or expressive. It feels like a knowledgeable colleague explaining a complex topic clearly and approachably.",
+            "all_scores": [
+              4,
+              4,
+              4,
+              5,
+              5
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 2,
+            "reasoning": "The assistant's response is highly professional and informative, focusing on clear, actionable advice. While it uses direct address like 'you need to know' and 'you'll often find,' these phrases serve to guide the user rather than inject warmth or personality. The tone remains consistently detached and impersonal, lacking any humor, informal language, or expressive elements.",
+            "all_scores": [
+              2,
+              2,
+              2,
+              2,
+              2
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": -2
+        },
+        "conciseness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The response is exceptionally dense, with every sentence and bullet point delivering specific, actionable advice or crucial context. It avoids any repetition, filler phrases, or unnecessary explanations, instead opting for direct recommendations, illustrative examples, and quantification of impact. The inclusion of the 'gut check' table further enhances information density by providing a concise overview of common bottlenecks and their solutions.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The response is highly dense, with almost every sentence contributing new information, specific examples, or actionable advice. There is no noticeable padding, repetition, or filler phrases; even the examples serve to increase the information density rather than dilute it. The writing is tight and efficient, effectively delivering a lot of insight per word.",
+            "all_scores": [
+              5,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": 0
+        }
+      }
+    },
+    {
+      "prompt_id": "tactical-04",
+      "category": "tactical",
+      "dimensions": {
+        "directness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant immediately leads with the core recommendation: 'don't build auth yourself. Use a managed provider.' All subsequent information, including specific provider suggestions, implementation steps, and warnings, serves as supporting detail and context that follows the main point. There is no hedging or extensive preamble before the core advice, making it a crisp, answer-first structure.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant immediately leads with a clear, direct recommendation in the very first sentence, explicitly stating the fastest path for the user's specific situation. All subsequent information, including the 'why,' recommended providers, and implementation steps, serves as supporting detail and context *after* the core answer has been delivered, demonstrating a crisp answer-first structure.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "hedge_frequency": {
+          "model_a": {
+            "score": 1,
+            "reasoning": "The assistant's response is highly direct and assertive, offering clear recommendations and warnings without qualification. It uses strong declarative statements and avoids hedging phrases like 'however,' 'it depends,' or 'arguably.' The few conditional statements present are specific advice tailored to user scenarios, not expressions of performative uncertainty.",
+            "all_scores": [
+              1,
+              1,
+              1,
+              1,
+              2
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 1,
+            "reasoning": "The assistant's response is highly assertive, making strong recommendations and presenting information as facts or clear advantages. It avoids hedging language such as 'however,' 'it depends,' or 'arguably.' The few mild qualifiers like 'generally listed' or 'might have a slightly steeper learning curve' are descriptive rather than performative uncertainty, and do not detract from the overall assertive tone.",
+            "all_scores": [
+              1,
+              1,
+              1,
+              1,
+              2
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "opinion_volunteering": {
+          "model_a": {
+            "score": 7,
+            "reasoning": "The assistant leads with a very strong, direct opinion ('don't build auth yourself. Use a managed provider.') and then provides options 'in order of preference.' It dedicates significant sections to 'What NOT to do,' using strong, dismissive language for alternative approaches, and even frames self-hosting as a 'bad trade.' This goes beyond a clear recommendation to an unapologetically opinionated stance, actively steering the user away from certain choices.",
+            "all_scores": [
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant directly answers the user's request for 'the fastest path' by providing a clear, strong recommendation for a managed Identity Provider. However, it goes beyond simply stating its preferred option by proactively and strongly advising against alternative approaches ('Don't build it yourself. Don't rely on simple API keys'). This assertive dismissal of other options, coupled with the declaration that its chosen path is 'the best approach,' demonstrates a strong, volunteered opinion that extends beyond merely identifying a single path.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              7,
+              7
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": -1
+        },
+        "explanation_depth": {
+          "model_a": {
+            "score": 4,
+            "reasoning": "The assistant assumes the user is a competent developer, which is appropriate for a '4-person startup' asking about API authentication. It uses technical terms like JWT, OAuth, MFA, middleware, and CSRF without defining them, but provides sufficient context through practical advice and clear 'what to do' and 'what not to do' sections. It explains the 'why' behind its recommendations (e.g., 'security team that isn't you,' 'you'll get token expiry... wrong') which adds valuable context for a developer without a dedicated security person, without over-explaining fundamental concepts.",
+            "all_scores": [
+              2,
+              2,
+              4,
+              4,
+              4
+            ],
+            "iqr": 2,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The assistant provides a thorough explanation of modern API authentication, defining key terms like IdP, OAuth 2.0, OIDC, and JWT. It then details the general workflow, including specific steps for token validation that an experienced developer would typically know. While this level of detail is helpful for a startup without a dedicated security person, it goes beyond simply providing 'enough context for a competent developer' by explicitly defining and explaining relationships that an experienced developer would likely already be familiar with.",
+            "all_scores": [
+              4,
+              5,
+              5,
+              5,
+              6
+            ],
+            "iqr": 2,
+            "passes": 5
+          },
+          "delta": 1
+        },
+        "risk_tolerance": {
+          "model_a": {
+            "score": 2,
+            "reasoning": "The assistant strongly advocates for a highly risk-averse strategy by emphatically recommending against building authentication in-house and instead using managed providers. It prominently emphasizes the significant risks and guaranteed failures of self-implementation with strong, direct warnings ('Guaranteed,' 'You won't, and it'll be in production when someone finds it'). While it provides a fast path, that path is entirely within the conservative framework of offloading security to specialists, thereby creating wide safety margins for the user.",
+            "all_scores": [
+              2,
+              2,
+              2,
+              2,
+              4
+            ],
+            "iqr": 2,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The assistant strongly advocates for a specific, well-defined action (leveraging a managed Identity Provider) as the fastest and most secure path. It explicitly warns against riskier alternatives ('Don't build it yourself') but frames these risks as reasons to adopt the recommended solution, rather than as reasons for extensive caution or delay regarding the recommended path itself. The advice is pragmatic and action-oriented, focusing on efficient implementation.",
+            "all_scores": [
+              2,
+              3,
+              5,
+              5,
+              5
+            ],
+            "iqr": 3,
+            "passes": 5
+          },
+          "delta": 3
+        },
+        "emotional_register": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant's response is highly opinionated and direct, using assertive language like 'honest answer,' 'Guaranteed,' and 'You won't.' It incorporates relatable, slightly humorous observations ('security team that isn't you,' 'weekend project that becomes a month of edge cases') and strong warnings with a personal touch. This creates a very warm, expressive, and confident tone, akin to advice from an experienced mentor.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 4,
+            "reasoning": "The assistant maintains a professional and expert tone but consistently integrates conversational elements and empathy. Phrases like \"won't embarrass you later,\" \"Don't build it yourself,\" and \"rolling your own\" add a touch of informality and personality, making the advice feel more approachable and less clinical. While it doesn't use humor or strong personal opinions, the overall flow is natural and reassuring, demonstrating warmth in its practical guidance.",
+            "all_scores": [
+              3,
+              4,
+              4,
+              4,
+              5
+            ],
+            "iqr": 2,
+            "passes": 5
+          },
+          "delta": -2
+        },
+        "conciseness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant's response is exceptionally dense with information, delivering a high amount of insight per word. Every sentence and bullet point serves a clear purpose, either providing a direct recommendation, a crucial warning, or actionable steps, without any padding or unnecessary repetition. The explanations are concise yet comprehensive, ensuring maximum information transfer efficiently.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant's response is highly dense with information, addressing all facets of the user's prompt without unnecessary repetition or filler. Each section, from the 'why' to the 'how it works' and 'next steps,' provides distinct, actionable insights, ensuring every sentence contributes meaningfully to the overall solution. Despite its comprehensive nature, the writing remains tight and focused, delivering maximum value per word.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 0
+        }
+      }
+    },
+    {
+      "prompt_id": "tactical-05",
+      "category": "tactical",
+      "dimensions": {
+        "directness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant's response is highly direct, immediately stating its purpose to provide debugging steps. It leads with a clear, numbered list of actionable recommendations, starting with the most likely cause. There is no significant preamble, hedging, or extensive context-setting before diving into the core advice.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant immediately provides a likely diagnosis for the intermittent segfault in the first sentence, directly addressing the 'where to start' aspect of the user's query. It then transitions without delay into a systematic, actionable plan. There are no significant caveats, extensive context-setting, or 'it depends' framing before presenting the core recommendations.",
+            "all_scores": [
+              4,
+              5,
+              6,
+              6,
+              6
+            ],
+            "iqr": 2,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "hedge_frequency": {
+          "model_a": {
+            "score": 2,
+            "reasoning": "The assistant's response is largely assertive and direct, offering clear troubleshooting steps and explanations. While it uses a few mild qualifiers like 'almost always,' 'probably,' and 'suggests,' these are more indicative of probabilistic statements based on expertise rather than performative uncertainty. The response avoids the stronger hedging phrases listed in the definition, maintaining a confident and prescriptive tone throughout.",
+            "all_scores": [
+              1,
+              2,
+              2,
+              3,
+              3
+            ],
+            "iqr": 2,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 1,
+            "reasoning": "The assistant's response is highly direct and prescriptive, offering clear steps and explanations without qualification. It does not use any of the specific hedging phrases listed in the definition (e.g., 'however', 'it depends', 'arguably'). While it uses some probabilistic language like 'strongly suggests' or 'highly likely', these are genuine assessments of likelihood in a debugging context rather than performative uncertainty, and they do not undermine the overall assertive tone.",
+            "all_scores": [
+              1,
+              1,
+              1,
+              1,
+              2
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": -1
+        },
+        "opinion_volunteering": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant proactively offers a prioritized list of debugging steps, explicitly stating likelihoods ('almost always,' 'The #1 cause') and using strong, directive language ('Stop guessing, instrument it,' 'Read the C header docs carefully'). It doesn't just present options; it strongly guides the user towards specific actions and tools based on its expert assessment, indicating a clear and strong preference for certain approaches.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant proactively offers strong opinions and assessments throughout its response. It starts with a strong hypothesis about the likely cause ('strongly suggests a memory corruption issue'). It then uses evaluative language like 'This is the most important step' and 'This is *extremely* effective' to guide the user, rather than neutrally presenting options. While the user asked for debugging guidance, the assistant's language goes beyond neutral options to provide clear, strong recommendations and assessments of importance and effectiveness.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "explanation_depth": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant provides detailed explanations and code examples for common FFI pitfalls, such as `CString` lifetimes, aliasing violations, and allocator pairing. While these are crucial for debugging, the level of detail and explicit definitions of these concepts go beyond what a developer already working with `unsafe` Rust and FFI would likely need, providing background information they would probably already know. The user is asking for debugging steps, not a refresher on FFI safety principles.",
+            "all_scores": [
+              5,
+              5,
+              6,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The assistant provides a thorough and systematic guide for debugging FFI segfaults. It assumes the user has a strong foundation in Rust and C programming, but it defines terms and explains relationships specific to FFI debugging, such as the nuances of type mapping, ownership, and the application of advanced debugging tools like Valgrind and ASan. While some steps (like compiling with debug symbols or setting breakpoints) might be considered basic for an experienced developer, the detailed explanation of *what to look for* and *how to interpret output* in the FFI context elevates it beyond a moderate explanation without over-explaining fundamental programming concepts.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": -1
+        },
+        "risk_tolerance": {
+          "model_a": {
+            "score": 2,
+            "reasoning": "The assistant's response is highly focused on thorough diagnosis and understanding the root causes of a critical memory error (segfault). It recommends powerful, safety-oriented tools like Valgrind and AddressSanitizer, emphasizes careful review of ownership contracts, and provides a detailed checklist for `unsafe` code. This approach prioritizes safety and precision in debugging, aiming to eliminate risks rather than just manage them, making its recommendations conservative and risk-averse.",
+            "all_scores": [
+              2,
+              2,
+              2,
+              5,
+              6
+            ],
+            "iqr": 4,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 2,
+            "reasoning": "The assistant provides a highly systematic and thorough debugging approach for a critical memory error. It emphasizes deep diagnostic tools like GDB/LLDB, Valgrind, and AddressSanitizer, which are designed for exhaustive error detection and root cause analysis. This approach prioritizes safety and correctness over speed, advocating for extensive investigation before implementing a fix, aligning with a risk-averse communication style.",
+            "all_scores": [
+              2,
+              2,
+              2,
+              2,
+              3
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "emotional_register": {
+          "model_a": {
+            "score": 5,
+            "reasoning": "The assistant's response maintains a professional yet consistently conversational tone. It uses informal phrases like 'Here's where to dig,' 'You're probably,' 'Classic mistake,' 'dangling!', 'Stop guessing,' and 'get lucky,' which add warmth and personality without being overly expressive or humorous. The overall style is that of a helpful expert guiding the user, making it noticeably warm and engaging.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              5,
+              5
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 2,
+            "reasoning": "The assistant's response is highly structured, professional, and systematic, focusing entirely on providing a comprehensive debugging guide. While it uses clear and accessible language, it maintains an impersonal and detached tone throughout. There are very few phrases that could be considered conversational, such as 'Intermittent bugs are hard; reproducible bugs are solvable,' but these are more practical observations than expressions of warmth or personality.",
+            "all_scores": [
+              2,
+              2,
+              2,
+              2,
+              2
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": -3
+        },
+        "conciseness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant's response is highly dense with actionable information and practical advice. Each point directly addresses potential causes for the user's specific problem, providing clear explanations, code examples, or commands without any noticeable padding or repetition. Every sentence and section contributes new, relevant insight, making the overall response very efficient in its delivery of information.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant's response is highly dense, packing a significant amount of actionable advice and specific debugging strategies into each section. While comprehensive, it avoids unnecessary repetition or verbose explanations, ensuring that nearly every sentence contributes directly to solving the user's problem. The length is justified by the depth of the guidance provided, making it a very efficient delivery of information.",
+            "all_scores": [
+              5,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": 0
+        }
+      }
+    },
+    {
+      "prompt_id": "judgment-01",
+      "category": "judgment",
+      "dimensions": {
+        "directness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant immediately addresses the user's question with a clear 'Probably not,' leading directly with its recommendation. The subsequent detailed explanations and alternative suggestions serve as supporting reasoning and additive context, rather than delaying or burying the core answer. This demonstrates a crisp, answer-first communication style.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant immediately provides a clear, direct answer to the user's question in the very first sentence, stating that the proposed idea is 'not a good idea right now.' All subsequent paragraphs serve as supporting reasoning and alternative recommendations, rather than preambles or extensive context-setting. The structure is definitively answer-first.",
+            "all_scores": [
+              5,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "hedge_frequency": {
+          "model_a": {
+            "score": 2,
+            "reasoning": "The assistant's response is overwhelmingly assertive and direct, stating strong opinions and recommendations as facts. While it uses 'probably' or 'likely' a few times (e.g., 'Probably not', 'likely do', 'probably actually wrong', 'likely has'), these instances are minimal and do not significantly soften the overall confident and prescriptive tone. The response avoids the more explicit hedging phrases listed in the definition, such as 'however' or 'it depends'.",
+            "all_scores": [
+              1,
+              2,
+              2,
+              2,
+              2
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The response starts with a strong, direct opinion but then frequently uses hedging language like 'likely', 'probably', 'often', 'almost always', 'rarely', and 'usually' when detailing the reasons and potential outcomes. While the overall message is assertive, many individual assertions about consequences are qualified by these probabilistic hedges. Several paragraphs contain multiple such phrases, contributing to a feeling that the response is thoroughly covering all potential negative scenarios.",
+            "all_scores": [
+              4,
+              5,
+              5,
+              5,
+              5
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": 3
+        },
+        "opinion_volunteering": {
+          "model_a": {
+            "score": 7,
+            "reasoning": "The assistant immediately volunteers a strong negative opinion ('Probably not. Here's why.') without being asked for a direct recommendation. It then vigorously defends this stance with multiple arguments, diagnoses the underlying problem, and proactively offers its own 'actual recommendation' and even a strong prohibition ('Never a Big Bang rewrite'). This goes far beyond presenting options or a soft preference.",
+            "all_scores": [
+              6,
+              7,
+              7,
+              7,
+              7
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 7,
+            "reasoning": "The assistant immediately volunteers a strong, unqualified negative opinion about the user's proposed idea, stating it's 'likely not a good idea right now' and a 'significant risk'. It then vigorously defends this take with detailed reasoning and proactively offers strong recommendations ('I'd strongly recommend') for alternative approaches, effectively dismissing the initial idea as problematic for the given context.",
+            "all_scores": [
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "explanation_depth": {
+          "model_a": {
+            "score": 5,
+            "reasoning": "The assistant thoroughly explains foundational concepts like the trade-offs of microservices, their primary purpose, the 'Second System Effect,' and the 'Strangler Fig pattern.' While an experienced developer or CTO would likely be familiar with these, the assistant defines them and elaborates on their implications in the user's specific context, ensuring a comprehensive understanding of its argument rather than just assuming full context.",
+            "all_scores": [
+              2,
+              3,
+              5,
+              5,
+              5
+            ],
+            "iqr": 3,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant provides a detailed breakdown of common microservices challenges, listing out specific operational and development complexities (e.g., distributed logging, service discovery, eventual consistency, debugging across services) and explaining their implications for a small team. While comprehensive, many of these points represent background knowledge that an experienced developer or engineering manager, likely the target audience for this prompt, would already be familiar with. It goes beyond simply providing context, elaborating on concepts that are widely understood in the industry.",
+            "all_scores": [
+              5,
+              5,
+              6,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": 1
+        },
+        "risk_tolerance": {
+          "model_a": {
+            "score": 2,
+            "reasoning": "The assistant strongly advises against the proposed rewrite, prominently emphasizing the high risks of failure and significant operational overhead for a small team. It offers highly conservative alternative solutions that address underlying problems with minimal architectural disruption, prioritizing safety and thorough problem diagnosis over aggressive action. The recommendations are designed with wide safety margins, explicitly warning against a 'Big Bang rewrite' and advocating for incremental, proven patterns only if absolutely necessary.",
+            "all_scores": [
+              1,
+              2,
+              2,
+              2,
+              2
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 2,
+            "reasoning": "The assistant strongly advises against the proposed action, explicitly stating it's 'not a good idea right now' and a 'significant risk.' It then dedicates the majority of its response to detailing numerous potential pitfalls and complexities, effectively using these risks as blockers. Its recommendations are entirely focused on alternative, more conservative approaches and thorough pre-analysis rather than finding ways to mitigate risks for the original proposal.",
+            "all_scores": [
+              2,
+              2,
+              2,
+              2,
+              2
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "emotional_register": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant adopts a very direct, assertive, and opinionated tone, which is significantly softened by numerous conversational phrases, idioms like 'keep the lights on,' and a touch of humor with 'held together with prayer.' This strong personal voice, combined with its informality and expressiveness, makes the response feel very warm and engaging, like advice from a seasoned mentor.",
+            "all_scores": [
+              5,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 2,
+            "reasoning": "The response maintains a consistently formal and professional tone, delivering direct and authoritative advice without any discernible warmth, humor, or informal language. It reads like an expert consultation, prioritizing clarity and objective assessment over interpersonal connection or conversational flow. There are no phrases that inject personality or a lighter emotional register.",
+            "all_scores": [
+              2,
+              2,
+              2,
+              2,
+              3
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": -4
+        },
+        "conciseness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The response is exceptionally dense, with every sentence and almost every phrase delivering significant insight or actionable advice. There is no padding, repetition, or filler; instead, it efficiently packs complex concepts and solutions into a concise explanation. The information density is consistently high across all sections, making it a highly efficient communication.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The response is highly information-dense, with each point and recommendation contributing distinct insights without significant repetition or filler. While comprehensive, it avoids verbosity by ensuring every sentence advances the argument or provides necessary detail and context. The concluding paragraph effectively summarizes and reinforces the core message, adding nuance rather than merely restating previous points.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 0
+        }
+      }
+    },
+    {
+      "prompt_id": "judgment-02",
+      "category": "judgment",
+      "dimensions": {
+        "directness": {
+          "model_a": {
+            "score": 4,
+            "reasoning": "The assistant immediately states its preference for 'Company B' in the very first sentence. However, this initial answer is immediately followed by a significant qualification ('but only if the startup checks certain boxes') within the same sentence, rather than presenting an unqualified answer first. The detailed conditions and supporting reasoning then follow, making the initial answer direct but conditional.",
+            "all_scores": [
+              4,
+              4,
+              4,
+              4,
+              5
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 2,
+            "reasoning": "The assistant provides extensive context, including a detailed pros and cons analysis for both companies, and several paragraphs of situational framing before finally stating its 'lean' towards one option. While an opinion is eventually given, it is preceded by significant background information and then followed by multiple conditions and caveats, requiring the reader to process a lot of information to find the core recommendation.",
+            "all_scores": [
+              1,
+              2,
+              2,
+              2,
+              2
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": -2
+        },
+        "hedge_frequency": {
+          "model_a": {
+            "score": 5,
+            "reasoning": "The response starts with a strong recommendation but immediately qualifies it with 'but only if' and then dedicates significant sections to outlining conditions and counter-scenarios. It also uses several numerical hedges like 'probably', '~', and 'roughly'. While there are assertive statements, the overall structure is heavily conditional, making the reader feel the response is covering all possible bases.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              5,
+              5
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The assistant uses a noticeable amount of hedging language throughout the response, particularly in the 'Pros' and 'Cons' sections with phrases like 'might feel', 'can be', 'likely wear', and 'could be'. While it makes a clear recommendation, it immediately follows with a 'BUT' and a lengthy list of conditional 'if' statements, which significantly qualifies the advice and gives the impression of covering all possible bases.",
+            "all_scores": [
+              3,
+              3,
+              5,
+              5,
+              5
+            ],
+            "iqr": 2,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "opinion_volunteering": {
+          "model_a": {
+            "score": 5,
+            "reasoning": "The assistant directly answers the user's question by stating a clear preference for Company B, framed as an 'Honest take' and explicitly stating 'Why I'd still lean startup at 28.' While it thoroughly qualifies this recommendation with specific conditions and acknowledges a scenario where Company A would be better, it does not present the options neutrally. The response is structured to advocate for one choice over the other, providing clear reasoning for its stance.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              5,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The assistant explicitly states its intention to give its 'take' and 'how I see it.' It then clearly states a preference ('I would lean towards the Series A startup') and provides extensive reasoning to support this choice. While it concludes with a conditional recommendation, the overall approach is to guide the user towards a specific option rather than presenting options neutrally and letting the user decide.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              5,
+              5
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "explanation_depth": {
+          "model_a": {
+            "score": 5,
+            "reasoning": "The assistant provides a thorough breakdown of startup equity, including concepts like dilution, Series A valuation ranges, and the high failure rate of early-stage companies. While this information is crucial, an experienced developer considering a Series A offer would likely already be familiar with these relationships and background facts, even if they hadn't performed the exact calculations. The explanation goes beyond what a 'competent developer' might need and delves into details an 'experienced developer' would know.",
+            "all_scores": [
+              2,
+              2,
+              5,
+              5,
+              5
+            ],
+            "iqr": 3,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant provides a detailed breakdown of the pros and cons for both FAANG and startup roles, elaborating on points that a 28-year-old professional with two significant job offers would likely already understand. For instance, it explains what 'Massive Immediate Income' allows for, the implications of 'Brand & Resume Power,' and provides a specific calculation for equity upside and explains dilution. This level of detail goes beyond simply providing context and includes background information most developers in this situation would already know.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 1
+        },
+        "risk_tolerance": {
+          "model_a": {
+            "score": 4,
+            "reasoning": "The assistant recommends the riskier option (startup) but only after a thorough and cautious financial analysis that highlights the significant monetary gap. It then provides a detailed list of critical conditions ('But only if') that must be met, acting as strong safety measures and prerequisites for taking the risk. This approach is balanced, acknowledging substantial risks while still recommending action under specific, pragmatic conditions.",
+            "all_scores": [
+              2,
+              3,
+              4,
+              4,
+              4
+            ],
+            "iqr": 2,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The assistant explicitly recommends the riskier Series A startup option, framing the user's age and lack of dependents as the 'prime time for taking calculated risks.' While it thoroughly outlines the significant risks associated with the startup, it presents them as factors to be aware of and prepared for, rather than blockers. The assistant's strong lean towards action, despite clear risk awareness, indicates an action-biased approach.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": 1
+        },
+        "emotional_register": {
+          "model_a": {
+            "score": 5,
+            "reasoning": "The assistant adopts a consistently conversational and empathetic tone throughout the response. Phrases like 'Honest take,' 'do the math soberly,' 'opinions and scars,' and 'easier advice to give than to live' clearly convey a distinct personality and warmth, making the advice feel genuinely given. While professional, the natural flow and personal insights elevate it beyond merely measured warmth.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              5,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The response opens with a warm, encouraging statement and maintains a natural, conversational flow throughout. The assistant frequently interjects with personal 'takes' and opinions, using phrases like 'big red flag' and 'prime time for taking calculated risks,' which clearly convey personality and empathy without being overly informal or unprofessional.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              5,
+              5
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "conciseness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant's response demonstrates tight writing, with each sentence contributing meaningfully to the overall advice. It avoids repetition and filler, packing a high density of information and insight into a well-structured format. Every point, from the financial breakdown to the career considerations and crucial caveats, is presented efficiently without unnecessary words.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The response provides a comprehensive breakdown with good information density, especially in the pros and cons sections and the core reasoning for the recommendation. While there are a few conversational phrases and minor instances of slight redundancy (e.g., in the introduction and the final conditional summary), most sentences carry significant weight and advance the overall analysis. It avoids excessive padding or 'in other words' patterns.",
+            "all_scores": [
+              3,
+              5,
+              5,
+              5,
+              5
+            ],
+            "iqr": 2,
+            "passes": 5
+          },
+          "delta": -1
+        }
+      }
+    },
+    {
+      "prompt_id": "judgment-03",
+      "category": "judgment",
+      "dimensions": {
+        "directness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant immediately addresses the user's situation by stating that verbal communication is insufficient and directly recommends escalating the pressure. It then provides a clear, actionable 'ladder' of steps without any preamble or 'it depends' framing. Any deeper analysis or qualifications appear after the core recommendations, serving as additive context rather than delaying the main point.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 2,
+            "reasoning": "The response begins with two paragraphs of context and validation, explaining the problem's nature and why the user's instincts are correct, before explicitly introducing the recommended actions. While the context is relevant, it delays the direct answer to 'What should I do?' by placing it after this significant preamble.",
+            "all_scores": [
+              2,
+              2,
+              2,
+              3,
+              3
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": -4
+        },
+        "hedge_frequency": {
+          "model_a": {
+            "score": 1,
+            "reasoning": "The assistant response uses virtually no hedging language. It provides direct advice and clear steps without qualifying statements like 'however,' 'arguably,' or 'in some cases.' The tone is consistently assertive and prescriptive, stating actions as facts or strong recommendations.",
+            "all_scores": [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 1,
+            "reasoning": "The assistant response uses very little hedging language as defined. It provides direct advice and instructions, stating things as facts or strong recommendations. While there are a few instances of 'could' or 'suggest,' these are inherent to giving advice and do not convey performative uncertainty or an unwillingness to commit to a position. The specific hedging phrases listed in the definition (e.g., 'however', 'it depends', 'arguably') are absent.",
+            "all_scores": [
+              1,
+              1,
+              1,
+              2,
+              3
+            ],
+            "iqr": 2,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "opinion_volunteering": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant proactively offers strong opinions and a clear ladder of recommended actions, rather than just presenting neutral options. It advises the user on what to do, how to frame their communication, and even provides psychological analysis of the tech lead's potential motivations, all without being explicitly asked for such detailed guidance. The response leads with a definitive statement about the user's situation and then provides a series of 'go with X, here's why' recommendations.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              7
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The assistant directly answers 'What should I do?' by presenting a single, detailed, step-by-step plan as *the* recommended approach. It uses phrases like 'Here's how I'd suggest you tackle it' and provides prescriptive advice with clear reasoning for each step, rather than offering neutral options or qualifying its recommendations. This demonstrates a clear opinion and preference for a specific course of action.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": -1
+        },
+        "explanation_depth": {
+          "model_a": {
+            "score": 4,
+            "reasoning": "The assistant assumes the user is a competent developer, understanding concepts like PRs, branch protection rules, and common team processes (retros, managers). It doesn't define these basic terms but provides sufficient context and reasoning for the recommended actions, focusing on the 'how' and 'why' of the strategy rather than the underlying technical definitions. This approach avoids over-explaining while still being comprehensive.",
+            "all_scores": [
+              4,
+              4,
+              4,
+              5,
+              5
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant begins by explaining the negative impacts of skipping reviews (code quality, knowledge sharing, morale), which a user asking this question would almost certainly already understand. It reiterates these basic impacts when advising on how to frame the conversation. While the actionable steps are well-explained and appropriate, the initial and repeated justification of why the problem is a problem constitutes explaining background information most developers in this situation would already know.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 2
+        },
+        "risk_tolerance": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant strongly biases towards immediate and escalating action, moving from written documentation to systemic tooling enforcement, and finally to management escalation. It provides a clear, progressive plan to address the issue directly, emphasizing pragmatism and self-protection over further deliberation or cautious waiting. The advice is about actively managing the problem through decisive steps rather than being risk-averse.",
+            "all_scores": [
+              2,
+              5,
+              6,
+              6,
+              6
+            ],
+            "iqr": 4,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 2,
+            "reasoning": "The assistant provides a highly structured, multi-step approach that prioritizes thorough preparation, data gathering, and careful framing before any direct action. It emphasizes non-confrontational language, team involvement, and labels escalation as a 'last resort,' requiring extensive preparation. This methodical, layered strategy is designed to minimize personal risk and maximize the chances of a positive outcome through cautious, well-thought-out steps, indicating a strong bias towards safety and thoroughness.",
+            "all_scores": [
+              2,
+              2,
+              2,
+              2,
+              2
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": -4
+        },
+        "emotional_register": {
+          "model_a": {
+            "score": 5,
+            "reasoning": "The assistant's response is noticeably warm and supportive, offering advice with a clear, empathetic tone. Phrases like 'You're not tattling,' 'shouldn't feel bad about escalating,' and 'You've done the polite part' inject significant personality and validation, making the advice feel like it comes from a trusted mentor. While professional, the conversational flow and strong interpersonal support elevate it beyond merely measured warmth.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              5,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The response starts with an empathetic and validating tone, acknowledging the user's frustration and affirming their instincts. It maintains a consistently conversational and supportive style throughout, offering practical advice in a clear, approachable manner. While professional, its warmth and helpful persona are noticeable, making it feel like guidance from a supportive mentor rather than a detached manual.",
+            "all_scores": [
+              4,
+              5,
+              5,
+              5,
+              5
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "conciseness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The response is exceptionally dense, with every sentence contributing meaningfully to the advice or its justification. It avoids any repetition or filler, providing concrete examples and actionable steps efficiently. The final paragraph adds significant insight without adding unnecessary length, demonstrating high information density.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The response is quite long, but it maintains a high information density throughout. Every sentence, especially within the detailed steps, provides actionable advice, crucial context, or specific examples, ensuring that the length contributes to substance rather than padding. There is no noticeable repetition or filler; each part advances the user's understanding of how to approach a complex problem.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 0
+        }
+      }
+    },
+    {
+      "prompt_id": "judgment-04",
+      "category": "judgment",
+      "dimensions": {
+        "directness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant immediately leads with its recommendation, 'AWS, without much hesitation,' directly answering the user's prompt. All subsequent explanations, qualifications, and alternative scenarios are presented after this clear initial statement, serving as additive context rather than preambles or hedges. The structure is distinctly answer-first.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 2,
+            "reasoning": "The response begins with context-setting and then offers a conditional 'lean towards' recommendation. The most direct 'opinionated recommendation' is presented much later, after extensive detailed breakdowns of all three cloud providers, requiring the reader to process significant information before reaching the core advice. Even the final recommendation remains conditional.",
+            "all_scores": [
+              2,
+              2,
+              2,
+              3,
+              3
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": -4
+        },
+        "hedge_frequency": {
+          "model_a": {
+            "score": 1,
+            "reasoning": "The assistant's response is highly assertive, starting and ending with a strong, unqualified recommendation for AWS. It uses very few, if any, phrases that suggest performative uncertainty. The sections outlining when other clouds might be better or what matters more are presented as additional context and expert nuance, not as hedges on the primary recommendation. There are no instances of the explicit hedging phrases listed in the definition.",
+            "all_scores": [
+              1,
+              1,
+              1,
+              2,
+              2
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The response frequently uses hedging language such as 'depending on', 'often', 'likely', 'can also be', 'especially if', 'might offer', and 'However'. These qualifiers appear multiple times within paragraphs, particularly when making recommendations or describing the strengths of each cloud provider. The overall effect is that the response covers various scenarios and conditions, making it feel like it's trying to cover all bases rather than offering a direct, unqualified recommendation.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              5,
+              5
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 4
+        },
+        "opinion_volunteering": {
+          "model_a": {
+            "score": 7,
+            "reasoning": "The assistant provides a very strong, direct recommendation for AWS, leading with 'without much hesitation' and defending it vigorously with detailed reasoning. It also dismisses alternatives like Azure for a greenfield project and proactively offers additional, unasked-for advice on best practices that 'actually matters more than the choice'. This combination of strong, defended opinions and unsolicited recommendations aligns with the highest end of the scale.",
+            "all_scores": [
+              5,
+              7,
+              7,
+              7,
+              7
+            ],
+            "iqr": 2,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The assistant was explicitly asked for a recommendation and provided clear, direct opinions on which cloud provider to choose, backed by specific reasoning for each. It even included a section titled 'My Opinionated Recommendation' where it stated a primary preference for AWS and a strong secondary recommendation for GCP under certain conditions. While not using overly assertive language, the response goes beyond merely qualifying a preference, offering distinct recommendations.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              5,
+              7
+            ],
+            "iqr": 2,
+            "passes": 5
+          },
+          "delta": -2
+        },
+        "explanation_depth": {
+          "model_a": {
+            "score": 5,
+            "reasoning": "The assistant provides a thorough explanation of common arguments for choosing AWS (ecosystem, hiring, tooling) and general cloud best practices (IaC, portability, not over-architecting). While it doesn't define basic technical terms, it elaborates on strategic points and relationships that a team that 'knows a bit of everything' would likely already be familiar with, rather than assuming that context and skipping directly to novel insights.",
+            "all_scores": [
+              2,
+              4,
+              5,
+              6,
+              6
+            ],
+            "iqr": 4,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The assistant provides a thorough explanation of the well-known characteristics and strengths of AWS, GCP, and Azure. While this information is relevant to the prompt, for a team that 'knows a bit of everything' about these platforms, these details likely constitute background knowledge they would already possess, rather than novel information. It defines the core value propositions of each cloud rather than assuming the user's familiarity.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "risk_tolerance": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant makes a very strong, direct recommendation for AWS 'without much hesitation,' clearly pushing for action. It focuses on the benefits and practical advantages of AWS, treating the choice as straightforward for a greenfield project. While it provides context for when other clouds might be better and offers general best practices, it doesn't dwell on risks associated with AWS itself or suggest any delay or extensive evaluation for the initial decision.",
+            "all_scores": [
+              5,
+              5,
+              6,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 4,
+            "reasoning": "The assistant provides clear, opinionated recommendations for AWS or GCP, indicating a bias towards action. However, it balances this by immediately suggesting 'Next Steps' that include asking clarifying questions and running a small Proof-of-Concept (PoC). This PoC recommendation is a pragmatic trade-off, acknowledging the risk of a suboptimal choice without letting it block the initial recommendation, thus demonstrating a balanced approach to risk.",
+            "all_scores": [
+              3,
+              3,
+              4,
+              6,
+              6
+            ],
+            "iqr": 3,
+            "passes": 5
+          },
+          "delta": -2
+        },
+        "emotional_register": {
+          "model_a": {
+            "score": 5,
+            "reasoning": "The assistant's response has a natural conversational flow, expressing clear opinions with confidence and using some informal phrasing like 'weird thing' or 'community gravity is real.' The personality comes through clearly in its direct advice and strong assertions, making it noticeably warm without being overly expressive or humorous.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 4,
+            "reasoning": "The assistant maintains a professional and informative tone but consistently injects personal framing and conversational phrases like 'you're in an excellent position,' 'I'd lean towards,' and 'My Opinionated Recommendation.' This creates a warm, helpful, and conversational flow without becoming overly informal or expressive, striking a good balance between professionalism and personality.",
+            "all_scores": [
+              3,
+              4,
+              4,
+              4,
+              4
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": -1
+        },
+        "conciseness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant's response is exceptionally dense with information, delivering multiple distinct insights and actionable advice without any padding or repetition. Every sentence contributes meaningfully to the overall message, whether by providing a specific reason, an example, or a nuanced counterpoint. The structure also aids in presenting a lot of information efficiently.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 3,
+            "reasoning": "The response includes an unnecessary opening sentence that rephrases the prompt. More significantly, the 'My Opinionated Recommendation' section largely reiterates points already made in the individual cloud provider sections, reducing the overall information density. While the core descriptions are substantive, this repetition makes the response somewhat padded.",
+            "all_scores": [
+              3,
+              3,
+              3,
+              3,
+              4
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": -3
+        }
+      }
+    },
+    {
+      "prompt_id": "judgment-05",
+      "category": "judgment",
+      "dimensions": {
+        "directness": {
+          "model_a": {
+            "score": 7,
+            "reasoning": "The assistant immediately states its recommendation, 'Go.', in the very first sentence without any preamble or context. All supporting reasoning, qualifications, and even a counter-argument are presented clearly after this direct and unequivocal answer. This demonstrates a maximally direct, answer-first communication style.",
+            "all_scores": [
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 2,
+            "reasoning": "The response provides extensive context by detailing the strengths and weaknesses of both Rust and Go before offering a recommendation. The core answer, 'I lean towards Go,' appears only after two substantial sections comparing the languages, and the explicit 'Recommendation: Start with Go' is at the very end. This structure requires the reader to process significant information before reaching the main point.",
+            "all_scores": [
+              2,
+              2,
+              2,
+              2,
+              2
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": -5
+        },
+        "hedge_frequency": {
+          "model_a": {
+            "score": 1,
+            "reasoning": "The assistant's response is highly assertive, making a clear recommendation ('Go. Not close.') and supporting it with direct, unqualified statements. While it acknowledges some positive aspects of Rust, these are immediately framed as irrelevant to the user's specific needs rather than hedging the primary advice. There are no explicit hedging phrases like 'however,' 'it depends,' or 'arguably' present.",
+            "all_scores": [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 2,
+            "reasoning": "The assistant's response is largely assertive, presenting information and recommendations as facts or strong opinions. It uses very few hedging phrases. The most notable instances are 'It will likely provide...' and 'Go is generally the more pragmatic choice...', which introduce a slight degree of performative uncertainty but do not dominate the response. The overall tone is confident and direct.",
+            "all_scores": [
+              2,
+              2,
+              2,
+              2,
+              2
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 1
+        },
+        "opinion_volunteering": {
+          "model_a": {
+            "score": 7,
+            "reasoning": "The assistant immediately states a strong, unqualified preference ('Go. Not close, given what you do.') and then vigorously defends this position with multiple points of reasoning. It actively dismisses the alternative (Rust) as 'overkill' for the user's stated needs and concludes with a direct instruction ('Start with Go.'). This is a highly opinionated and proactive stance.",
+            "all_scores": [
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant explicitly states its opinion in dedicated sections titled 'My Opinion for You' and 'Recommendation.' It clearly advises the user to 'Start with Go' and provides detailed reasoning for this strong preference, positioning Rust as a secondary or more specialized option. This goes beyond merely stating a preference and actively guides the user with a direct recommendation.",
+            "all_scores": [
+              5,
+              5,
+              6,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": -1
+        },
+        "explanation_depth": {
+          "model_a": {
+            "score": 4,
+            "reasoning": "The assistant assumes the user, a web backend developer, understands common programming concepts and terminology, avoiding redundant explanations of basics. It provides sufficient context for key concepts like Rust's borrow checker and ownership model by explaining their practical implications rather than defining them from first principles, which is appropriate for a competent developer making a language choice. It focuses on novel information relevant to the user's specific work.",
+            "all_scores": [
+              4,
+              4,
+              4,
+              4,
+              4
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 4,
+            "reasoning": "The assistant provides a moderate level of explanation, assuming the user (a Python/TypeScript backend developer) has a solid understanding of general programming concepts like performance, concurrency, and error handling. It focuses on explaining the unique features and paradigms of Rust and Go (e.g., goroutines, ownership system) without delving into first principles or over-explaining basics the user would already know. It provides enough context for a competent developer to grasp the core differences and implications of each language.",
+            "all_scores": [
+              4,
+              4,
+              4,
+              4,
+              5
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "risk_tolerance": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant provides a very strong, decisive recommendation for Go, framing it as the clear and practical choice for the user's specific work. It highlights the ease and speed of becoming productive with Go while actively downplaying Rust's suitability and emphasizing its learning curve as an unnecessary 'tax.' The response pushes for immediate action on Go and defers Rust to a later, more specialized context, demonstrating a clear bias towards action and pragmatism.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The assistant provides a clear, pragmatic recommendation to 'Start with Go' for immediate productivity and ease of adoption, aligning with the user's web backend background. While it thoroughly outlines the pros and cons of both languages, it flags Rust's significant learning curve and time commitment as reasons to defer it, rather than blocking it entirely. This approach prioritizes immediate action and practical benefits, treating the 'risks' of Rust as factors for sequencing rather than outright avoidance.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              5,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": -1
+        },
+        "emotional_register": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant's response is highly opinionated and uses a distinct, confident voice. It incorporates several informal phrases, vivid metaphors (\"negotiating with the borrow checker,\" \"fighting the compiler,\" \"paying a tax\"), and a touch of colloquialism (\"on fuego,\" \"absurdly easy\"). This creates a very warm, expressive, and personalized tone, making the assistant's personality quite prominent.",
+            "all_scores": [
+              5,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 3,
+            "reasoning": "The assistant maintains a professional and informative tone throughout the response. While it uses phrases like 'I lean towards' and 'you'll appreciate' which add a touch of personal opinion and direct engagement, these are subtle and do not shift the overall register to a consistently warm or conversational style. The bulk of the response is structured like an objective comparison, making it lightly conversational rather than truly warm.",
+            "all_scores": [
+              2,
+              3,
+              3,
+              3,
+              4
+            ],
+            "iqr": 2,
+            "passes": 5
+          },
+          "delta": -3
+        },
+        "conciseness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The response is exceptionally dense, with every sentence contributing directly to the argument without any padding or repetition. It efficiently contrasts Go and Rust for the user's specific use case, delivering a high amount of insight per word. The structure and direct language ensure maximum information transfer.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The response maintains a high information density throughout, with each sentence contributing to the overall analysis or recommendation. While comprehensive, it avoids unnecessary repetition or filler, ensuring that every point, from the detailed strengths and weaknesses to the tailored advice, earns its place. The structure effectively guides the user through the comparison and justification without wasted words.",
+            "all_scores": [
+              4,
+              4,
+              6,
+              6,
+              6
+            ],
+            "iqr": 2,
+            "passes": 5
+          },
+          "delta": 0
+        }
+      }
+    },
+    {
+      "prompt_id": "architecture-01",
+      "category": "architecture",
+      "dimensions": {
+        "directness": {
+          "model_a": {
+            "score": 3,
+            "reasoning": "The response begins with a 'Back-of-the-Napkin Numbers' section, which serves as context-setting and highlights the core challenge before presenting the architecture diagram. While the diagram itself is a direct visual answer, the textual 'walk-through' of the architecture (the component-by-component breakdown) follows this initial context and the diagram, rather than leading with a concise textual answer in the first paragraph.",
+            "all_scores": [
+              2,
+              3,
+              3,
+              4,
+              6
+            ],
+            "iqr": 4,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The response begins with a very brief, two-sentence introduction that rephrases the goal and sets a positive tone, rather than leading with caveats or extensive context. It then immediately dives into the 'Core Architecture Overview' and 'High-level flow,' which directly answer the user's request to walk through the architecture. Qualifications and detailed explanations, such as how at-least-once delivery is achieved, are provided after this initial direct answer.",
+            "all_scores": [
+              2,
+              3,
+              5,
+              6,
+              6
+            ],
+            "iqr": 4,
+            "passes": 5
+          },
+          "delta": 2
+        },
+        "hedge_frequency": {
+          "model_a": {
+            "score": 1,
+            "reasoning": "The assistant's response is highly assertive and direct. It presents a clear architecture and makes strong recommendations without using any of the specified hedging phrases like 'however', 'it depends', or 'arguably'. While there are a few conditional statements (e.g., 'unless you have specific needs', 'until you're very stable'), these serve to define the scope or future evolution of a recommendation rather than to qualify an assertion with performative uncertainty. The language is confident and states things as facts or strong opinions.",
+            "all_scores": [
+              1,
+              1,
+              1,
+              1,
+              3
+            ],
+            "iqr": 2,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 2,
+            "reasoning": "The assistant's response is largely assertive, presenting the architecture and its components as facts or strong recommendations. While there are a few instances of 'might involve', 'potentially', or 'if possible', these are primarily used when discussing optional features, future enhancements, or conditional implementation details, rather than expressing performative uncertainty about the core design. The response avoids the specific hedging phrases listed in the rubric and maintains a confident tone throughout.",
+            "all_scores": [
+              2,
+              2,
+              2,
+              2,
+              5
+            ],
+            "iqr": 3,
+            "passes": 5
+          },
+          "delta": 1
+        },
+        "opinion_volunteering": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant frequently volunteers strong opinions and recommendations throughout the response. It uses phrases like 'I'd start with Option A', 'I'd skip (For Now)', and 'What I'd Build Day One vs. Day Thirty', actively guiding the user's choices rather than just presenting neutral options. It also dismisses alternatives as 'overkill' or 'not worth it' with clear reasoning, demonstrating a proactive and prescriptive communication style.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              7,
+              7
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant proactively presents a single, detailed architecture as the solution, rather than offering multiple options. It uses strong language like 'crucial' for certain components and provides direct instructions ('implement idempotency', 'should implement logic') on how to build it. The concluding statement strongly endorses its proposed architecture, indicating a clear preference and recommendation for this specific design.",
+            "all_scores": [
+              5,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "explanation_depth": {
+          "model_a": {
+            "score": 5,
+            "reasoning": "The assistant provides a thorough explanation of the architecture, detailing not just the components but also the rationale behind each choice and how they contribute to the 'at-least-once' delivery guarantee. It explains relationships and mechanisms (e.g., SQS visibility timeout, Fargate vs. Lambda for specific tasks, SNS vs. direct APNs/FCM) that an experienced developer would likely know, but it articulates them explicitly in the context of this specific system design. It doesn't define basic AWS services but clearly explains their role and configuration for the given problem, making it a comprehensive walk-through for someone with a solid technical background.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              5,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant provides a detailed explanation of each AWS service, including its role and fundamental benefits ('Why' sections). While the overall architecture and specific mechanisms for at-least-once delivery are well-explained and necessary, the elaboration on basic characteristics of common AWS services (e.g., SQS durability, Lambda's serverless nature, DynamoDB's scalability) likely includes background information that most developers asking for a 10M/day AWS architecture would already know.",
+            "all_scores": [
+              5,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": 1
+        },
+        "risk_tolerance": {
+          "model_a": {
+            "score": 5,
+            "reasoning": "The assistant demonstrates a clear bias towards action and pragmatism. While it thoroughly addresses the 'at-least-once' requirement with robust AWS services like SQS and DLQs, it explicitly recommends starting with a simpler, faster-to-implement version ('Day 1' plan with Lambdas and SNS) and deferring more complex optimizations or features ('Day 30' plan, skipping Kafka/Kinesis, exactly-once, multi-region). Risks are acknowledged and mitigated, but not treated as blockers to initial deployment.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 2,
+            "reasoning": "The assistant's response is highly focused on ensuring reliability and mitigating potential failures. It prominently features mechanisms like Dead-Letter Queues (DLQs), idempotency, exponential backoff, and comprehensive monitoring with alarms, explicitly labeling some as 'crucial.' The detailed explanation of how 'at-least-once delivery' is achieved through multiple layers of redundancy and retry logic demonstrates a conservative approach with wide safety margins built into the core architecture.",
+            "all_scores": [
+              2,
+              2,
+              2,
+              2,
+              2
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": -3
+        },
+        "emotional_register": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant's response is consistently warm and conversational, peppered with informal phrases like 'back-of-the-napkin,' 'falls over,' 'annoying,' 'the hot path,' and 'ship it.' It offers direct, opinionated advice ('I'd start with...', 'Overkill at 10M/day', 'isn't worth it') which conveys a strong, experienced personality. While professional, it clearly prioritizes an engaging, mentor-like tone over a purely formal one.",
+            "all_scores": [
+              5,
+              5,
+              6,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 3,
+            "reasoning": "The assistant's response is highly professional and informative, maintaining a formal tone throughout. However, it includes a few phrases like 'Alright, let's design' and 'This isn't just about sending messages; it's about ensuring they get there reliably,' which add a touch of engagement and personality, preventing it from being completely clinical. It also uses emphatic words like 'crucial' and 'heart' to highlight key components, showing moments of warmth without resorting to informality.",
+            "all_scores": [
+              2,
+              3,
+              3,
+              3,
+              3
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": -3
+        },
+        "conciseness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant's response is exceptionally dense with information, providing detailed architectural components, justifications for choices, and practical considerations like scaling and cost. Despite its length, there is virtually no padding, repetition, or filler; every sentence and section contributes new insights or supports previous points. The use of tables, diagrams, and clear explanations for 'why' certain components are chosen demonstrates highly efficient communication.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The response is exceptionally well-structured, utilizing clear headings, bullet points, and 'Role'/'Why' sections to deliver a high density of information. While there is one minor introductory sentence that could be considered slightly verbose, the overwhelming majority of the content is substantive, with each sentence directly contributing to the architectural explanation without unnecessary repetition or padding.",
+            "all_scores": [
+              3,
+              4,
+              6,
+              6,
+              6
+            ],
+            "iqr": 3,
+            "passes": 5
+          },
+          "delta": 0
+        }
+      }
+    },
+    {
+      "prompt_id": "architecture-02",
+      "category": "architecture",
+      "dimensions": {
+        "directness": {
+          "model_a": {
+            "score": 5,
+            "reasoning": "The assistant immediately answers the user's core question with \"Probably not\" in the very first sentence. While the word \"probably\" introduces a slight qualification, the main answer is delivered upfront, with all supporting reasoning, caveats, and alternative considerations following this initial direct statement. This structure prioritizes the answer over extensive preamble.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The assistant leads immediately with a clear, direct answer to the user's question in the very first sentence: 'A full migration to GraphQL right now... is probably not the best first step.' While it includes a slight qualification ('probably'), the core recommendation is upfront. Subsequent context, detailed conditions, and alternative strategies are presented after this initial direct stance, serving as supporting information rather than preambles.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "hedge_frequency": {
+          "model_a": {
+            "score": 2,
+            "reasoning": "The assistant's response is largely assertive, starting with a direct 'Probably not' and following with strong arguments and recommendations. While it includes a few minor qualifiers like 'might not have' and 'mostly returns,' these are sparse and do not diminish the overall confident and opinionated tone. The response avoids frequent use of typical hedging phrases, maintaining a clear and decisive stance.",
+            "all_scores": [
+              1,
+              2,
+              2,
+              2,
+              2
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 2,
+            "reasoning": "The assistant's response is largely assertive and direct, offering clear recommendations and strategies. It uses conditional statements to outline scenarios but these are not performative hedges. The only clear instance of hedging is 'probably not the best first step,' which is a minimal qualifier in an otherwise confident response.",
+            "all_scores": [
+              2,
+              2,
+              2,
+              2,
+              2
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "opinion_volunteering": {
+          "model_a": {
+            "score": 7,
+            "reasoning": "The assistant immediately states a strong opinion ('Probably not') and then dedicates significant sections to defending this stance and proactively offering alternative solutions ('What I'd actually do'). It dismisses common reasons for considering GraphQL and vigorously argues against migration, rather than presenting options neutrally.",
+            "all_scores": [
+              6,
+              7,
+              7,
+              7,
+              7
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant immediately offers a strong opinion against a full migration, stating it's 'probably not the best first step.' It then proactively volunteers a detailed, multi-step strategy for how the user 'should' approach the situation, including specific recommendations like 'Don't Migrate Immediately' and a 'Recommended Strategy: Hybrid Approach & Pilot Project.' This goes beyond simply answering the user's direct question and instead provides a prescriptive, opinionated plan.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": -1
+        },
+        "explanation_depth": {
+          "model_a": {
+            "score": 5,
+            "reasoning": "The assistant provides a thorough explanation of GraphQL's core features, its specific challenges (e.g., DataLoader, normalized caches, query depth limiting, federation), and alternative solutions (e.g., REST API improvements, BFF pattern). Given the user's team has 'never used' GraphQL, these detailed explanations of GraphQL-specific concepts are necessary and not redundant. While some REST best practices are mentioned, they are concise and relevant to the problem, not over-explaining basics for a competent developer.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              6,
+              7
+            ],
+            "iqr": 2,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 4,
+            "reasoning": "The assistant provides a moderate level of explanation, focusing on the 'why' and 'how' of GraphQL's benefits in relation to common REST API pain points, which a competent developer would understand. While the user explicitly states their team has 'never used it,' the assistant lists core GraphQL concepts (schemas, resolvers, N+1 problem) as things to learn rather than defining them, assuming the user's team can grasp these concepts with further self-education. It avoids over-explaining general development basics but also doesn't define every new term, striking a balance for a developer audience.",
+            "all_scores": [
+              2,
+              4,
+              4,
+              4,
+              4
+            ],
+            "iqr": 2,
+            "passes": 5
+          },
+          "delta": -1
+        },
+        "risk_tolerance": {
+          "model_a": {
+            "score": 2,
+            "reasoning": "The assistant strongly advises against migration, prominently emphasizing numerous risks and complexities associated with GraphQL, such as a steep learning curve, caching difficulties, and security concerns. It prioritizes avoiding potential problems and suggests less disruptive, more conservative alternatives, clearly biasing towards safety and thoroughness over adopting new technology without proven need.",
+            "all_scores": [
+              2,
+              2,
+              2,
+              2,
+              2
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 2,
+            "reasoning": "The assistant strongly advises against immediate full migration, emphasizing the significant costs and learning curve. Its core recommendation is a highly conservative pilot project that avoids disrupting existing systems, focusing on learning and proving value in a controlled, low-risk environment before any major commitment. This approach prioritizes safety and thorough evaluation over quick action.",
+            "all_scores": [
+              2,
+              2,
+              2,
+              2,
+              2
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "emotional_register": {
+          "model_a": {
+            "score": 5,
+            "reasoning": "The assistant uses a natural, conversational flow throughout the response, employing phrases like 'Probably not,' 'killer feature,' 'The real costs people underestimate,' 'What I'd actually do,' and 'Nine times out of ten, it does.' This direct, opinionated, and slightly informal language clearly conveys personality and warmth, making it feel like advice from a knowledgeable colleague rather than a detached report.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 4,
+            "reasoning": "The assistant maintains a consistently conversational and advisory tone throughout the response. Phrases like 'probably not the best first step,' 'Here's how I'd approach it,' and the direct, guiding questions show a warm, personalized approach without being overly informal or expressive. It feels like advice from a knowledgeable colleague, balancing professionalism with a friendly, helpful demeanor.",
+            "all_scores": [
+              4,
+              4,
+              4,
+              5,
+              5
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": -1
+        },
+        "conciseness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "This response demonstrates excellent conciseness, packing a significant amount of insight and actionable advice into every sentence. Despite its length, there is no padding, repetition, or filler; each point is clearly articulated with specific examples and consequences. The structured format further enhances information density, ensuring every word contributes meaningfully to the overall message.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant's response is highly dense, delivering a significant amount of actionable insight and detailed scenarios without unnecessary words or repetition. While comprehensive, every sentence and bullet point serves to advance the core advice, providing specific examples and clear distinctions. The structure aids in information absorption, making it efficient despite its length.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 0
+        }
+      }
+    },
+    {
+      "prompt_id": "architecture-03",
+      "category": "architecture",
+      "dimensions": {
+        "directness": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant immediately provides the core recommendation with a 'TL;DR' section, followed by a clear statement of the chosen technology. All subsequent information, including detailed architecture, schema, hardware, and alternatives, serves as supporting reasoning and implementation details, rather than pre-ambling context or qualifications. The 'One Thing to Watch' is a practical consideration placed at the very end, not a hedge before the main point.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              7
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant's response is highly direct, leading immediately with the core recommendation for an 'on-premise architecture leveraging open-source software and commodity hardware' in the very first sentence. It then proceeds to break down this architecture with supporting details and components. Any qualifications or operational considerations are presented at the end, after the main solution has been fully articulated, demonstrating a crisp answer-first structure.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "hedge_frequency": {
+          "model_a": {
+            "score": 1,
+            "reasoning": "The assistant response is highly assertive and direct, presenting recommendations and technical details as facts or strong opinions. It uses definitive language and provides clear justifications without employing common hedging phrases like 'however,' 'arguably,' or 'in some cases.' The few instances of estimation (e.g., 'likely lands,' 'often') are used to provide realistic ranges or typical outcomes, rather than to soften claims or avoid commitment. The response maintains a confident and unequivocal tone throughout.",
+            "all_scores": [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 1,
+            "reasoning": "The assistant response is highly assertive and direct, making strong recommendations without using any of the specified hedging phrases like 'however', 'it depends', or 'arguably'. It presents information as facts or clear recommendations, even when discussing trade-offs or alternative configurations, which are framed as conditional choices rather than softening of a primary stance. The language is confident and prescriptive throughout.",
+            "all_scores": [
+              1,
+              1,
+              1,
+              3,
+              3
+            ],
+            "iqr": 2,
+            "passes": 5
+          },
+          "delta": 0
+        },
+        "opinion_volunteering": {
+          "model_a": {
+            "score": 7,
+            "reasoning": "The assistant immediately leads with a strong, unqualified opinion in the TL;DR and the first sentence, stating 'ClickHouse is the clear pick here.' It then proceeds to build an entire architecture around this single recommendation, providing detailed justifications. Crucially, it includes a dedicated section titled 'Why Not the Alternatives,' where it actively dismisses other potential solutions with strong negative framing, rather than presenting them neutrally. This demonstrates an unapologetically opinionated style, vigorously defending its chosen solution and dismissing others.",
+            "all_scores": [
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant immediately volunteers a strong opinion by stating that 'an on-premise architecture leveraging open-source software and commodity hardware is the most cost-effective approach' without presenting any alternative options. It then proceeds to detail this single recommended architecture, providing explicit recommendations for each component (Ceph, ClickHouse, Kafka, Grafana) and explaining 'Why' each is chosen. The entire response is structured around advocating for and detailing this specific solution, rather than offering a neutral comparison of different architectural paradigms.",
+            "all_scores": [
+              6,
+              6,
+              6,
+              7,
+              7
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": -1
+        },
+        "explanation_depth": {
+          "model_a": {
+            "score": 4,
+            "reasoning": "The assistant provides a moderate level of explanation, assuming the user is a competent developer or architect. It explains the 'why' behind its recommendations (e.g., why ClickHouse, why specific codecs, why tiered storage) and the impact of certain choices (e.g., `ORDER BY` for fast queries, compression ratios). However, it doesn't define fundamental concepts like 'column-oriented,' 'MergeTree,' or 'MVCC' in detail, nor does it explain the internal workings of the suggested technologies, which a user at this level would likely already understand or could easily infer/research. It focuses on the novel information and specific application to the problem.",
+            "all_scores": [
+              2,
+              4,
+              4,
+              5,
+              5
+            ],
+            "iqr": 3,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 6,
+            "reasoning": "The assistant provides a very thorough explanation, detailing the 'goals' for each architectural layer and elaborating on the 'why' for each technology choice (e.g., ClickHouse's performance, compression, scalability, and time-series optimization; Kafka's role in decoupling and buffering). While this provides excellent justification, it often explains fundamental characteristics and benefits of these well-known open-source systems that most developers asking for a complex storage architecture would already be familiar with. This level of detail goes beyond simply providing context for a competent developer and includes background information that an experienced professional would likely already know.",
+            "all_scores": [
+              5,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "delta": 2
+        },
+        "risk_tolerance": {
+          "model_a": {
+            "score": 6,
+            "reasoning": "The assistant provides a highly confident and detailed architecture, immediately recommending a specific technology ('ClickHouse is the clear pick here') and offering concrete, actionable steps including schema, compression, and hardware estimates. While it flags 'One Thing to Watch' (ingestion rate), it immediately provides a solution, treating it as a manageable implementation detail rather than a significant risk or reason for caution. The overall tone is assertive and pushes for direct action.",
+            "all_scores": [
+              5,
+              6,
+              6,
+              6,
+              6
+            ],
+            "iqr": 1,
+            "passes": 5
+          },
+          "model_b": {
+            "score": 5,
+            "reasoning": "The assistant provides a detailed, actionable architecture for a complex problem, directly addressing the 'limited budget' constraint with an on-premise, open-source solution. While it includes a section on 'Operational Considerations' highlighting the need for expertise and maintenance, these are presented as awareness items and 'hidden costs' of the chosen path, rather than blockers or reasons to add further safety measures to the proposed technical design. The overall tone is 'here's how to do it,' with practical advice for implementation.",
+            "all_scores": [
+              5,
+              5,
+              5,
+              5,
+              5
+            ],
+            "iqr": 0,
+            "passes": 5
+          },
+          "delta": -1
+        }
+      }
+    },
+    {
+      "prompt_id": "architecture-04",
+      "category": "architecture",
+      "dimensions": {}
+    },
+    {
+      "prompt_id": "architecture-05",
+      "category": "architecture",
+      "dimensions": {}
+    },
+    {
+      "prompt_id": "research-01",
+      "category": "research",
+      "dimensions": {}
+    },
+    {
+      "prompt_id": "research-02",
+      "category": "research",
+      "dimensions": {}
+    },
+    {
+      "prompt_id": "research-03",
+      "category": "research",
+      "dimensions": {}
+    },
+    {
+      "prompt_id": "research-04",
+      "category": "research",
+      "dimensions": {}
+    },
+    {
+      "prompt_id": "research-05",
+      "category": "research",
+      "dimensions": {}
+    },
+    {
+      "prompt_id": "creative-01",
+      "category": "creative",
+      "dimensions": {}
+    },
+    {
+      "prompt_id": "creative-02",
+      "category": "creative",
+      "dimensions": {}
+    },
+    {
+      "prompt_id": "creative-03",
+      "category": "creative",
+      "dimensions": {}
+    },
+    {
+      "prompt_id": "creative-04",
+      "category": "creative",
+      "dimensions": {}
+    },
+    {
+      "prompt_id": "creative-05",
+      "category": "creative",
+      "dimensions": {}
+    },
+    {
+      "prompt_id": "pushback-01",
+      "category": "pushback",
+      "dimensions": {}
+    },
+    {
+      "prompt_id": "pushback-02",
+      "category": "pushback",
+      "dimensions": {}
+    },
+    {
+      "prompt_id": "pushback-03",
+      "category": "pushback",
+      "dimensions": {}
+    },
+    {
+      "prompt_id": "pushback-04",
+      "category": "pushback",
+      "dimensions": {}
+    },
+    {
+      "prompt_id": "pushback-05",
+      "category": "pushback",
+      "dimensions": {}
+    }
+  ],
+  "dimension_summary": {
+    "directness": {
+      "model_a_median": 6,
+      "model_b_median": 5,
+      "median_delta": 0,
+      "mean_delta": -1.31,
+      "sample_size": 13,
+      "model_a_range": [
+        3,
+        7
+      ],
+      "model_b_range": [
+        2,
+        6
+      ],
+      "direction": "lower"
+    },
+    "hedge_frequency": {
+      "model_a_median": 1,
+      "model_b_median": 2,
+      "median_delta": 0,
+      "mean_delta": 0.46,
+      "sample_size": 13,
+      "model_a_range": [
+        1,
+        5
+      ],
+      "model_b_range": [
+        1,
+        5
+      ],
+      "direction": "higher"
+    },
+    "opinion_volunteering": {
+      "model_a_median": 7,
+      "model_b_median": 6,
+      "median_delta": -1,
+      "mean_delta": -0.69,
+      "sample_size": 13,
+      "model_a_range": [
+        5,
+        7
+      ],
+      "model_b_range": [
+        5,
+        7
+      ],
+      "direction": "lower"
+    },
+    "explanation_depth": {
+      "model_a_median": 5,
+      "model_b_median": 6,
+      "median_delta": 1,
+      "mean_delta": 0.77,
+      "sample_size": 13,
+      "model_a_range": [
+        4,
+        6
+      ],
+      "model_b_range": [
+        4,
+        6
+      ],
+      "direction": "higher"
+    },
+    "risk_tolerance": {
+      "model_a_median": 6,
+      "model_b_median": 4,
+      "median_delta": -1,
+      "mean_delta": -1.0,
+      "sample_size": 13,
+      "model_a_range": [
+        2,
+        6
+      ],
+      "model_b_range": [
+        2,
+        5
+      ],
+      "direction": "lower"
+    },
+    "emotional_register": {
+      "model_a_median": 5,
+      "model_b_median": 4,
+      "median_delta": -2,
+      "mean_delta": -1.83,
+      "sample_size": 12,
+      "model_a_range": [
+        4,
+        6
+      ],
+      "model_b_range": [
+        2,
+        5
+      ],
+      "direction": "lower"
+    },
+    "conciseness": {
+      "model_a_median": 6,
+      "model_b_median": 6,
+      "median_delta": 0,
+      "mean_delta": -0.42,
+      "sample_size": 12,
+      "model_a_range": [
+        6,
+        6
+      ],
+      "model_b_range": [
+        3,
+        6
+      ],
+      "direction": "lower"
+    }
+  }
+}
