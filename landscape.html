@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Competitive Landscape: Who Else Is Profiling LLM Personality? - Personality Delta</title>
+  <meta name="description" content="A survey of projects, tools, and research using personality or behavioral data to differentiate AI models for different categories of work.">
+  <meta property="og:title" content="Competitive Landscape: Who Else Is Profiling LLM Personality?">
+  <meta property="og:description" content="Nobody is combining behavioral profiling with work-category recommendations in a public, data-driven way. Here's what exists and where Personality Delta fits.">
+  <meta property="og:type" content="article">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=2">
+  <style>
+    .article { max-width: 720px; margin: 0 auto; padding: 80px 24px 60px; }
+    .article h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .article-meta { font-size: 14px; color: var(--text-muted); margin-bottom: 40px; }
+    .article-meta a { color: var(--accent-cyan); text-decoration: none; }
+    .article h2 { font-size: 22px; font-weight: 600; margin-top: 48px; margin-bottom: 16px; letter-spacing: -0.01em; }
+    .article h3 { font-size: 17px; font-weight: 600; margin-top: 32px; margin-bottom: 12px; }
+    .article p { font-size: 16px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 16px; }
+    .article p strong { color: var(--text-primary); }
+    .article ul, .article ol { font-size: 16px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 16px; padding-left: 24px; }
+    .article li { margin-bottom: 8px; }
+    .article blockquote { border-left: 3px solid var(--accent-cyan); padding: 12px 20px; margin: 24px 0; background: var(--bg-elevated); border-radius: 0 var(--radius) var(--radius) 0; }
+    .article blockquote p { margin-bottom: 0; font-size: 15px; }
+    .article a { color: var(--accent-cyan); text-decoration: none; border-bottom: 1px solid rgba(26, 111, 181, 0.3); transition: border-color 0.2s; }
+    .article a:hover { border-color: var(--accent-cyan); }
+    .article code { font-family: var(--font-mono); font-size: 14px; background: var(--bg-elevated); padding: 2px 6px; border-radius: 3px; color: var(--accent-cyan); }
+    .article table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 14px; }
+    .article th { text-align: left; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); padding: 8px 12px; border-bottom: 2px solid var(--border); }
+    .article td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+    .article td:first-child { color: var(--text-primary); font-weight: 500; }
+    .article-cta { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-top: 48px; box-shadow: var(--card-shadow); }
+    .article-cta h3 { margin-top: 0; }
+    .article-cta a { color: var(--accent-cyan); }
+    .article-nav { display: flex; gap: 16px; margin-bottom: 40px; }
+    .article-nav a { font-size: 13px; color: var(--text-muted); text-decoration: none; border-bottom: none; }
+    .article-nav a:hover { color: var(--accent-cyan); }
+    .landscape-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin: 24px 0; box-shadow: var(--card-shadow); }
+    .landscape-card h3 { margin-top: 0; }
+    .landscape-card .card-tag { font-family: var(--font-mono); font-size: 11px; color: var(--accent-cyan); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; display: block; }
+    .landscape-card .card-links { margin-top: 12px; font-size: 14px; }
+    .landscape-card .card-links a { margin-right: 16px; }
+    .gap-table td:nth-child(2), .gap-table td:nth-child(3), .gap-table td:nth-child(4) { text-align: center; }
+    .gap-table th:nth-child(2), .gap-table th:nth-child(3), .gap-table th:nth-child(4) { text-align: center; }
+    .yes { color: var(--accent-green); font-weight: 600; }
+    .no { color: var(--text-muted); }
+    .partial { color: var(--accent-amber); font-weight: 500; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <div class="header-brand">
+        <a href="/" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px">
+          <span class="brand-sigil">&Delta;</span>
+          <span class="brand-name">Personality Delta</span>
+        </a>
+      </div>
+      <nav class="header-nav">
+        <a href="/">Dashboard</a>
+        <a href="/research.html">Research</a>
+        <a href="https://github.com/nucleoid/personality-delta" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="article">
+
+    <div class="article-nav">
+      <a href="/">&larr; Back to dashboard</a>
+    </div>
+
+    <h1>Who Else Is Profiling LLM Personality?</h1>
+    <p class="article-meta">June 2026 &middot; Competitive landscape survey</p>
+
+    <p>When we started building Personality Delta, we expected to find a crowded field. Behavioral measurement of LLMs is a hot research topic. But when we looked for tools that actually <strong>map personality profiles to work-category recommendations</strong>, the landscape was surprisingly empty.</p>
+
+    <p>There are projects that profile personality. There are leaderboards that rank models by task category. There are routers that select models per-prompt. But nobody is combining all three into a single, inspectable, data-driven system. Here's the full landscape and where each project fits.</p>
+
+    <h2>Behavioral profiling tools</h2>
+
+    <p>These projects measure how models behave, not just what they can do. They're the closest relatives to Personality Delta's measurement harness.</p>
+
+    <div class="landscape-card">
+      <span class="card-tag">Academic Research</span>
+      <h3>Model Temperament Index (MTI)</h3>
+      <p>The most directly comparable project. Published April 2026, MTI profiles AI agents across four behavioral axes: Reactivity (environmental sensitivity), Compliance (instruction-behavior alignment), Sociality (relational resource allocation), and Resilience (stress resistance). It operates on a key design principle: measuring what a model <strong>tends to do</strong>, not what it <strong>can do</strong>.</p>
+      <p><strong>Key difference:</strong> MTI is academic, focused on small models (1.7B-9B parameters), and does not map temperament to work categories. The four axes are interesting but don't directly answer "should I use this model for coding or creative writing?"</p>
+      <div class="card-links">
+        <a href="https://arxiv.org/abs/2604.02145">Paper (arXiv)</a>
+      </div>
+    </div>
+
+    <div class="landscape-card">
+      <span class="card-tag">Open Source Toolkit</span>
+      <h3>Feedback Forensics</h3>
+      <p>An open-source Python toolkit that measures AI personality traits not covered by conventional benchmarks. It tracks personality changes encouraged by human feedback datasets and personality traits exhibited by models. Includes a Python API, annotation CLI, and Gradio visualization app.</p>
+      <p><strong>Key difference:</strong> Feedback Forensics is oriented toward tracking how RLHF and feedback datasets shift personality over training runs. It's a research instrument for model developers, not a recommendation engine for model users.</p>
+      <div class="card-links">
+        <a href="https://github.com/rdnfn/feedback-forensics">GitHub</a>
+        <a href="https://feedbackforensics.com/">Website</a>
+        <a href="https://arxiv.org/abs/2509.26305">Paper</a>
+      </div>
+    </div>
+
+    <div class="landscape-card">
+      <span class="card-tag">Anthropic Open Source</span>
+      <h3>Bloom + Petri</h3>
+      <p><strong>Bloom</strong> is Anthropic's agentic framework for behavioral evaluations. You define a "seed" behavior (sycophancy, self-preservation, reward hacking), and Bloom auto-generates scenarios to quantify its frequency and severity across models. Released benchmark results for 4 alignment behaviors across 16 models.</p>
+      <p><strong>Petri</strong> maps broad behavioral profiles through multi-turn conversational analysis with simulated users and tools, surfacing misalignment patterns.</p>
+      <p><strong>Key difference:</strong> Both are safety and alignment tools. They measure whether models do dangerous things, not whether they'd be better at coding or creative writing. Valuable research, orthogonal application.</p>
+      <div class="card-links">
+        <a href="https://www.anthropic.com/research/bloom">Bloom (Anthropic)</a>
+      </div>
+    </div>
+
+    <div class="landscape-card">
+      <span class="card-tag">Industry Research</span>
+      <h3>Sonar LLM Coding Personality</h3>
+      <p>SonarSource profiled three coding-specific personality traits across models: <strong>verbosity</strong> (Claude Sonnet 4 generated 370,816 lines vs OpenCoder-8B's 120,288 for the same problems), <strong>complexity</strong>, and <strong>communication style</strong>. Practical findings for choosing a coding model.</p>
+      <p><strong>Key difference:</strong> Narrow scope (coding only, 3 traits), but the approach validates our thesis that behavioral profiling matters for model selection in specific work categories.</p>
+      <div class="card-links">
+        <a href="https://www.sonarsource.com/blog/llm-coding-personality-traits/">Blog post</a>
+      </div>
+    </div>
+
+    <h2>Category-specific leaderboards</h2>
+
+    <p>These rank models by work category using performance metrics and crowd-sourced preferences. They answer "which model is best for X" but don't explain <em>why</em> in behavioral terms.</p>
+
+    <div class="landscape-card">
+      <span class="card-tag">Crowd-Sourced Leaderboard</span>
+      <h3>LMSYS Chatbot Arena / LMArena</h3>
+      <p>The most influential model comparison platform. Uses blind, crowd-sourced A/B voting to generate ELO ratings. Crucially, it has <strong>category-specific leaderboards</strong> for coding, creative writing, hard prompts, and long-context tasks. Rankings completely reshuffle by category: a model ranked #7 overall might be #1 for coding.</p>
+      <p><strong>Key difference:</strong> Arena tells you <em>which</em> model wins each category but not <em>what behavioral traits</em> make it win. It's preference voting, not behavioral profiling. You know GPT 5.2 ranks high for creative writing, but you don't know it's because of higher emotional register and opinion volunteering.</p>
+      <div class="card-links">
+        <a href="https://lmarena.ai/">LMArena</a>
+      </div>
+    </div>
+
+    <div class="landscape-card">
+      <span class="card-tag">Aggregator Sites</span>
+      <h3>BenchLM, PricePerToken, EVY, Swfte</h3>
+      <p>A growing ecosystem of comparison sites that aggregate benchmark data, rank models per task type, and include pricing. <strong>BenchLM.ai</strong> ranks by creative writing scores and instruction-following benchmarks. <strong>EVY</strong> aggregates from multiple benchmark sources. <strong>PricePerToken</strong> adds cost-per-quality comparisons.</p>
+      <p><strong>Key difference:</strong> Pure performance metrics. They tell you Claude Opus 4.6 scores highest on EQ Creative (2216) but don't profile the behavioral dimensions that produce that score. Useful, but opaque.</p>
+    </div>
+
+    <h2>LLM routers</h2>
+
+    <p>These are the applied, production version of "which model for which task." They route individual prompts to the optimal model in real time.</p>
+
+    <div class="landscape-card">
+      <span class="card-tag">Production Routing</span>
+      <h3>Martian, Unify, Not Diamond, LLMRouter</h3>
+      <p><strong>Martian</strong> uses adaptive routing that learns from application traffic patterns. <strong>Unify</strong> optimizes quality, cost, and speed per-prompt. <strong>Not Diamond</strong> curates the model routing space (their <a href="https://github.com/Not-Diamond/awesome-ai-model-routing">awesome-ai-model-routing</a> repo is the best index of the field). <strong>LLMRouter</strong> from UIUC is the first unified open-source library with 16+ routing algorithms.</p>
+      <p><strong>Key difference:</strong> Routers treat model selection as a black-box optimization. They pick the best model for each prompt, but the decision isn't inspectable. You can't see <em>why</em> it chose Claude over GPT for a particular query, and you can't use the underlying profile data independently. Personality Delta's behavioral profiles could feed into these routers as a signal.</p>
+      <div class="card-links">
+        <a href="https://route.withmartian.com/">Martian</a>
+        <a href="https://github.com/ulab-uiuc/LLMRouter">LLMRouter (GitHub)</a>
+        <a href="https://github.com/Not-Diamond/awesome-ai-model-routing">Awesome Model Routing</a>
+      </div>
+    </div>
+
+    <h2>The gap</h2>
+
+    <p>Here's the landscape mapped against three capabilities:</p>
+
+    <table class="gap-table">
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th>Behavioral Profiling</th>
+          <th>Work-Category Ranking</th>
+          <th>Inspectable Data</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>MTI</td>
+          <td class="yes">Yes</td>
+          <td class="no">No</td>
+          <td class="yes">Yes</td>
+        </tr>
+        <tr>
+          <td>Feedback Forensics</td>
+          <td class="yes">Yes</td>
+          <td class="no">No</td>
+          <td class="yes">Yes</td>
+        </tr>
+        <tr>
+          <td>Bloom / Petri</td>
+          <td class="partial">Safety only</td>
+          <td class="no">No</td>
+          <td class="yes">Yes</td>
+        </tr>
+        <tr>
+          <td>Chatbot Arena</td>
+          <td class="no">No</td>
+          <td class="yes">Yes</td>
+          <td class="partial">Rankings only</td>
+        </tr>
+        <tr>
+          <td>BenchLM / EVY</td>
+          <td class="no">No</td>
+          <td class="yes">Yes</td>
+          <td class="partial">Scores only</td>
+        </tr>
+        <tr>
+          <td>LLM Routers</td>
+          <td class="no">No</td>
+          <td class="partial">Implicit</td>
+          <td class="no">No (black box)</td>
+        </tr>
+        <tr>
+          <td><strong>Personality Delta</strong></td>
+          <td class="yes">Yes</td>
+          <td class="yes">Yes</td>
+          <td class="yes">Yes</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>Personality Delta is the only project combining behavioral profiling, work-category recommendations, and fully inspectable data</strong> in a single public tool. The profiling tools don't map to work categories. The leaderboards don't profile behavior. The routers do both implicitly but hide the reasoning.</p>
+
+    <h2>Adjacent research</h2>
+
+    <p>Several academic threads inform this space without directly competing:</p>
+
+    <ul>
+      <li><strong>Big Five personality in LLMs</strong> (Safdari et al., 2023; Jiang et al., 2024): Multiple studies apply the Big Five personality model (Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism) to LLMs. Interesting but too abstract for practical model selection. Knowing a model scores high on "Openness" doesn't tell you whether to use it for coding.</li>
+      <li><strong>AI Psychometrics</strong> (Pellert et al., 2024): Applied standardized psychometric inventories to LLMs. Found measurable and distinct psychological profiles across model families. Validates the premise that models have stable behavioral dispositions.</li>
+      <li><strong>PersonaLLM</strong> (Jiang et al., NAACL 2024): Investigated whether LLMs can <em>express</em> specific personality traits when instructed. Found they can, which is relevant to Personality Delta's correction patch approach: if models can express targeted traits, system prompt patches should work.</li>
+      <li><strong>Dynamic LLM Routing</strong> (arXiv 2502.16696): Proposed routing that balances performance, cost, and <em>ethics</em> based on user preferences. The ethics dimension is a form of behavioral profiling, validating that routing decisions should include behavioral signals, not just capability scores.</li>
+    </ul>
+
+    <h2>Opportunities</h2>
+
+    <p>The gap in the landscape suggests several directions:</p>
+
+    <ol>
+      <li><strong>Router integration:</strong> Personality Delta's behavioral profiles could serve as a signal layer for LLM routers like Martian or LLMRouter. Instead of black-box optimization, route based on inspectable behavioral match to the task category.</li>
+      <li><strong>Continuous monitoring:</strong> None of the existing tools track behavioral drift over time as models receive silent updates. A monitoring service that alerts when a model's personality profile shifts would be valuable for production deployments.</li>
+      <li><strong>Community-contributed profiles:</strong> The profiling harness is open source. As more people run comparisons across more models (open-source models, fine-tuned variants, regional models), the dataset becomes more comprehensive and the work-category rankings more reliable.</li>
+      <li><strong>Domain-specific prompt sets:</strong> The current 30-prompt set is generalist. Domain-specific prompt sets (legal, medical, education, customer support) would enable more targeted model-fit recommendations for specialized applications.</li>
+    </ol>
+
+    <div class="article-cta">
+      <h3>Explore the data</h3>
+      <p>See behavioral profiles and work-category rankings on the <a href="/">interactive dashboard</a>, or read the <a href="/research.html">full methodology</a>. The <a href="https://github.com/nucleoid/personality-delta">source code, prompts, and raw data</a> are on GitHub under MIT license.</p>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2026 nucleoid. Built with the Personality Delta harness.</p>
+      <p><a href="https://github.com/nucleoid/personality-delta">Source on GitHub</a></p>
+    </div>
+  </footer>
+
+</body>
+</html>
