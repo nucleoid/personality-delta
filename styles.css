@@ -181,6 +181,60 @@ body {
   margin-top: 6px;
 }
 
+/* ---- MODEL FIT ---- */
+
+.model-fit {
+  padding: 80px 0;
+}
+
+.fit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.fit-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--card-shadow);
+}
+
+.fit-card h4 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.fit-profile {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent-cyan);
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.fit-card p:last-child {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.fit-insight {
+  background: var(--bg-elevated);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  border-left: 3px solid var(--accent-cyan);
+}
+
+.fit-insight p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
 /* ---- WHY / USES ---- */
 
 .why {

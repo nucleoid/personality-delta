@@ -22,7 +22,7 @@
         <span class="brand-name">Personality Delta</span>
       </div>
       <nav class="header-nav">
-        <a href="#why">Why</a>
+        <a href="#model-fit">Model Fit</a>
         <a href="#findings">Findings</a>
         <a href="#comparisons">Comparisons</a>
         <a href="#patch">Patch</a>
@@ -64,21 +64,66 @@
       </div>
     </section>
 
-    <section class="why" id="why">
+    <section class="model-fit" id="model-fit">
       <div class="container">
-        <div class="why-primary">
-          <h2 class="section-title">Why this exists</h2>
-          <p class="why-lead">
-            <a href="https://github.com/openclaw/openclaw" target="_blank" rel="noopener">OpenClaw</a> is an open-source agent harness that runs across multiple LLM providers. Its agent personality -- how direct it is, whether it leads with opinions or caveats, how much risk it tolerates in recommendations -- is defined in system prompt files (SOUL.md, IDENTITY.md). But when the underlying model changes, the personality drifts. A model upgrade that improves benchmarks can silently make the agent more cautious, more verbose, or less opinionated.
-          </p>
-          <p class="why-body">
-            Personality Delta was built to solve this: measure the exact behavioral delta between the current model and the upgrade candidate, then generate targeted system prompt corrections that preserve the agent's disposition. No more guessing whether a model swap will break the vibe.
-          </p>
+        <h2 class="section-title">Which model fits which work?</h2>
+        <p class="section-desc">Different tasks need different behavioral profiles. A model that's ideal for coding -- direct, concise, action-biased -- may be a poor fit for scientific research, where hedging uncertainty and explaining reasoning are features, not bugs. Behavioral dimensions let you match models to work categories.</p>
+
+        <div class="fit-grid">
+          <div class="fit-card">
+            <h4>Software Development</h4>
+            <p class="fit-profile">Needs: high directness, high conciseness, high risk tolerance, low explanation depth</p>
+            <p>Give me the answer, don't hedge about edge cases I didn't ask about, don't explain what a for loop is. The best coding models lead with working code and flag only the risks that matter.</p>
+          </div>
+
+          <div class="fit-card">
+            <h4>Creative Writing</h4>
+            <p class="fit-profile">Needs: high emotional register, high opinion volunteering, moderate pushback resilience</p>
+            <p>Strong creative voice, warmth, willingness to commit to an aesthetic direction rather than presenting three safe options. Should hold the creative vision under feedback but adapt when the human has a better idea.</p>
+          </div>
+
+          <div class="fit-card">
+            <h4>Scientific Research</h4>
+            <p class="fit-profile">Needs: low risk tolerance, high hedge frequency, high explanation depth, high pushback resilience</p>
+            <p>Qualify uncertainty properly, show reasoning, be cautious about claims. A model that scores 6/7 on risk tolerance would make a dangerous research assistant -- it would state conclusions too confidently.</p>
+          </div>
+
+          <div class="fit-card">
+            <h4>Customer Support</h4>
+            <p class="fit-profile">Needs: high emotional register, moderate directness, low opinion volunteering, high conciseness</p>
+            <p>Warm and empathetic but efficient. Should not volunteer opinions about company policy or recommend competitors. Needs to resolve issues without making the customer feel lectured.</p>
+          </div>
+
+          <div class="fit-card">
+            <h4>Legal / Compliance</h4>
+            <p class="fit-profile">Needs: low risk tolerance, high hedge frequency, high explanation depth, low opinion volunteering</p>
+            <p>Must flag every caveat, never present a recommendation as certain, and explain the reasoning exhaustively. A high-directness model would skip qualifications that matter in legal contexts.</p>
+          </div>
+
+          <div class="fit-card">
+            <h4>Executive Briefings</h4>
+            <p class="fit-profile">Needs: high directness, high conciseness, high opinion volunteering, moderate risk tolerance</p>
+            <p>Lead with the recommendation, keep it tight, and have a point of view. Executives want signal, not options. But temper risk tolerance enough to flag genuine blockers.</p>
+          </div>
         </div>
 
-        <div class="uses-grid">
-          <h3 class="uses-heading">Other uses for this data</h3>
+        <div class="fit-insight">
+          <p>The behavioral profiles in this study let you score each model's natural fit for each category. A model like GPT 5.5, which scores low on risk tolerance (-1.4 vs Opus 4.6), is naturally better suited for scientific research and legal work than for coding. Opus 4.6's action-biased disposition makes it a strong coding and executive briefing model but would need correction for compliance work.</p>
+        </div>
+      </div>
+    </section>
 
+    <section class="why" id="why">
+      <div class="container">
+        <h2 class="section-title">Origin and other applications</h2>
+        <p class="why-lead">
+          This project started with a specific problem: <a href="https://github.com/openclaw/openclaw" target="_blank" rel="noopener">OpenClaw</a> is an open-source agent harness that runs across multiple LLM providers. Its agent personality is defined in system prompt files (SOUL.md, IDENTITY.md), but when the underlying model changes, the personality drifts. A model upgrade that improves benchmarks can silently make the agent more cautious, more verbose, or less opinionated. Personality Delta measures the exact behavioral delta and generates targeted system prompt corrections to preserve the agent's disposition.
+        </p>
+        <p class="why-body" style="margin-bottom: 32px;">
+          But the behavioral measurement tooling turned out to be useful well beyond personality preservation. Here are the other applications we've identified:
+        </p>
+
+        <div class="uses-grid">
           <div class="use-card">
             <div class="use-number">01</div>
             <h4>Model upgrade gating</h4>
