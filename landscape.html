@@ -60,11 +60,13 @@
           <span class="brand-name">Personality Delta</span>
         </a>
       </div>
-      <nav class="header-nav">
+      <nav class="header-nav" id="headerNav">
         <a href="/">Dashboard</a>
         <a href="/research.html">Research</a>
+        <a href="/landscape.html">Landscape</a>
         <a href="https://github.com/nucleoid/personality-delta" target="_blank" rel="noopener">GitHub</a>
       </nav>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">&#9776;</button>
     </div>
   </header>
 
@@ -77,9 +79,9 @@
     <h1>Who Else Is Profiling LLM Personality?</h1>
     <p class="article-meta">June 2026 &middot; Competitive landscape survey</p>
 
-    <p>When we started building Personality Delta, we expected to find a crowded field. Behavioral measurement of LLMs is a hot research topic. But when we looked for tools that actually <strong>map personality profiles to work-category recommendations</strong>, the landscape was surprisingly empty.</p>
+    <p>When we started building Personality Delta, we expected to find a crowded field. We'd just profiled 7 frontier models across Claude, GPT, and Gemini families and found that only two behavioral axes -- risk tolerance and directness -- consistently differentiate them. Surely someone else had published this kind of data.</p>
 
-    <p>There are projects that profile personality. There are leaderboards that rank models by task category. There are routers that select models per-prompt. But nobody is combining all three into a single, inspectable, data-driven system. Here's the full landscape and where each project fits.</p>
+    <p>There are projects that profile personality. There are leaderboards that rank models by task category. There are routers that select models per-prompt. But nobody is combining all three into a single, inspectable, data-driven system that maps <strong>behavioral profiles to work-category recommendations</strong>. Here's the full landscape and where each project fits.</p>
 
     <h2>Behavioral profiling tools</h2>
 
@@ -262,5 +264,13 @@
     </div>
   </footer>
 
+  <script>
+    const toggle = document.getElementById('navToggle');
+    const nav = document.getElementById('headerNav');
+    if (toggle && nav) {
+      toggle.addEventListener('click', () => nav.classList.toggle('open'));
+      nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+    }
+  </script>
 </body>
 </html>

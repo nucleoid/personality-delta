@@ -52,11 +52,13 @@
           <span class="brand-name">Personality Delta</span>
         </a>
       </div>
-      <nav class="header-nav">
+      <nav class="header-nav" id="headerNav">
         <a href="/">Dashboard</a>
+        <a href="/research.html">Research</a>
         <a href="/landscape.html">Landscape</a>
         <a href="https://github.com/nucleoid/personality-delta" target="_blank" rel="noopener">GitHub</a>
       </nav>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">&#9776;</button>
     </div>
   </header>
 
@@ -226,5 +228,13 @@ be asked.</code></pre>
     </div>
   </footer>
 
+  <script>
+    const toggle = document.getElementById('navToggle');
+    const nav = document.getElementById('headerNav');
+    if (toggle && nav) {
+      toggle.addEventListener('click', () => nav.classList.toggle('open'));
+      nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+    }
+  </script>
 </body>
 </html>
